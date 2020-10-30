@@ -56,7 +56,7 @@ namespace BLOCKS{
 
     namespace EVENTS{
         ImGuiID ActiveBlock;
-        BLOCK LinePoints[2] = {NULL};
+        //BLOCK LinePoints[2] = {NULL};
     }
     std::vector<BLOCK*> ALL_BLOCKS_GUI(BLKType_COUNT,NULL);
 
