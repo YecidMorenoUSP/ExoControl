@@ -9,6 +9,6 @@ O objetivo principal é criam uma GUI intuitiva que seja programavel usamdo bloc
     2. Concerto de alguns erros
 
 - ### Versão v0.2 
-    1. Proximanente
+    1. Proximanente ...
 
 
