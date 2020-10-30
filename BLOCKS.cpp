@@ -2,7 +2,7 @@
     #include "BLOCKS.h"   
 #endif
 
-#include "BLOCKS/BLOCK_SUM.h"
+#include "BLOCKS/BLOCK_SUM.h" 
 #include "BLOCKS/BLOCK_POW.h"
 
 namespace BLOCKS{
