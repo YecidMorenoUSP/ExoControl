@@ -4,6 +4,10 @@ enum GUI_Colors_{
     GUICol_BlockFill,
     GUICol_BlockText,
     GUICol_Amarillo,
+    GUICol_BlockBorder,
+    GUICol_BlockIN,
+    GUICol_BlockOUT,
+    GUICol_BlockBorderActive,
     GUICol_COUNT
 };
 

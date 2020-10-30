@@ -67,7 +67,6 @@ namespace BLOCKS{
     }
 
 
-
     void AddBLOCK(TypeBlock_ TypeBlock){
         
         
@@ -78,9 +77,12 @@ namespace BLOCKS{
         aux->name = name;   
         aux->ENABLED = true;
         aux->ACTIVE = true;
+        aux->posBlock = aux->posBlock + ImVec2(30,20)*aux->indexType;
+               
 
         ALL_BLOCKS_GUI.push_back(aux);
-        GUI::showAllConsole();
+        
+        //GUI::showAllConsole();
     }
 
     void DROOPBLOCK(ImGuiID ID){
@@ -92,7 +94,7 @@ namespace BLOCKS{
                 }
             }
 
-            GUI::showAllConsole();
+            //GUI::showAllConsole();
                 
     }
 

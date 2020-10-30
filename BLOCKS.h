@@ -39,10 +39,16 @@ namespace BLOCKS{
             bool ENABLED = false;
             bool ACTIVE  = false;
 
-            ImVec2 posBlock  = ImVec2(250,250);
+            ImVec2 posBlock  = ImVec2(10,10);
             ImVec2 sizeBlock = ImVec2(100,50);
             
             struct Properties;
+
+            int N_IN;
+            int N_OUT;
+
+            float N_IN_size ;
+            float N_OUT_size;
         
 
         virtual void Draw(){};

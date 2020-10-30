@@ -13,7 +13,7 @@
     draw_list->
 
 */
-
+#define iterateBLOCKS_GUI for (std::vector<BLOCKS::BLOCK*>::iterator it = BLOCKS::ALL_BLOCKS_GUI.begin() + BLKType_COUNT ; it != BLOCKS::ALL_BLOCKS_GUI.end(); it++)
 #ifndef GUI_H
     #include "GUI.h"   
 #endif
@@ -126,9 +126,15 @@ namespace GUI{
         colors_[ImGuiCol_NavWindowingDimBg]      = ImVec4(0.20f, 0.20f, 0.20f, 0.20f);
         colors_[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
     
-        colors[GUICol_BlockFill] = ImVec4(0.260f, 0.590f, 0.980f, 1.00f);
-        colors[GUICol_BlockText] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
-        colors[GUICol_Amarillo] =  ImVec4(0.984f, 0.757f, 0.000f, 1.000f);
+        colors[GUICol_BlockFill]   = ImVec4(0.260f, 0.590f, 0.980f, 1.00f);
+        colors[GUICol_BlockBorder] = ImVec4(0.9f, 0.9f, 0.9f, 1.00f);
+        colors[GUICol_BlockIN]     = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+        colors[GUICol_BlockOUT]    = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+        colors[GUICol_BlockBorderActive]    = ImVec4(0.96f, 0.83f, 0.04f, 1.00f);
+        colors[GUICol_BlockText]   = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+        colors[GUICol_Amarillo]    = ImVec4(0.984f, 0.757f, 0.000f, 1.000f);
+
+    
 
     }
 
@@ -236,7 +242,7 @@ namespace GUI{
         }
         if(EVENTS::showBlocksProgramming){
             ImGui::Begin("Block logic",&EVENTS::showBlocksProgramming,0); 
-
+            displayBlocksLogic();
             ImGui::End();
         }
         if(EVENTS::showRealTime){
@@ -275,7 +281,9 @@ namespace GUI{
     }
 
     void displayBlocksLogic(){
-
+        iterateBLOCKS_GUI{
+            (*it)->Draw();
+        }  
     }
 }
 
