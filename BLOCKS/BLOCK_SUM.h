@@ -72,6 +72,14 @@ namespace BLOCKS{
                 ImRect posBlock_Cursor = ImRect(window->DC.CursorPos,window->DC.CursorPos+posBlock+sizeBlock);
                 ImRect posBlock_Global(pos+posBlock,pos+posBlock+sizeBlock);
 
+
+                for(int i  = 1 ; i <= N_OUT ; i++){
+                    ImRect  OUTRec(posBlock_Global.Min + ImVec2(-5 + sizeBlock.x ,i*N_OUT_size-5),
+                                   posBlock_Global.Min + ImVec2( 5 + sizeBlock.x ,i*N_OUT_size+5));
+                    cout<<ImGui::ItemHoverable(OUTRec, id);    
+                    //EVENTS::LinePoints[0] = this;
+                }
+
                 if (!ImGui::ItemAdd(posBlock_Cursor, id)) return;
 
                 LOCAL.hovered = ImGui::ItemHoverable(posBlock_Global, id);
@@ -122,6 +130,7 @@ namespace BLOCKS{
 
     void BlockSUM_INIT(){
         ALL_BLOCKS_GUI[BLKType_Sum] = new BlockSUM();
+        cout << "\n   "<< name_of(BLKType_Sum)  <<": Cargado ";
     }
  
  

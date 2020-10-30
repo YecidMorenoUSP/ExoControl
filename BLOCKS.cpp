@@ -9,10 +9,9 @@ namespace BLOCKS{
     
     void Init(){
                
-               
+        cout << "\n>> Cargando Bloques : ";
         BlockSUM_INIT();
         BlockPOW_INIT();
-   
        
     }
 

@@ -66,7 +66,22 @@
 namespace GUI{
 
     void init(){
-        loadTextures();
+        cout << "\n>> Cargando Texturas : ";
+        loadTextures("Textures/GUITex_Default.png",GUITex_Default);
+        loadTextures("Textures/GUITex_Exo1.png",GUITex_Exo1);
+        loadTextures("Textures/GUITex_Exo2.png",GUITex_Exo2);
+        loadTextures("Textures/GUITex_Exo3.png",GUITex_Exo3);
+        loadTextures("Textures/GUITex_Exo_blur_1.png",GUITex_Exo_blur_1);
+        loadTextures("Textures/GUITex_Exo_blur_2.png",GUITex_Exo_blur_2);
+        loadTextures("Textures/GUITex_Exo_blur_3.png",GUITex_Exo_blur_3);
+        loadTextures("Textures/GUITex_Xsens_Off.png",GUITex_Xsens_Off);
+        loadTextures("Textures/GUITex_Xsens_On.png",GUITex_Xsens_On);
+        loadTextures("Textures/GUITex_Delsys_Off.png",GUITex_Delsys_Off);
+        loadTextures("Textures/GUITex_Delsys_On.png",GUITex_Delsys_On);
+        loadTextures("Textures/GUITex_Btn_Run.png",GUITex_Btn_Run);
+        loadTextures("Textures/GUITex_Btn_Pause.png",GUITex_Btn_Pause);
+        loadTextures("Textures/GUITex_REROB.png",GUITex_REROB);
+        cout << "\n   Texturas cargadas ";
     }
 
     void StyleApp(){
@@ -142,24 +157,16 @@ namespace GUI{
         return ImGui::GetColorU32(colors[indexColor]);
     }
 
-    void loadTextures(){
-        
+    void loadTextures(const char * name, GUI_Textures_ index){
         int aux[2] = {0,0};
         bool ret;
-        char buffer[40]={0};
-        for(int i = 0 ; i < GUITexture_COUNT ; i++){
-            
-            //sprintf(buffer,"Textures/texture%d.png",i);
-            //ret = LoadTextureFromFile(buffer, &textures[i], &aux[0],&aux[1]);
-            //if(!ret) continue;
-            //GE::dimensions[i] = ImVec2((int)aux[0],(int)aux[1]);
-            //GE::dimensionsInit[i] = ImVec2((int)aux[0],(int)aux[1]);
-            //IM_ASSERT(ret);
-
-            //cout<<;
-            
-        }
-
+        ret = LoadTextureFromFile(name, &Texture[index].texture, &aux[0],&aux[1]);
+        if(!ret){
+            cout << "\n   Textura  "<<name<<" no encontrada";
+            Texture[index] = Texture[GUITex_Default];
+            return;}
+        Texture[index].dimensions = ImVec2((int)aux[0],(int)aux[1]);
+        IM_ASSERT(ret);
     }
 
     void createDocking(){
@@ -281,6 +288,17 @@ namespace GUI{
     }
 
     void displayBlocksLogic(){
+
+        if(ImGui::ImageButton((void*)Texture[GUITex_Btn_Run].texture,ImVec2(25,25))){                      
+                //if(exoTask_mutex_end.load()){
+                //    exoTask_mutex_end.store(false);
+                //    thread_1 = std::thread(exoSimulationTask, "----");
+                //}else{
+                //    exoTask_mutex_end.store(true); 
+                //    thread_1.join();
+                //}          
+        } 
+
         iterateBLOCKS_GUI{
             (*it)->Draw();
         }  

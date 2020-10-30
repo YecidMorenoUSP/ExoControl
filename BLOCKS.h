@@ -20,13 +20,9 @@ namespace BLOCKS{
         arg->Exec();
     }
 
-
-
     void Init();
 
-    namespace EVENTS{
-        ImGuiID ActiveBlock;
-    }
+
     class BLOCK {
         public:
             ImGuiID ID;
@@ -58,7 +54,10 @@ namespace BLOCKS{
         void Draw2();
     };
 
-    
+    namespace EVENTS{
+        ImGuiID ActiveBlock;
+        BLOCK LinePoints[2] = {NULL};
+    }
     std::vector<BLOCK*> ALL_BLOCKS_GUI(BLKType_COUNT,NULL);
 
    

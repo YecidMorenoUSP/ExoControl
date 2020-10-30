@@ -120,6 +120,7 @@ namespace BLOCKS{
 
     void BlockPOW_INIT(){
         ALL_BLOCKS_GUI[BLKType_Pow] = new BlockPOW();
+        cout << "\n   "<< name_of(BLKType_Pow)  <<": Cargado ";
     }
  
 
