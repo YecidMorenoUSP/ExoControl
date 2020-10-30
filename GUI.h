@@ -8,6 +8,8 @@ enum GUI_Colors_{
     GUICol_BlockIN,
     GUICol_BlockOUT,
     GUICol_BlockBorderActive,
+    GUICol_BlockINHover,
+    GUICol_BlockOUTHover,
     GUICol_COUNT
 };
 

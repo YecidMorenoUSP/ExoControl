@@ -13,7 +13,9 @@ namespace BLOCKS{
                 bool clicked = false;
                 bool inDrag = false;
                 bool hovered = false;
-                ImVec2 posBlock_aux ;
+                
+                ImVec2 posBlock_aux ;                
+
             }LOCAL;
             struct Properties{
                     float val;
@@ -72,17 +74,43 @@ namespace BLOCKS{
                 ImRect posBlock_Cursor = ImRect(window->DC.CursorPos,window->DC.CursorPos+posBlock+sizeBlock);
                 ImRect posBlock_Global(pos+posBlock,pos+posBlock+sizeBlock);
 
+                LOCAL.hovered = ImGui::ItemHoverable(posBlock_Global, id);
 
-                for(int i  = 1 ; i <= N_OUT ; i++){
-                    ImRect  OUTRec(posBlock_Global.Min + ImVec2(-5 + sizeBlock.x ,i*N_OUT_size-5),
-                                   posBlock_Global.Min + ImVec2( 5 + sizeBlock.x ,i*N_OUT_size+5));
-                    cout<<ImGui::ItemHoverable(OUTRec, id);    
-                    //EVENTS::LinePoints[0] = this;
+                if(EVENTS::creatingLine == 0){
+                    for(int i  = 1 ; i <= N_OUT ; i++){
+                        ImRect  OUTRec(posBlock_Global.Min + ImVec2(-6 + sizeBlock.x ,i*N_OUT_size-6),
+                                       posBlock_Global.Min + ImVec2( 6 + sizeBlock.x ,i*N_OUT_size+6));
+                        if(ImGui::ItemHoverable(OUTRec, id)){
+                            draw_list->AddCircleFilled(posBlock_Global.Min  + ImVec2(sizeBlock.x,i*N_OUT_size),8,GUI::getColorU32(GUICol_BlockOUTHover));
+                        }
+                        if(ImGui::ItemHoverable(OUTRec, id)&&ImGui::IsMouseClicked(0)){
+                            
+                            EVENTS::creatingLine = 1;
+                            EVENTS::newLinePosOUT= ImVec2(posBlock_Global.Min.x + sizeBlock.x ,
+                                                          posBlock_Global.Min.y + i*N_OUT_size);
+                        }
+                    }
                 }
+
+                if(EVENTS::creatingLine == 1 ){
+                    for(int i  = 1 ; i <= N_IN ; i++){
+                        ImRect  OUTRec(posBlock_Global.Min + ImVec2(-6  ,i*N_IN_size-6),
+                                       posBlock_Global.Min + ImVec2( 6  ,i*N_IN_size+6));
+                        if(ImGui::ItemHoverable(OUTRec, id)){
+                            draw_list->AddCircleFilled(posBlock_Global.Min + ImVec2(0,i*N_IN_size),8,GUI::getColorU32(GUICol_BlockOUTHover));
+                        }
+                        if(ImGui::ItemHoverable(OUTRec, id)&&(ImGui::IsMouseReleased(0))){
+                            EVENTS::creatingLine = 2;
+                            EVENTS::newLinePosIN= ImVec2(posBlock_Global.Min.x  ,
+                                                          posBlock_Global.Min.y + i*N_IN_size);
+                        }
+                    }
+                }
+
 
                 if (!ImGui::ItemAdd(posBlock_Cursor, id)) return;
 
-                LOCAL.hovered = ImGui::ItemHoverable(posBlock_Global, id);
+                
                 const bool double_clicked = (LOCAL.hovered && g.IO.MouseDoubleClicked[0]);
                 const bool clicked = (LOCAL.hovered && g.IO.MouseClicked[0]);
                                                

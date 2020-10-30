@@ -41,9 +41,11 @@ using namespace arma;
 
 #include "GUI.h"
 #include "BLOCKS.h"
+#include "LINES.h"
 
 #include "GUI.cpp"
 #include "BLOCKS.cpp"
+#include "LINES.cpp"
 
 
 

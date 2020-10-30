@@ -145,6 +145,8 @@ namespace GUI{
         colors[GUICol_BlockBorder] = ImVec4(0.9f, 0.9f, 0.9f, 1.00f);
         colors[GUICol_BlockIN]     = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
         colors[GUICol_BlockOUT]    = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+        colors[GUICol_BlockINHover]    = ImVec4(0.0f, 0.0f, 0.0f, 1.000f);
+        colors[GUICol_BlockOUTHover]    = ImVec4(0.0f, 0.0f, 0.0f, 1.000f);
         colors[GUICol_BlockBorderActive]    = ImVec4(0.96f, 0.83f, 0.04f, 1.00f);
         colors[GUICol_BlockText]   = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
         colors[GUICol_Amarillo]    = ImVec4(0.984f, 0.757f, 0.000f, 1.000f);
@@ -302,6 +304,13 @@ namespace GUI{
         iterateBLOCKS_GUI{
             (*it)->Draw();
         }  
+
+        if(BLOCKS::EVENTS::creatingLine >= 1){
+            if(BLOCKS::EVENTS::creatingLine == 1) BLOCKS::EVENTS::newLinePosIN = ImGui::GetMousePos();
+            ImDrawList* draw_list = ImGui::GetWindowDrawList();
+            draw_list->AddLine(BLOCKS::EVENTS::newLinePosOUT,BLOCKS::EVENTS::newLinePosIN,getColorU32(GUICol_Amarillo),2);
+            if(ImGui::IsMouseReleased(0)) BLOCKS::EVENTS::creatingLine = 0;
+        }
     }
 }
 
