@@ -2,45 +2,21 @@
     #include "BLOCKS.h"   
 #endif
 
+#include "BLOCKS/BLOCK_SUM.h"
+#include "BLOCKS/BLOCK_POW.h"
+
 namespace BLOCKS{
     
     void Init(){
-        
-        
-
-        BLOCKS::BlockSUM * auxSum1 = new BLOCKS::BlockSUM();
-        BLOCKS::BlockPOW * auxPow1 = new BLOCKS::BlockPOW();
-
-        BLOCKS::BlockSUM * auxSum2 = new BLOCKS::BlockSUM();
-        BLOCKS::BlockPOW * auxPow2 = new BLOCKS::BlockPOW();
-
-        auxSum1->props.val = 1;
-        auxSum2->props.val = 2;
-
-        auxPow1->props.y = 10;
-        auxPow2->props.y = 20;
-
-         auxSum1->Exec(); cout<<sizeof(auxSum1);
-         auxSum2->Exec(); cout<<sizeof(auxSum2);
-         auxPow1->Exec(); cout<<sizeof(auxPow1);
-         auxPow2->Exec(); cout<<sizeof(auxPow2);
-
-        int * Bloques[] = {(int*)auxSum1,(int*)auxPow1,(int*)auxSum2,(int*)auxPow2};
-
-        BLOCKS::BLOCK * auxSum11 =(BLOCKS::BLOCK *)Bloques[1];
-        
-        cout<<auxSum11->TYPE;
-
-        ALL_BLOCKS[BLKType_Sum] = ALL_BLOCKS[BLKType_Default];
-        ALL_BLOCKS[BLKType_Sum].name = "ADD";       
-
-        ALL_BLOCKS[BLKType_Pow] = ALL_BLOCKS[BLKType_Default];
-        ALL_BLOCKS[BLKType_Pow].name = "POW"; 
-
-      
+               
+               
+        BlockSUM_INIT();
+        BlockPOW_INIT();
+   
+       
     }
 
-    void BLOCK::Draw(){
+    void BLOCK::Draw2(){
                 
         ImGuiWindow* window = ImGui::GetCurrentWindow();
         ImGuiContext& g = *GImGui;
@@ -90,47 +66,35 @@ namespace BLOCKS{
                 
     }
 
+
+
     void AddBLOCK(TypeBlock_ TypeBlock){
         
-            
-        for(int i = BLKType_COUNT ; i < MAX_NUM_BLOCKS ; i++){
-            if(!BLOCKS::ALL_BLOCKS[i].ACTIVE){
-                
-                BLOCKS::ALL_BLOCKS[TypeBlock].indexType += 1;
-                int index = BLOCKS::ALL_BLOCKS[TypeBlock].indexType;
+        
+        BLOCK * aux = ALL_BLOCKS_GUI[TypeBlock]->Create();
+        aux->indexType = ++ALL_BLOCKS_GUI[TypeBlock]->indexType;
+        std::string name = BLOCKS::ALL_BLOCKS_GUI[TypeBlock]->name + "(" + std::to_string(aux->indexType) + ")";
+        aux->ID = BLOCKS::getIDBLOCK(name.c_str());
+        aux->name = name;   
+        aux->ENABLED = true;
+        aux->ACTIVE = true;
 
-                ImGuiWindow* window = ImGui::GetCurrentWindow();
-                std::string name = BLOCKS::ALL_BLOCKS[TypeBlock].name + "(" + std::to_string(index) + ")";
-
-                BLOCKS::ALL_BLOCKS[i] = BLOCKS::ALL_BLOCKS[TypeBlock];
-
-                BLOCKS::ALL_BLOCKS[i].ID = window->GetID(name.c_str());
-                BLOCKS::ALL_BLOCKS[i].TYPE = TypeBlock;
-                BLOCKS::ALL_BLOCKS[i].indexType = index;
-                BLOCKS::ALL_BLOCKS[i].ENABLED = true;  
-                BLOCKS::ALL_BLOCKS[i].ACTIVE = true;
-                BLOCKS::ALL_BLOCKS[i].name = name;
-                
-                return;
-            }
-            
-        }
-            
+        ALL_BLOCKS_GUI.push_back(aux);
+        GUI::showAllConsole();
     }
 
     void DROOPBLOCK(ImGuiID ID){
             
-            //Falta limitarlo hasta que encuentre algun objeto incativo
-            bool found = false;
-            for(int i = BLKType_COUNT ; i < (MAX_NUM_BLOCKS-1) ; i++){
-                if(BLOCKS::ALL_BLOCKS[i].ID == ID)found = true;
-                if(found){
-                    BLOCKS::ALL_BLOCKS[i] = BLOCKS::ALL_BLOCKS[i+1];
+            for (std::vector<BLOCK*>::iterator it = ALL_BLOCKS_GUI.begin() + BLKType_COUNT ; it != ALL_BLOCKS_GUI.end(); it++){
+                if((*it)->ID == ID) {
+                    ALL_BLOCKS_GUI.erase(it);
+                    break;
                 }
             }
-            if(found) BLOCKS::ALL_BLOCKS[MAX_NUM_BLOCKS-1] = BLOCKS::ALL_BLOCKS[BLKType_Default];
+
+            GUI::showAllConsole();
                 
-        }
+    }
 
     
 }

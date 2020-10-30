@@ -1,12 +1,6 @@
-/*
-    Si desea adicionar un bloque necesita modificar : 
-        enum TypeBlock_
-        BLOCKS::Init()
-        BLOCKS::functionNameBlock(arg 1, arg 2)
-*/
-
 #define BLOCKS_H
 #define MAX_NUM_BLOCKS 100
+
 enum TypeBlock_{
     BLKType_Default,
     BLKType_Sum,
@@ -16,19 +10,19 @@ enum TypeBlock_{
 
 namespace BLOCKS{
 
+    ImGuiID getIDBLOCK(const char * str){
+        ImGuiID id = ImHashStr(str);
+        return id;
+    }
+
+    template <typename T>
+    void runBlock(T arg){
+        arg->Exec();
+    }
+
+
+
     void Init();
-
-    void functionDefaultBlock(){}
-
-    void functionADD(){
-        cout<<"SUMA\t"<<endl;
-    }
-
-
-
-    void functionPOW(){
-        cout<<"POW\t"<<endl;
-    }
 
     namespace EVENTS{
         ImGuiID ActiveBlock;
@@ -47,53 +41,23 @@ namespace BLOCKS{
 
             ImVec2 posBlock  = ImVec2(250,250);
             ImVec2 sizeBlock = ImVec2(100,50);
+            
+            struct Properties;
+        
 
-        void Draw();
-        void Exec();
+        virtual void Draw(){};
+        virtual void Exec(){};
+        virtual BLOCK * Create(){return NULL;};
+     
+        void Draw2();
     };
 
     
+    std::vector<BLOCK*> ALL_BLOCKS_GUI(BLKType_COUNT,NULL);
 
-    BLOCK * ALL_BLOCKS = new BLOCK[MAX_NUM_BLOCKS];
-
-    class BlockSUM : public BLOCK {
-        private:
-            static int count;
-        public:
-            struct Properties{
-                    float val;
-            }props;
-
-            BlockSUM(){
-                name = "BlockSUM";
-                TYPE = BLKType_Sum;
-                props.val = 1;
-            }
-            void Exec(){
-                cout<<"\n SUMA "<< props.val <<"\t";
-            }
-    };
-
-    class BlockPOW : public BLOCK {
-
-        public:
-            struct Properties{
-                    float y;
-            }props;
-
-            BlockPOW(){
-                name = "BlockPOW";
-                TYPE = BLKType_Pow;
-                props.y = 2;
-            }
-            void Exec(){
-                cout<<"\n POW "<< props.y <<"\t";
-            }
-    };
-
+   
     void AddBLOCK(TypeBlock_ TypeBlock);
     void DROOPBLOCK(ImGuiID ID);
-
 
 
 }

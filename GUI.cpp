@@ -28,9 +28,10 @@
             bool showDevTools      = true;
         }
 
-        void showBlocksGeginEnd(int A , int B ){
-            for(int i = A ; i < B; i++)
-                cout<<BLOCKS::ALL_BLOCKS[i].name<<"\t";   
+        void showAllConsole(){
+            cout<<endl;
+            for (std::vector<BLOCKS::BLOCK*>::iterator it = BLOCKS::ALL_BLOCKS_GUI.begin() + BLKType_COUNT ; it != BLOCKS::ALL_BLOCKS_GUI.end(); it++)
+                cout<<(*it)->name<<"\t";
             cout<<endl;
         }
         
@@ -45,17 +46,16 @@
             //if(EVENTS::showBlockTest)drawBlockTest();
 
             if(ImGui::Button("DEV >> Create BLock")){             
-                BLOCKS::AddBLOCK(BLKType_Default);   
-                showBlocksGeginEnd(0,10);
+                BLOCKS::AddBLOCK(BLKType_Sum);   
+                //showBlocksBeginEnd(0,10);
             }
   
             static char blockName [100] = {0};
             ImGui::InputText("##NaneBlock",blockName,IM_ARRAYSIZE(blockName),0);
             if(ImGui::Button("DEV >> Delete BLock")){   
-                ImGuiWindow* window = ImGui::GetCurrentWindow();          
-                BLOCKS::DROOPBLOCK(window->GetID(blockName));
+       
+                BLOCKS::DROOPBLOCK(BLOCKS::getIDBLOCK(blockName));
                 
-                showBlocksGeginEnd(0,10);
             }
         }
     } 
@@ -131,7 +131,6 @@ namespace GUI{
         colors[GUICol_Amarillo] =  ImVec4(0.984f, 0.757f, 0.000f, 1.000f);
 
     }
-
 
     ImU32 getColorU32(int indexColor){
         return ImGui::GetColorU32(colors[indexColor]);
@@ -266,12 +265,13 @@ namespace GUI{
 
     void displayBlocksGUI(){
           
-            for(int i = 1 ; i < BLKType_COUNT ; i++){
-                if(ImGui::Button(BLOCKS::ALL_BLOCKS[i].name.c_str(),ImVec2(100,50))){
-                    BLOCKS::AddBLOCK((TypeBlock_)i);   
-                    showBlocksGeginEnd(0,10);
-                }                
+            for (int i = 1 ; i < BLKType_COUNT ; i++){
+                if(ImGui::Button(BLOCKS::ALL_BLOCKS_GUI[i]->name.c_str(),ImVec2(100,50))){
+                    BLOCKS::AddBLOCK((TypeBlock_)i);                      
+                }  
+                
             }
+
     }
 
     void displayBlocksLogic(){
