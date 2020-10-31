@@ -1,10 +1,11 @@
 #define BLOCKS_H
-#define MAX_NUM_BLOCKS 100
+
 
 enum TypeBlock_{
     BLKType_Default,
-    BLKType_Sum,
-    BLKType_Pow,
+    BLKType_SUM,
+    BLKType_POW,
+    BLKType_FUNGEN,
     BLKType_COUNT
 };
 
@@ -83,3 +84,4 @@ namespace BLOCKS{
 
 
 }
+

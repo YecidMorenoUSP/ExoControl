@@ -19,8 +19,16 @@ namespace SIM{
         EVENTS::time_begin = std::chrono::steady_clock::now();
         while (true)
         {
-            EVENTS::time_index ++;
+            if(LINES::ALL_LINES_GUI.size()>= 1){
+                iterateLINES_GUI{
+                    (*it)->blockOut->Exec();
+                }
+                LINES::ALL_LINES_GUI.back()->blockIn->Exec();
             
+            }
+            
+
+            EVENTS::time_index ++;
             while(std::chrono::duration_cast<std::chrono::nanoseconds> (std::chrono::steady_clock::now() - EVENTS::time_begin).count()/1000000000.f <= EVENTS::time_index*EVENTS::Ts);  
             if (EVENTS::SimulationTaskMutex_end.load()) break;
         }

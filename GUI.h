@@ -1,5 +1,8 @@
 #define GUI_H
 
+#define iterateBLOCKS_GUI for (std::vector<BLOCKS::BLOCK*>::iterator it = BLOCKS::ALL_BLOCKS_GUI.begin() + BLKType_COUNT ; it != BLOCKS::ALL_BLOCKS_GUI.end(); it++)
+#define iterateLINES_GUI for  (std::vector<LINES::LINE*>::iterator   it = LINES::ALL_LINES_GUI.begin() ; it != LINES::ALL_LINES_GUI.end(); it++)
+
 enum GUI_Colors_{
     GUICol_BlockFill,
     GUICol_BlockText,

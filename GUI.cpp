@@ -13,8 +13,7 @@
     draw_list->
 
 */
-#define iterateBLOCKS_GUI for (std::vector<BLOCKS::BLOCK*>::iterator it = BLOCKS::ALL_BLOCKS_GUI.begin() + BLKType_COUNT ; it != BLOCKS::ALL_BLOCKS_GUI.end(); it++)
-#define iterateLINES_GUI for  (std::vector<LINES::LINE*>::iterator   it = LINES::ALL_LINES_GUI.begin() ; it != LINES::ALL_LINES_GUI.end(); it++)
+
 #ifndef GUI_H
     #include "GUI.h"   
 #endif
@@ -25,6 +24,7 @@
         
         namespace EVENTS{
             bool showStyleEditor   = false;
+            bool showExamples      = false;
             bool showBlockTest     = false;
             bool showDevTools      = true;
         }
@@ -43,11 +43,12 @@
             ImGui::Checkbox("DEV >> Style Editor",&EVENTS::showStyleEditor);
             if(EVENTS::showStyleEditor)ImGui::ShowStyleEditor();
 
-            ImGui::Checkbox("DEV >> Block Test",&EVENTS::showBlockTest);
-            //if(EVENTS::showBlockTest)drawBlockTest();
+
+            ImGui::Checkbox("DEV >> Demo Window",&EVENTS::showExamples);
+            if(EVENTS::showExamples) ImGui::ShowDemoWindow();
 
             if(ImGui::Button("DEV >> Create BLock")){             
-                BLOCKS::AddBLOCK(BLKType_Sum);   
+                BLOCKS::AddBLOCK(BLKType_SUM);   
                 //showBlocksBeginEnd(0,10);
             }
   
@@ -307,6 +308,7 @@ namespace GUI{
         } 
 
         iterateBLOCKS_GUI{
+            //cout<<"\n "<<(*(*it)->IN_ARMA[2])<<"  ";
             (*it)->Draw();
         }  
         
@@ -316,11 +318,13 @@ namespace GUI{
             if(BLOCKS::EVENTS::creatingLine == 2){
                 
                 LINES::LINE * ln = new LINES::LINE();
+
                 ln->blockIn  = BLOCKS::EVENTS::blockInLine;
                 ln->blockOut = BLOCKS::EVENTS::blockOutLine;
                 ln->posIn    = BLOCKS::EVENTS::posInLineIndex;
                 ln->posOut   = BLOCKS::EVENTS::posOutLineIndex;
                  
+                ln->blockIn->IN_ARMA[BLOCKS::EVENTS::posInLineIndex] = &(ln->blockOut->OUT_ARMA[BLOCKS::EVENTS::posOutLineIndex]);
                 
                 LINES::ALL_LINES_GUI.push_back(ln);
                 BLOCKS::EVENTS::creatingLine = 0;

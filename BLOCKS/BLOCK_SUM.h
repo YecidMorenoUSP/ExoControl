@@ -1,10 +1,56 @@
 #ifndef BLOCKS_H
     #include "BLOCKS.h"   
 #endif
+/*
+    
+    name_of_class    ->   
+    name_of_type     ->    to enum TypeBlock_ in BLOCKS.h
+    name_of_block    ->  
+    
+    name_of_class_INIT(); -> to BLOCOS.cpp/void INIT(); 
+
+    #include "BLOCKS/name_of_class.h" -> to BLOCOS.cpp
+    
+    struct Properties             ->   propiedades do bloco, para apresentar na janela Properties
+    showProperties()              ->   distribuição das propiedades na janela
+
+    virtual void Exec()           ->   função para executar na simulação
+*/
+//#ifdef name_of_class
+//    #undef name_of_class
+//#endif
+//#ifdef name_of_type
+//    #undef name_of_type
+//#endif
+//#ifdef name_of_block
+//    #undef name_of_block
+//#endif
+//#ifdef name_of_init
+//    #undef name_of_init
+//#endif
+
+
+
+#define name_of_class  PPCAT(Block, name_of_object)
+#define name_of_type   PPCAT(BLKType_, name_of_object)
+#define name_of_block  STRINGIZE(name_of_object)
+#define name_of_init   PPCAT(name_of_class,_INIT)
+
+//#define name_of_class  BlockFUNGEN
+//#define name_of_type   BLKType_FUNGEN
+//#define name_of_block  "FUNGEN"
+//#define name_of_init   PPCAT(name_of_class,_INIT)
+
+
+
+
+
+
+
 
 namespace BLOCKS{
 
- class BlockSUM : public BLOCK {
+ class name_of_class : public BLOCK {
         private:
             static int count;
             struct LOCAL{
@@ -28,15 +74,16 @@ namespace BLOCKS{
                     sprintf(str,"Val : %f",Properties.val);
                     ImGui::Text(str);
                     ImGui::SliderFloat("##Val",&Properties.val,-100,100,"%f U");
+                    ShowDemoWindowWidgets();
                 ImGui::End();
             }
 
         public:
         
             
-            BlockSUM(){
-                name = "SUM";
-                TYPE = BLKType_Sum;
+            name_of_class(){
+                name = name_of_block;
+                TYPE = name_of_type;
 
                 N_IN  = 2;
                 N_OUT = 1;
@@ -49,8 +96,9 @@ namespace BLOCKS{
 
                 arma::mat auxOut ;
                 auxOut << 0.0f;
-                //IN_ARMA.insert(IN_ARMA.begin(),N_OUT+1,NULL); 
+                
                 OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
+                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::mat);            
             
             }
 
@@ -59,7 +107,7 @@ namespace BLOCKS{
             }
             
             virtual BLOCK * Create(){
-                return new BlockSUM();
+                return new name_of_class();
             }
             
             virtual  void Draw(){
@@ -106,6 +154,7 @@ namespace BLOCKS{
                             draw_list->AddCircleFilled(posOut[i],8,GUI::getColorU32(GUICol_BlockOUTHover));
                             if(g.IO.KeyCtrl)
                                 OUT_ARMA[i].print("OUT : ");
+                                
                         }
                         if(ImGui::ItemHoverable(OUTRec, id)&&ImGui::IsMouseClicked(0)){
                             EVENTS::blockOutLine = this;
@@ -180,9 +229,12 @@ namespace BLOCKS{
             
     };
 
-    void BlockSUM_INIT(){
-        ALL_BLOCKS_GUI[BLKType_Sum] = new BlockSUM();
-        cout << "\n   "<< name_of(BLKType_Sum)  <<": Cargado ";
+    void name_of_init(){
+        //STRINGIZE(PPCAT(name_of_class, _INIT()))
+        ALL_BLOCKS_GUI[name_of_type] = new name_of_class();
+        cout << "\n   "<< STRINGIZE(name_of_class)  <<": Cargado ";
+        //cout<<"\n resultDefine    : "<<STRINGIZE(resultDefine);
+        //cout<<"\n resultDefineAux : "<<STRINGIZE(resultDefineAux);
     }
  
  

@@ -2,17 +2,27 @@
     #include "BLOCKS.h"   
 #endif
 
-#include "BLOCKS/BLOCK_SUM.h" 
+#define DefineBLOCKS BlockSUM_INIT(); \
+                     BlockPOW_INIT(); \
+                     BlockFUNGEN_INIT();
+
+#define name_of_object SUM
+#include "BLOCKS/BLOCK_SUM.h"
+
+#define name_of_object POW
 #include "BLOCKS/BLOCK_POW.h"
+
+#define name_of_object FUNGEN
+#include "BLOCKS/BLOCK_FUNGEN.h"
 
 namespace BLOCKS{
     
     void Init(){
                
         cout << "\n>> Cargando Bloques : ";
-        BlockSUM_INIT();
-        BlockPOW_INIT();
-       
+        
+        DefineBLOCKS;   
+               
     }
 
    
