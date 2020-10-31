@@ -103,7 +103,7 @@ namespace BLOCKS{
             }
 
             virtual void Exec() override{
-                cout<<"\n"<<name;
+                
             }
             
             virtual BLOCK * Create(){

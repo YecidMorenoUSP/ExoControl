@@ -27,15 +27,19 @@ namespace BLOCKS{
                 ImVec2 posBlock_aux ;                
 
             }LOCAL;
+            
+            
             struct Properties{
-                    float val;
+                    const char * itemsComboType [3] = {"SIN","SQUARE","SAWTOOTH"};        
+                    int TypeSelected = 0;
+                    
+                    int type;
             }Properties;
             void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);  
-                    char str[100];
-                    sprintf(str,"Val : %f",Properties.val);
-                    ImGui::Text(str);
-                    ImGui::SliderFloat("##Val",&Properties.val,-100,100,"%f U");
+                  
+                    ImGui::Combo("Type", &Properties.TypeSelected, Properties.itemsComboType, IM_ARRAYSIZE(Properties.itemsComboType));
+                    
                     ShowDemoWindowWidgets();
                 ImGui::End();
             }
@@ -65,7 +69,9 @@ namespace BLOCKS{
             }
 
             virtual void Exec() override{
-                cout<<"\n"<<SIM::EVENTS::time_index;
+                arma::mat time = {SIM::GET_NANOS()};
+                
+                OUT_ARMA[1] =  arma::sin(time*datum::pi*2);
             }
             
             virtual BLOCK * Create(){
@@ -192,12 +198,8 @@ namespace BLOCKS{
     };
 
     void name_of_init(){
-        //STRINGIZE(PPCAT(name_of_class, _INIT()))
         ALL_BLOCKS_GUI[name_of_type] = new name_of_class();
         cout << "\n   "<< STRINGIZE(name_of_class)  <<": Cargado ";
- 
-        //cout<<"\n resultDefine    : "<<STRINGIZE(resultDefine);
-        //cout<<"\n resultDefineAux : "<<STRINGIZE(resultDefineAux);
     }
  
  

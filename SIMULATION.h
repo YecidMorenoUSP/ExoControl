@@ -14,6 +14,10 @@ namespace SIM{
         long time_index;
     };
 
+    float GET_NANOS(){
+        return std::chrono::duration_cast<std::chrono::nanoseconds> (std::chrono::steady_clock::now() - EVENTS::time_begin).count()/1000000000.f;
+    }
+
     void RUN(){
         EVENTS::time_index = 0;
         EVENTS::time_begin = std::chrono::steady_clock::now();
