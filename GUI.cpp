@@ -14,6 +14,7 @@
 
 */
 #define iterateBLOCKS_GUI for (std::vector<BLOCKS::BLOCK*>::iterator it = BLOCKS::ALL_BLOCKS_GUI.begin() + BLKType_COUNT ; it != BLOCKS::ALL_BLOCKS_GUI.end(); it++)
+#define iterateLINES_GUI for  (std::vector<LINES::LINE*>::iterator   it = LINES::ALL_LINES_GUI.begin() ; it != LINES::ALL_LINES_GUI.end(); it++)
 #ifndef GUI_H
     #include "GUI.h"   
 #endif
@@ -150,6 +151,8 @@ namespace GUI{
         colors[GUICol_BlockBorderActive]    = ImVec4(0.96f, 0.83f, 0.04f, 1.00f);
         colors[GUICol_BlockText]   = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
         colors[GUICol_Amarillo]    = ImVec4(0.984f, 0.757f, 0.000f, 1.000f);
+        colors[GUICol_Black]    = ImVec4(0.0f, 0.0f, 0.0f, 1.000f);
+        colors[GUICol_White]     = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
 
     
 
@@ -291,25 +294,56 @@ namespace GUI{
 
     void displayBlocksLogic(){
 
-        if(ImGui::ImageButton((void*)Texture[GUITex_Btn_Run].texture,ImVec2(25,25))){                      
-                //if(exoTask_mutex_end.load()){
-                //    exoTask_mutex_end.store(false);
-                //    thread_1 = std::thread(exoSimulationTask, "----");
-                //}else{
-                //    exoTask_mutex_end.store(true); 
-                //    thread_1.join();
-                //}          
+        ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
+        if(ImGui::ImageButton((void*)Texture[GUITex_Btn_Run+!SIM::EVENTS::SimulationTaskMutex_end.load()].texture,ImVec2(25,25))){                      
+                if(SIM::EVENTS::SimulationTaskMutex_end.load()){
+                    SIM::EVENTS::SimulationTaskMutex_end.store(false);
+                    SIM::EVENTS::SimulationThread_ = std::thread(SIM::RUN);
+                }else{
+                    SIM::EVENTS::SimulationTaskMutex_end.store(true); 
+                    SIM::EVENTS::SimulationThread_.join();
+                }          
         } 
 
         iterateBLOCKS_GUI{
             (*it)->Draw();
         }  
-
+        
         if(BLOCKS::EVENTS::creatingLine >= 1){
             if(BLOCKS::EVENTS::creatingLine == 1) BLOCKS::EVENTS::newLinePosIN = ImGui::GetMousePos();
-            ImDrawList* draw_list = ImGui::GetWindowDrawList();
             draw_list->AddLine(BLOCKS::EVENTS::newLinePosOUT,BLOCKS::EVENTS::newLinePosIN,getColorU32(GUICol_Amarillo),2);
-            if(ImGui::IsMouseReleased(0)) BLOCKS::EVENTS::creatingLine = 0;
+            if(BLOCKS::EVENTS::creatingLine == 2){
+                
+                LINES::LINE * ln = new LINES::LINE();
+                ln->blockIn  = BLOCKS::EVENTS::blockInLine;
+                ln->blockOut = BLOCKS::EVENTS::blockOutLine;
+                ln->posIn    = BLOCKS::EVENTS::posInLineIndex;
+                ln->posOut   = BLOCKS::EVENTS::posOutLineIndex;
+                 
+                
+                LINES::ALL_LINES_GUI.push_back(ln);
+                BLOCKS::EVENTS::creatingLine = 0;
+                BLOCKS::EVENTS::newLinePosIN  = ImVec2(0,0);
+                BLOCKS::EVENTS::newLinePosOUT = ImVec2(0,0);
+            }
+            if(ImGui::IsMouseReleased(0)){
+                BLOCKS::EVENTS::newLinePosIN  = ImVec2(0,0);
+                BLOCKS::EVENTS::newLinePosOUT = ImVec2(0,0);
+                BLOCKS::EVENTS::creatingLine = 0;
+                
+            } 
+        }
+
+        iterateLINES_GUI{
+            //cout<<"\n "<< (*it)->blockIn->posBlock.x;
+            //draw_list->AddLine((*it)->posOut,(*it)->posIn,getColorU32(GUICol_Amarillo),2);
+            bool eraseItem = false;
+            (*it)->Draw(&eraseItem);
+            if(eraseItem){
+                LINES::ALL_LINES_GUI.erase(it);
+                break;
+            }
         }
     }
 }

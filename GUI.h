@@ -10,6 +10,8 @@ enum GUI_Colors_{
     GUICol_BlockBorderActive,
     GUICol_BlockINHover,
     GUICol_BlockOUTHover,
+    GUICol_Black,
+    GUICol_White,
     GUICol_COUNT
 };
 
@@ -39,6 +41,7 @@ namespace GUI{
     void loadTextures(const char * name, GUI_Textures_ index);
 
     ImVec4 colors[GUICol_COUNT];
+    
 
     struct Texture_{
         ImVec2 dimensions;

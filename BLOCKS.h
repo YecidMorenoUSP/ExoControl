@@ -45,21 +45,35 @@ namespace BLOCKS{
 
             float N_IN_size ;
             float N_OUT_size;
-        
+
+            std::vector<arma::mat * > IN_ARMA;
+            std::vector<arma::mat> OUT_ARMA;
+
+            std::vector<ImVec2> posIn;
+            std::vector<ImVec2> posOut;
+
 
         virtual void Draw(){};
         virtual void Exec(){};
         virtual BLOCK * Create(){return NULL;};
-     
-        void Draw2();
+    
     };
 
     namespace EVENTS{
         ImGuiID ActiveBlock;
         BLOCK * LinePoints[2] = {NULL,NULL};
+
         int creatingLine = 0;
+
         ImVec2 newLinePosOUT;
         ImVec2 newLinePosIN;
+
+        int posInLineIndex;
+        int posOutLineIndex;
+
+
+        BLOCKS::BLOCK * blockInLine;
+        BLOCKS::BLOCK * blockOutLine;
     }
     std::vector<BLOCK*> ALL_BLOCKS_GUI(BLKType_COUNT,NULL);
 

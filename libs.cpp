@@ -42,10 +42,12 @@ using namespace arma;
 #include "GUI.h"
 #include "BLOCKS.h"
 #include "LINES.h"
+#include "SIMULATION.h"
 
 #include "GUI.cpp"
 #include "BLOCKS.cpp"
 #include "LINES.cpp"
+#include "SIMULATION.cpp"
 
 
 
