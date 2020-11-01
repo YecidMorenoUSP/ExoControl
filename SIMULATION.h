@@ -12,6 +12,7 @@ namespace SIM{
         std::chrono::steady_clock::time_point time_cur;
 
         long time_index;
+
     };
 
     float GET_NANOS(){
@@ -19,6 +20,17 @@ namespace SIM{
     }
 
     void RUN(){
+
+        EVENTS::time_index = -1;
+        EVENTS::time_begin = std::chrono::steady_clock::now();
+        if(LINES::ALL_LINES_GUI.size()>= 1){
+            iterateLINES_GUI{
+                (*it)->blockOut->Exec();
+            }
+            LINES::ALL_LINES_GUI.back()->blockIn->Exec();
+        
+        }
+
         EVENTS::time_index = 0;
         EVENTS::time_begin = std::chrono::steady_clock::now();
         while (true)

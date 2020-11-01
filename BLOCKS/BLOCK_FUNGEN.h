@@ -15,43 +15,53 @@ namespace BLOCKS{
  class name_of_class : public BLOCK {
         private:
             static int count;
-            struct LOCAL{
-                int double_clicked_count = 0;
-                bool double_clicked = false;
-                bool clicked = false;
-                bool inDrag = false;
-                bool hovered = false;
-                
-                bool firsTime = true;
 
-                ImVec2 posBlock_aux ;                
+            struct VARS{
+                arma::fmat wave = {0.0f}; 
+            }VARS;
 
-            }LOCAL;
-            
-            
             struct Properties{
                     const char * itemsComboType [3] = {"SIN","SQUARE","SAWTOOTH"};        
                     int TypeSelected = 0;
+
+                    int   Rad_or_Hz = 1;
+                    float FrequencyGUI = 1.0f;
+                    float FrequencyW = 1.0f;
+
+                    float Amplitude = 1;
+
+                    char strBuffer[100];                
                     
-                    int type;
             }Properties;
-            void showProperties(){
+
+            virtual void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);  
                   
-                    ImGui::Combo("Type", &Properties.TypeSelected, Properties.itemsComboType, IM_ARRAYSIZE(Properties.itemsComboType));
-                    
-                    ShowDemoWindowWidgets();
+      
+                        ImGui::Combo("Type", &Properties.TypeSelected, Properties.itemsComboType, IM_ARRAYSIZE(Properties.itemsComboType));
+                                        
+                        ImGui::RadioButton("Radians  ", &Properties.Rad_or_Hz, 0); ImGui::SameLine();
+                        ImGui::RadioButton("Hertz ", &Properties.Rad_or_Hz, 1); 
+                        
+                        ImGui::InputFloat( Properties.Rad_or_Hz == 1? "Hz" : "rad/s", &Properties.FrequencyGUI, 0.1f, 10.0f, "%.3f");
+
+                        ImGui::InputFloat("U", &Properties.Amplitude, -5.0f, 5.0f, "%.3f");
+
+                        Properties.FrequencyW = Properties.Rad_or_Hz == 1 ? Properties.FrequencyGUI*2.0f*datum::pi : Properties.FrequencyGUI ;
+                        ShowDemoWindowWidgets();
+
+                 
+                 
                 ImGui::End();
             }
 
         public:
         
-            
             name_of_class(){
                 name = name_of_block;
                 TYPE = name_of_type;
 
-                N_IN  = 2;
+                N_IN  = 0;
                 N_OUT = 1;
                 
                 N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
@@ -60,140 +70,46 @@ namespace BLOCKS{
                 posIn.insert(posIn.begin(),N_IN+1,ImVec2(0,0));
                 posOut.insert(posOut.begin(),N_OUT+1,ImVec2(0,0)); 
 
-                arma::mat auxOut ;
+                arma::fmat auxOut ;
                 auxOut << 0.0f;
                 
                 OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
-                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::mat);            
+                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);            
             
             }
 
             virtual void Exec() override{
-                arma::mat time = {SIM::GET_NANOS()};
+                 if(SIM::EVENTS::time_index == -1)return;
                 
-                OUT_ARMA[1] =  arma::sin(time*datum::pi*2);
+                arma::fmat time = {SIM::GET_NANOS()};
+                arma::fmat sineWave =  Properties.Amplitude * arma::sin(time*Properties.FrequencyW);
+                
+                switch (Properties.TypeSelected)
+                {
+                    case 0:
+                        VARS.wave = sineWave;
+                        break;
+                    case 1:
+                        VARS.wave = arma::sign(sineWave);
+                        break;
+                
+                    default:
+                        VARS.wave += (sineWave.at(0) >= 0) ? SIM::EVENTS::Ts : -SIM::EVENTS::Ts;
+                        break;
+                }
+                
+                OUT_ARMA[1] =  VARS.wave;
+
             }
             
             virtual BLOCK * Create(){
                 return new name_of_class();
             }
             
-            virtual  void Draw(){
-                
-                ImGuiWindow* window = ImGui::GetCurrentWindow();
-                ImGuiContext& g = *GImGui;
-                
-                const  ImGuiID id = window->GetID(name.c_str());
-
-                ImDrawList* draw_list = ImGui::GetWindowDrawList();
-                ImVec2 pos = ImGui::GetWindowPos();          
-
-
-                if(LOCAL.clicked && ImGui::IsMouseReleased(0)) LOCAL.clicked = false;
-                if(LOCAL.double_clicked && ImGui::IsMouseReleased(0)) LOCAL.double_clicked = false;
-                
-                if(LOCAL.firsTime){
-                    for(int i  = 1 ; i <= N_OUT ; i++)
-                        posOut[i] = pos+posBlock  + ImVec2(sizeBlock.x,i*N_OUT_size);
-                    for(int i  = 1 ; i <= N_IN ; i++)
-                        posIn[i] = pos+posBlock + ImVec2(0,i*N_IN_size);
-                    
-                    LOCAL.firsTime = false;
-                }
-                
-                if(LOCAL.hovered && ImGui::IsMouseDragging(0) && LOCAL.clicked){
-                    posBlock =  LOCAL.posBlock_aux + ImGui::GetMouseDragDelta();
-                    for(int i  = 1 ; i <= N_OUT ; i++)
-                        posOut[i] = pos+posBlock  + ImVec2(sizeBlock.x,i*N_OUT_size);
-                    for(int i  = 1 ; i <= N_IN ; i++)
-                        posIn[i] = pos+posBlock + ImVec2(0,i*N_IN_size);
-                }                      
-               
-                ImRect posBlock_Cursor = ImRect(window->DC.CursorPos,window->DC.CursorPos+posBlock+sizeBlock);
-                ImRect posBlock_Global(pos+posBlock,pos+posBlock+sizeBlock);             
-
-                LOCAL.hovered = ImGui::ItemHoverable(posBlock_Global, id);
-
-                if(EVENTS::creatingLine == 0){
-                    for(int i  = 1 ; i <= N_OUT ; i++){
-                        ImRect  OUTRec(posBlock_Global.Min + ImVec2(-6 + sizeBlock.x ,i*N_OUT_size-6),
-                                       posBlock_Global.Min + ImVec2( 6 + sizeBlock.x ,i*N_OUT_size+6));
-                        if(ImGui::ItemHoverable(OUTRec, id)){
-                            draw_list->AddCircleFilled(posOut[i],8,GUI::getColorU32(GUICol_BlockOUTHover));
-                            if(g.IO.KeyCtrl)
-                                OUT_ARMA[i].print("OUT : ");
-                                
-                        }
-                        if(ImGui::ItemHoverable(OUTRec, id)&&ImGui::IsMouseClicked(0)){
-                            EVENTS::blockOutLine = this;
-                            EVENTS::posOutLineIndex = i;
-                            EVENTS::creatingLine = 1;
-                            EVENTS::newLinePosOUT= ImVec2(posBlock_Global.Min.x + sizeBlock.x ,
-                                                          posBlock_Global.Min.y + i*N_OUT_size);
-                        }
-                    }
-                }
-
-                if(EVENTS::creatingLine == 1 ){
-                    for(int i  = 1 ; i <= N_IN ; i++){
-                        ImRect  OUTRec(posBlock_Global.Min + ImVec2(-6  ,i*N_IN_size-6),
-                                       posBlock_Global.Min + ImVec2( 6  ,i*N_IN_size+6));
-                        
-                        if(ImGui::ItemHoverable(OUTRec, id)){
-                            draw_list->AddCircleFilled(posIn[i],8,GUI::getColorU32(GUICol_BlockOUTHover));
-                        }
-                        if(ImGui::ItemHoverable(OUTRec, id)&&(ImGui::IsMouseReleased(0))){
-                            EVENTS::blockInLine = this;
-                            EVENTS::posInLineIndex = i;
-                            EVENTS::creatingLine = 2;
-                            EVENTS::newLinePosIN= ImVec2(posBlock_Global.Min.x  ,
-                                                          posBlock_Global.Min.y + i*N_IN_size);
-                        }
-                    }
-                }
-
-
-                if (!ImGui::ItemAdd(posBlock_Cursor, id)) return;
-
-                
-                const bool double_clicked = (LOCAL.hovered && g.IO.MouseDoubleClicked[0]);
-                const bool clicked = (LOCAL.hovered && g.IO.MouseClicked[0]);
-                                               
-                if(clicked && EVENTS::creatingLine == 0){
-                    LOCAL.inDrag = true;
-                    LOCAL.posBlock_aux = posBlock;
-                    LOCAL.clicked = clicked;
-                }
-
-                if(double_clicked && EVENTS::creatingLine == 0) {
-                    BLOCKS::EVENTS::ActiveBlock = id;
-                    LOCAL.double_clicked_count = 10;
-                    LOCAL.double_clicked = double_clicked;
-                    GUI::EVENTS::showProperties = true;     
-                }
-
-                if(LOCAL.double_clicked_count>=0){
-                    draw_list->AddRect(posBlock_Global.Min-ImVec2(LOCAL.double_clicked_count,LOCAL.double_clicked_count),
-                                        posBlock_Global.Max+ImVec2(LOCAL.double_clicked_count,LOCAL.double_clicked_count),GUI::getColorU32(GUICol_BlockFill),0.0f);
-                    LOCAL.double_clicked_count--;
-                }
-                    
-                if(GUI::EVENTS::showProperties && BLOCKS::EVENTS::ActiveBlock == id)showProperties();           
-                
-                draw_list->AddRectFilled(posBlock_Global.Min,posBlock_Global.Max,GUI::getColorU32(GUICol_BlockFill),0.0f);
-                draw_list->AddRect(posBlock_Global.Min,posBlock_Global.Max,GUI::getColorU32(GUICol_BlockBorder),0.0f);
-                draw_list->AddText(pos+posBlock- ImGui::CalcTextSize(this->name.c_str())*.5f + sizeBlock*.5f ,GUI::getColorU32(GUICol_BlockText),this->name.c_str());          
-                
-                if(BLOCKS::EVENTS::ActiveBlock == id){
-                    draw_list->AddRect(posBlock_Global.Min,posBlock_Global.Max,GUI::getColorU32(GUICol_BlockBorderActive),0.0f);
-                }
-
-                for(int i  = 1 ; i <= N_IN ; i++)
-                    draw_list->AddCircleFilled(posIn[i],5,GUI::getColorU32(GUICol_BlockIN));
-                for(int i  = 1 ; i <= N_OUT ; i++)
-                    draw_list->AddCircleFilled(posOut[i],5,GUI::getColorU32(GUICol_BlockIN));
+            virtual void DrawADD(){
+                //ImDrawList* draw_list = ImGui::GetWindowDrawList();
+                //draw_list->AddCircleFilled(LOCAL.posBlock_Global.Min,5,GUI::getColorU32(GUICol_Amarillo));
             }    
-          
             
     };
 

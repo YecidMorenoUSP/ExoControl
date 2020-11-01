@@ -2,10 +2,12 @@
     #include "BLOCKS.h"   
 #endif
 
-#define DefineBLOCKS BlockSUM_INIT(); \
-                     BlockPOW_INIT(); \
-                     BlockFUNGEN_INIT();
-
+#define DefineBLOCKS BlockSUM_INIT();       \
+                     BlockPOW_INIT();       \
+                     BlockFUNGEN_INIT();    \
+                     BlockSCOPE_INIT();     \
+                     
+                    
 #define name_of_object SUM
 #include "BLOCKS/BLOCK_SUM.h"
 
@@ -14,6 +16,9 @@
 
 #define name_of_object FUNGEN
 #include "BLOCKS/BLOCK_FUNGEN.h"
+
+#define name_of_object SCOPE
+#include "BLOCKS/BLOCK_SCOPE.h"
 
 namespace BLOCKS{
     

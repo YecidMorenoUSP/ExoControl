@@ -246,7 +246,7 @@ namespace GUI{
         
        
         if(EVENTS::showGraphs){
-            ImGui::Begin("Graphs",&EVENTS::showGraphs,0);  
+            ImGui::Begin(" Graphs",&EVENTS::showGraphs,0);  
             ImGui::End();
         }
         if(EVENTS::showGameSerius){
@@ -345,6 +345,8 @@ namespace GUI{
             bool eraseItem = false;
             (*it)->Draw(&eraseItem);
             if(eraseItem){
+                (*it)->blockIn->IN_ARMA.clear();
+                (*it)->blockIn->IN_ARMA.insert((*it)->blockIn->IN_ARMA.begin(),(*it)->blockIn->N_IN+1,new arma::fmat);  
                 LINES::ALL_LINES_GUI.erase(it);
                 break;
             }
