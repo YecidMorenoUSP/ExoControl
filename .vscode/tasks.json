@@ -17,6 +17,7 @@
                     "-I",   "C:\\DEV2\\LIB\\Image",
 
                     "-I",   "\"${env:DEV2}\\LIB\\Armalillo\\include",
+                    
                     "-L",   "\"${env:DEV2}\\LIB\\Armalillo\\lib",
                     
                     "-L",    "C:\\DEV2\\LIB\\SDL2\\lib",
@@ -28,7 +29,6 @@
                     "-l",     "shell32",
                     "-l",     "blas_win64_MT",
                     "-l",     "lapack_win64_MT"
-                      
 
                     ], 
             "group": {

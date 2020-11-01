@@ -10,6 +10,7 @@
 #include <imgui_plot2.hpp>
 #include <imgui_plot2.cpp>
 
+
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_sdl.cpp>
 #include <imgui_impl_opengl2.h>
@@ -29,6 +30,7 @@
 #include <string>
 #include <atomic>
 #include <chrono>
+#include <vector>
 
 #include <imgui_demo.cpp>
 
@@ -37,12 +39,32 @@ using namespace arma;
 
 //#define DEV_MODE 
 #define name_of(name) #name
+#define PPCAT_NX(A, B) A ## B
+#define PPCAT(A, B) PPCAT_NX(A, B)
+
+#define COMMAND(NAME)  { #NAME, NAME ## _command }
+
+#define PPCAT_FUNC_NX(A, B) #A _INIT(); #B 
+#define PPCAT_FUNC(A, B) PPCAT_FUNC_NX(A, B)
+
+#define STRINGIZE_NX(A) #A
+#define STRINGIZE(A) STRINGIZE_NX(A)
+#define PPCAT_INIT(A) PPCAT(A,_INIT)
+
+#define initWithPyC(A) PPCAT( A, _INIT(); )
+
+
+
 
 #include "GUI.h"
 #include "BLOCKS.h"
+#include "LINES.h"
+#include "SIMULATION.h"
 
 #include "GUI.cpp"
 #include "BLOCKS.cpp"
+#include "LINES.cpp"
+#include "SIMULATION.cpp"
 
 
 

@@ -1,9 +1,20 @@
 #define GUI_H
 
+#define iterateBLOCKS_GUI for (std::vector<BLOCKS::BLOCK*>::iterator it = BLOCKS::ALL_BLOCKS_GUI.begin() + BLKType_COUNT ; it != BLOCKS::ALL_BLOCKS_GUI.end(); it++)
+#define iterateLINES_GUI for  (std::vector<LINES::LINE*>::iterator   it = LINES::ALL_LINES_GUI.begin() ; it != LINES::ALL_LINES_GUI.end(); it++)
+
 enum GUI_Colors_{
     GUICol_BlockFill,
     GUICol_BlockText,
     GUICol_Amarillo,
+    GUICol_BlockBorder,
+    GUICol_BlockIN,
+    GUICol_BlockOUT,
+    GUICol_BlockBorderActive,
+    GUICol_BlockINHover,
+    GUICol_BlockOUTHover,
+    GUICol_Black,
+    GUICol_White,
     GUICol_COUNT
 };
 
@@ -30,12 +41,17 @@ enum GUI_Textures_{
 namespace GUI{
      
     void StyleApp();
+    void loadTextures(const char * name, GUI_Textures_ index);
 
     ImVec4 colors[GUICol_COUNT];
+    
 
-    ImVec2 dimensions[GUITexture_COUNT] ;
-    ImVec2 dimensionsInit[GUITexture_COUNT] ;
-    GLuint textures [GUITexture_COUNT]= {0};
+    struct Texture_{
+        ImVec2 dimensions;
+        GLuint texture;    
+    };
+
+    Texture_ Texture[GUITexture_COUNT];
 
     namespace EVENTS{
          
@@ -52,7 +68,7 @@ namespace GUI{
 
     void init();
 
-    void loadTextures();
+    
 
     void createDocking();
 

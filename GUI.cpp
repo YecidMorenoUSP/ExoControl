@@ -24,13 +24,15 @@
         
         namespace EVENTS{
             bool showStyleEditor   = false;
+            bool showExamples      = false;
             bool showBlockTest     = false;
             bool showDevTools      = true;
         }
 
-        void showBlocksGeginEnd(int A , int B ){
-            for(int i = A ; i < B; i++)
-                cout<<BLOCKS::ALL_BLOCKS[i].name<<"\t";   
+        void showAllConsole(){
+            cout<<endl;
+            for (std::vector<BLOCKS::BLOCK*>::iterator it = BLOCKS::ALL_BLOCKS_GUI.begin() + BLKType_COUNT ; it != BLOCKS::ALL_BLOCKS_GUI.end(); it++)
+                cout<<(*it)->name<<"\t";
             cout<<endl;
         }
         
@@ -41,21 +43,21 @@
             ImGui::Checkbox("DEV >> Style Editor",&EVENTS::showStyleEditor);
             if(EVENTS::showStyleEditor)ImGui::ShowStyleEditor();
 
-            ImGui::Checkbox("DEV >> Block Test",&EVENTS::showBlockTest);
-            //if(EVENTS::showBlockTest)drawBlockTest();
+
+            ImGui::Checkbox("DEV >> Demo Window",&EVENTS::showExamples);
+            if(EVENTS::showExamples) ImGui::ShowDemoWindow();
 
             if(ImGui::Button("DEV >> Create BLock")){             
-                BLOCKS::AddBLOCK(BLKType_Default);   
-                showBlocksGeginEnd(0,10);
+                BLOCKS::AddBLOCK(BLKType_SUM);   
+                //showBlocksBeginEnd(0,10);
             }
   
             static char blockName [100] = {0};
             ImGui::InputText("##NaneBlock",blockName,IM_ARRAYSIZE(blockName),0);
             if(ImGui::Button("DEV >> Delete BLock")){   
-                ImGuiWindow* window = ImGui::GetCurrentWindow();          
-                BLOCKS::DROOPBLOCK(window->GetID(blockName));
+       
+                BLOCKS::DROOPBLOCK(BLOCKS::getIDBLOCK(blockName));
                 
-                showBlocksGeginEnd(0,10);
             }
         }
     } 
@@ -66,7 +68,22 @@
 namespace GUI{
 
     void init(){
-        loadTextures();
+        cout << "\n>> Cargando Texturas : ";
+        loadTextures("Textures/GUITex_Default.png",GUITex_Default);
+        loadTextures("Textures/GUITex_Exo1.png",GUITex_Exo1);
+        loadTextures("Textures/GUITex_Exo2.png",GUITex_Exo2);
+        loadTextures("Textures/GUITex_Exo3.png",GUITex_Exo3);
+        loadTextures("Textures/GUITex_Exo_blur_1.png",GUITex_Exo_blur_1);
+        loadTextures("Textures/GUITex_Exo_blur_2.png",GUITex_Exo_blur_2);
+        loadTextures("Textures/GUITex_Exo_blur_3.png",GUITex_Exo_blur_3);
+        loadTextures("Textures/GUITex_Xsens_Off.png",GUITex_Xsens_Off);
+        loadTextures("Textures/GUITex_Xsens_On.png",GUITex_Xsens_On);
+        loadTextures("Textures/GUITex_Delsys_Off.png",GUITex_Delsys_Off);
+        loadTextures("Textures/GUITex_Delsys_On.png",GUITex_Delsys_On);
+        loadTextures("Textures/GUITex_Btn_Run.png",GUITex_Btn_Run);
+        loadTextures("Textures/GUITex_Btn_Pause.png",GUITex_Btn_Pause);
+        loadTextures("Textures/GUITex_REROB.png",GUITex_REROB);
+        cout << "\n   Texturas cargadas ";
     }
 
     void StyleApp(){
@@ -126,35 +143,36 @@ namespace GUI{
         colors_[ImGuiCol_NavWindowingDimBg]      = ImVec4(0.20f, 0.20f, 0.20f, 0.20f);
         colors_[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
     
-        colors[GUICol_BlockFill] = ImVec4(0.260f, 0.590f, 0.980f, 1.00f);
-        colors[GUICol_BlockText] = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
-        colors[GUICol_Amarillo] =  ImVec4(0.984f, 0.757f, 0.000f, 1.000f);
+        colors[GUICol_BlockFill]   = ImVec4(0.260f, 0.590f, 0.980f, 1.00f);
+        colors[GUICol_BlockBorder] = ImVec4(0.9f, 0.9f, 0.9f, 1.00f);
+        colors[GUICol_BlockIN]     = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+        colors[GUICol_BlockOUT]    = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+        colors[GUICol_BlockINHover]    = ImVec4(0.0f, 0.0f, 0.0f, 1.000f);
+        colors[GUICol_BlockOUTHover]    = ImVec4(0.0f, 0.0f, 0.0f, 1.000f);
+        colors[GUICol_BlockBorderActive]    = ImVec4(0.96f, 0.83f, 0.04f, 1.00f);
+        colors[GUICol_BlockText]   = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+        colors[GUICol_Amarillo]    = ImVec4(0.984f, 0.757f, 0.000f, 1.000f);
+        colors[GUICol_Black]    = ImVec4(0.0f, 0.0f, 0.0f, 1.000f);
+        colors[GUICol_White]     = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+
+    
 
     }
-
 
     ImU32 getColorU32(int indexColor){
         return ImGui::GetColorU32(colors[indexColor]);
     }
 
-    void loadTextures(){
-        
+    void loadTextures(const char * name, GUI_Textures_ index){
         int aux[2] = {0,0};
         bool ret;
-        char buffer[40]={0};
-        for(int i = 0 ; i < GUITexture_COUNT ; i++){
-            
-            //sprintf(buffer,"Textures/texture%d.png",i);
-            //ret = LoadTextureFromFile(buffer, &textures[i], &aux[0],&aux[1]);
-            //if(!ret) continue;
-            //GE::dimensions[i] = ImVec2((int)aux[0],(int)aux[1]);
-            //GE::dimensionsInit[i] = ImVec2((int)aux[0],(int)aux[1]);
-            //IM_ASSERT(ret);
-
-            //cout<<;
-            
-        }
-
+        ret = LoadTextureFromFile(name, &Texture[index].texture, &aux[0],&aux[1]);
+        if(!ret){
+            cout << "\n   Textura  "<<name<<" no encontrada";
+            Texture[index] = Texture[GUITex_Default];
+            return;}
+        Texture[index].dimensions = ImVec2((int)aux[0],(int)aux[1]);
+        IM_ASSERT(ret);
     }
 
     void createDocking(){
@@ -228,7 +246,7 @@ namespace GUI{
         
        
         if(EVENTS::showGraphs){
-            ImGui::Begin("Graphs",&EVENTS::showGraphs,0);  
+            ImGui::Begin(" Graphs",&EVENTS::showGraphs,0);  
             ImGui::End();
         }
         if(EVENTS::showGameSerius){
@@ -237,7 +255,7 @@ namespace GUI{
         }
         if(EVENTS::showBlocksProgramming){
             ImGui::Begin("Block logic",&EVENTS::showBlocksProgramming,0); 
-
+            displayBlocksLogic();
             ImGui::End();
         }
         if(EVENTS::showRealTime){
@@ -266,16 +284,73 @@ namespace GUI{
 
     void displayBlocksGUI(){
           
-            for(int i = 1 ; i < BLKType_COUNT ; i++){
-                if(ImGui::Button(BLOCKS::ALL_BLOCKS[i].name.c_str(),ImVec2(100,50))){
-                    BLOCKS::AddBLOCK((TypeBlock_)i);   
-                    showBlocksGeginEnd(0,10);
-                }                
+            for (int i = 1 ; i < BLKType_COUNT ; i++){
+                if(ImGui::Button(BLOCKS::ALL_BLOCKS_GUI[i]->name.c_str(),ImVec2(100,50))){
+                    BLOCKS::AddBLOCK((TypeBlock_)i);                      
+                }  
+                
             }
+
     }
 
     void displayBlocksLogic(){
 
+        ImDrawList* draw_list = ImGui::GetWindowDrawList();
+
+        if(ImGui::ImageButton((void*)Texture[GUITex_Btn_Run+!SIM::EVENTS::SimulationTaskMutex_end.load()].texture,ImVec2(25,25))){                      
+                if(SIM::EVENTS::SimulationTaskMutex_end.load()){
+                    SIM::EVENTS::SimulationTaskMutex_end.store(false);
+                    SIM::EVENTS::SimulationThread_ = std::thread(SIM::RUN);
+                }else{
+                    SIM::EVENTS::SimulationTaskMutex_end.store(true); 
+                    SIM::EVENTS::SimulationThread_.join();
+                }          
+        } 
+
+        iterateBLOCKS_GUI{
+            //cout<<"\n "<<(*(*it)->IN_ARMA[2])<<"  ";
+            (*it)->Draw();
+        }  
+        
+        if(BLOCKS::EVENTS::creatingLine >= 1){
+            if(BLOCKS::EVENTS::creatingLine == 1) BLOCKS::EVENTS::newLinePosIN = ImGui::GetMousePos();
+            draw_list->AddLine(BLOCKS::EVENTS::newLinePosOUT,BLOCKS::EVENTS::newLinePosIN,getColorU32(GUICol_Amarillo),2);
+            if(BLOCKS::EVENTS::creatingLine == 2){
+                
+                LINES::LINE * ln = new LINES::LINE();
+
+                ln->blockIn  = BLOCKS::EVENTS::blockInLine;
+                ln->blockOut = BLOCKS::EVENTS::blockOutLine;
+                ln->posIn    = BLOCKS::EVENTS::posInLineIndex;
+                ln->posOut   = BLOCKS::EVENTS::posOutLineIndex;
+                 
+                ln->blockIn->IN_ARMA[BLOCKS::EVENTS::posInLineIndex] = &(ln->blockOut->OUT_ARMA[BLOCKS::EVENTS::posOutLineIndex]);
+                
+                LINES::ALL_LINES_GUI.push_back(ln);
+                BLOCKS::EVENTS::creatingLine = 0;
+                BLOCKS::EVENTS::newLinePosIN  = ImVec2(0,0);
+                BLOCKS::EVENTS::newLinePosOUT = ImVec2(0,0);
+            }
+            if(ImGui::IsMouseReleased(0)){
+                BLOCKS::EVENTS::newLinePosIN  = ImVec2(0,0);
+                BLOCKS::EVENTS::newLinePosOUT = ImVec2(0,0);
+                BLOCKS::EVENTS::creatingLine = 0;
+                
+            } 
+        }
+
+        iterateLINES_GUI{
+            //cout<<"\n "<< (*it)->blockIn->posBlock.x;
+            //draw_list->AddLine((*it)->posOut,(*it)->posIn,getColorU32(GUICol_Amarillo),2);
+            bool eraseItem = false;
+            (*it)->Draw(&eraseItem);
+            if(eraseItem){
+                (*it)->blockIn->IN_ARMA.clear();
+                (*it)->blockIn->IN_ARMA.insert((*it)->blockIn->IN_ARMA.begin(),(*it)->blockIn->N_IN+1,new arma::fmat);  
+                LINES::ALL_LINES_GUI.erase(it);
+                break;
+            }
+        }
     }
 }
 
