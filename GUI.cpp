@@ -67,6 +67,31 @@
 
 namespace GUI{
 
+    namespace MODAL_WARNING{
+        void setModal(std::string Title,std::string Body,std::string Ask){
+            MODAL_WARNING::Title = Title;
+            MODAL_WARNING::Body  = Body;
+            MODAL_WARNING::Ask   = Ask;
+            MODAL_WARNING::show = true;
+        }
+        void showModal(){
+            if(!MODAL_WARNING::show)return;
+            ImGui::OpenPopup(Title.c_str());
+            ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+            ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+            if (ImGui::BeginPopupModal(Title.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize))
+            {
+                ImGui::Text(Body.c_str());
+                ImGui::Separator();
+
+                if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); show = false; }
+                ImGui::EndPopup();
+            }
+        }
+    };
+
+
     void init(){
         cout << "\n>> Cargando Texturas : ";
         loadTextures("Textures/GUITex_Default.png",GUITex_Default);
@@ -154,6 +179,7 @@ namespace GUI{
         colors[GUICol_Amarillo]    = ImVec4(0.984f, 0.757f, 0.000f, 1.000f);
         colors[GUICol_Black]    = ImVec4(0.0f, 0.0f, 0.0f, 1.000f);
         colors[GUICol_White]     = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+        colors[GUICol_Green]     = ImVec4(.20f, 1.0f, .20f, 1.00f);
 
     
 
@@ -244,6 +270,7 @@ namespace GUI{
 
         createDocking();
         
+        MODAL_WARNING::showModal();
        
         if(EVENTS::showGraphs){
             ImGui::Begin(" Graphs",&EVENTS::showGraphs,0);  
@@ -299,6 +326,7 @@ namespace GUI{
 
         if(ImGui::ImageButton((void*)Texture[GUITex_Btn_Run+!SIM::EVENTS::SimulationTaskMutex_end.load()].texture,ImVec2(25,25))){                      
                 if(SIM::EVENTS::SimulationTaskMutex_end.load()){
+                    if(SIM::EVENTS::SimulationThread_.joinable())SIM::EVENTS::SimulationThread_.join();
                     SIM::EVENTS::SimulationTaskMutex_end.store(false);
                     SIM::EVENTS::SimulationThread_ = std::thread(SIM::RUN);
                 }else{
@@ -352,5 +380,7 @@ namespace GUI{
             }
         }
     }
+
+    
 }
 

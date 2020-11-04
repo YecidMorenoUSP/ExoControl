@@ -54,9 +54,12 @@ namespace BLOCKS{
             }
 
             virtual void Exec() override{
-                 if(SIM::EVENTS::time_index == -1)return;
-                //IN_ARMA[1];
-                //OUT_ARMA[1] =  VARS.val;
+                if(SIM::EVENTS::time_index == FIRST_LAP){
+                     return;
+                 }
+                 if(SIM::EVENTS::time_index == LAST_LAP){
+                     return;
+                 }
             }
             
             virtual BLOCK * Create(){

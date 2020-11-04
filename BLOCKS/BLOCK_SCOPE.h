@@ -74,7 +74,7 @@ namespace BLOCKS{
 
             virtual void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);  
-
+                    
                     int aux_N_IN = 0;
                     float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
                     ImGui::PushButtonRepeat(true);

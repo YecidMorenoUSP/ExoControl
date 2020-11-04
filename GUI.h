@@ -15,6 +15,7 @@ enum GUI_Colors_{
     GUICol_BlockOUTHover,
     GUICol_Black,
     GUICol_White,
+    GUICol_Green,
     GUICol_COUNT
 };
 
@@ -44,7 +45,14 @@ namespace GUI{
     void loadTextures(const char * name, GUI_Textures_ index);
 
     ImVec4 colors[GUICol_COUNT];
-    
+    namespace MODAL_WARNING{
+        bool show = false;
+        std::string Title = "Title";
+        std::string Body  = "Body";
+        std::string Ask   = "Ask";
+        void setModal(std::string Title = "",std::string Body = "",std::string Ask = "");
+        void showModal();
+    }
 
     struct Texture_{
         ImVec2 dimensions;

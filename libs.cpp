@@ -10,7 +10,6 @@
 #include <imgui_plot2.hpp>
 #include <imgui_plot2.cpp>
 
-
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_sdl.cpp>
 #include <imgui_impl_opengl2.h>
@@ -19,7 +18,9 @@
 #include <SDL_opengl.h>
 #include <math.h>
 #include <stdio.h>
-#include <windows.h>
+//#include <windows.h>
+
+
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -31,6 +32,7 @@
 #include <atomic>
 #include <chrono>
 #include <vector>
+
 
 #include <imgui_demo.cpp>
 
@@ -54,7 +56,9 @@ using namespace arma;
 #define initWithPyC(A) PPCAT( A, _INIT(); )
 
 
+#include "SerialPort.h"
 
+#include "GLOBAL.h"
 
 #include "GUI.h"
 #include "BLOCKS.h"

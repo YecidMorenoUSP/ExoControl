@@ -6,6 +6,8 @@
                      BlockPOW_INIT();       \
                      BlockFUNGEN_INIT();    \
                      BlockSCOPE_INIT();     \
+                     BlockDELSYS_INIT();     \
+                     BlockREHAMOVE_INIT();     \
                      
                     
 #define name_of_object SUM
@@ -19,6 +21,12 @@
 
 #define name_of_object SCOPE
 #include "BLOCKS/BLOCK_SCOPE.h"
+
+#define name_of_object DELSYS
+#include "BLOCKS/BLOCK_DELSYS.h"
+
+#define name_of_object REHAMOVE
+#include "BLOCKS/BLOCK_REHAMOVE.h"
 
 namespace BLOCKS{
     

@@ -7,6 +7,8 @@ enum TypeBlock_{
     BLKType_POW,
     BLKType_FUNGEN,
     BLKType_SCOPE,
+    BLKType_DELSYS,
+    BLKType_REHAMOVE,
     BLKType_COUNT
 };
 
