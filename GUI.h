@@ -92,4 +92,6 @@ namespace GUI{
 
     void displayBlocksLogic();
 
+    void displayMenu();
+
 }

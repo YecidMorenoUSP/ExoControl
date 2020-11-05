@@ -246,6 +246,11 @@ namespace BLOCKS{
             virtual void Exec() override{
                  if(SIM::EVENTS::time_index == FIRST_LAP){
                      StartCaptureEMG();
+                     if(!Properties.Connect){
+                        LOCAL.double_clicked_count = 50;
+                        GUI::MODAL_WARNING::setModal("SIMULATION FAILED","DELSYS : Not connected","");
+                        SIM::EVENTS::SimulationTaskMutex_end.store(true); 
+                     }
                      return;
                  }
                  if(SIM::EVENTS::time_index == LAST_LAP){

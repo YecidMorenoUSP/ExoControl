@@ -91,7 +91,6 @@ namespace GUI{
         }
     };
 
-
     void init(){
         cout << "\n>> Cargando Texturas : ";
         loadTextures("Textures/GUITex_Default.png",GUITex_Default);
@@ -297,8 +296,7 @@ namespace GUI{
             ImGui::End();
         }
         ImGui::Begin("Menu");                     
-            ImGui::Text("FPS : %.1f", ImGui::GetIO().Framerate);
-            if(ImGui::Button("Exit")) EVENTS::DONE = true;
+            displayMenu();
         ImGui::End();
         
 
@@ -381,6 +379,28 @@ namespace GUI{
         }
     }
 
+    void displayMenu(){
+        ImGuiWindow* windowCur = ImGui::GetCurrentWindow();          
+        ImVec2 cur = windowCur->DC.CursorPos;
+
+        ImGui::Text("FPS : %.1f", ImGui::GetIO().Framerate);
+        if(ImGui::Button("Exit")) EVENTS::DONE = true;
+        
+        ImGui::SetCursorPos(windowCur->Size - ImVec2(windowCur->Size.x/2.f+50,170));
+        ImGui::Image((void*)GUI::Texture[GUITex_REROB].texture,ImVec2(100,100));
+
+        char txtEval[500];
+        sprintf(txtEval,"José Yecid Moreno Villamizar");   
+        ImVec2 sizeAux = ImGui::CalcTextSize(txtEval);
+        ImGui::SetCursorPos(windowCur->Size - ImVec2(windowCur->Size.x/2.f+sizeAux.x/2.f,sizeAux.y + 30));
+        ImGui::Text(txtEval);
+
+        sprintf(txtEval,"N° USP : 11195127");
+        sizeAux = ImGui::CalcTextSize(txtEval);
+        ImGui::SetCursorPos(windowCur->Size - ImVec2(windowCur->Size.x/2.f+sizeAux.x/2.f,sizeAux.y + 10));
+        ImGui::Text(txtEval);
+
+    }
     
 }
 

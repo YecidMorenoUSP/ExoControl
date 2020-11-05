@@ -8,6 +8,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
         return -1; 
     }
 
+
            
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -114,7 +115,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
         
         SDL_GL_SwapWindow(window);
         
-        Sleep(50) ;
+        Sleep(50);
     }
 
     // Cleanup
