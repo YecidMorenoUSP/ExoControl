@@ -16,9 +16,9 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-    SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI );
-    //window_flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-    //window_flags |= SDL_WINDOW_FULLSCREEN;
+    SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | 0 );
+    //window_flags |= ((SDL_WindowFlags)SDL_WINDOW_FULLSCREEN_DESKTOP);
+    //window_flags |= (SDL_WindowFlags)SDL_WINDOW_FULLSCREEN;
 
     SDL_Window* window = SDL_CreateWindow("AppExo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);

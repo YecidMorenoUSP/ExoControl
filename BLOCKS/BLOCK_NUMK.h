@@ -21,16 +21,12 @@ namespace BLOCKS{
             }VARS;
 
             struct Properties{
-                arma::fmat K = {0.0f};
+                arma::fmat K = {1.0f};
             }Properties;
 
             virtual void showProperties(){
-                ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);  
-                  
-        
+                ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);            
                     ImGui::InputFloat( "Value", &(Properties.K[0]), -10.0f, 10.0f, "%.3f");
-
-                    ShowDemoWindowWidgets();
                 ImGui::End();
             }
 
@@ -40,7 +36,7 @@ namespace BLOCKS{
                 name = name_of_block;
                 TYPE = name_of_type;
 
-                N_IN  = 2;
+                N_IN  = 0;
                 N_OUT = 1;
                 
                 N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
@@ -58,9 +54,7 @@ namespace BLOCKS{
             }
 
             virtual void Exec() override{
-                if((*IN_ARMA[2]).size()>=1)
-                     OUT_ARMA[1] = (*IN_ARMA[1]) + Properties.K + (*IN_ARMA[2]);
-                else OUT_ARMA[1] = (*IN_ARMA[1]) + Properties.K;
+                    OUT_ARMA[1] =  Properties.K;
             }
             
             virtual BLOCK * Create(){

@@ -4,7 +4,9 @@
 enum TypeBlock_{
     BLKType_Default,
     BLKType_SUM,
+    BLKType_MULTI,
     BLKType_POW,
+    BLKType_NUMK,
     BLKType_FUNGEN,
     BLKType_SCOPE,
     BLKType_DELSYS,
@@ -56,7 +58,7 @@ namespace BLOCKS{
             bool ACTIVE  = false;
 
             ImVec2 posBlock  = ImVec2(10,10);
-            ImVec2 sizeBlock = ImVec2(100,50);
+            ImVec2 sizeBlock = ImVec2(80,40);
             
             struct Properties;
 

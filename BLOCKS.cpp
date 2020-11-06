@@ -4,6 +4,8 @@
 
 #define DefineBLOCKS BlockSUM_INIT();       \
                      BlockPOW_INIT();       \
+                     BlockMULTI_INIT();       \
+                     BlockNUMK_INIT();       \
                      BlockFUNGEN_INIT();    \
                      BlockSCOPE_INIT();     \
                      BlockDELSYS_INIT();     \
@@ -15,6 +17,9 @@
 
 #define name_of_object POW
 #include "BLOCKS/BLOCK_POW.h"
+
+#define name_of_object MULTI
+#include "BLOCKS/BLOCK_MULTI.h"
 
 #define name_of_object FUNGEN
 #include "BLOCKS/BLOCK_FUNGEN.h"
@@ -28,6 +33,10 @@
 #define name_of_object REHAMOVE
 #include "BLOCKS/BLOCK_REHAMOVE.h"
 
+#define name_of_object NUMK
+#include "BLOCKS/BLOCK_NUMK.h"
+
+
 namespace BLOCKS{
     
     void Init(){
@@ -37,7 +46,6 @@ namespace BLOCKS{
         DefineBLOCKS;   
                
     }
-
    
     void AddBLOCK(TypeBlock_ TypeBlock){
         

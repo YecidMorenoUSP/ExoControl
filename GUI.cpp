@@ -17,7 +17,7 @@
 #ifndef GUI_H
     #include "GUI.h"   
 #endif
-#define DEV_MODE
+//#define DEV_MODE
 #ifdef DEV_MODE
 
     namespace GUI{

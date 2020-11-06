@@ -18,6 +18,7 @@ namespace BLOCKS{
 
       
             struct VARS{
+                bool firstTime = true;
                 arma::fmat vals ;
                 arma::fmat time ;
 
@@ -41,7 +42,7 @@ namespace BLOCKS{
 
                 std::string windowName = "Graphs";
 
-                bool maximized = false;
+                bool maximized = true;
 
             }Properties;
 
@@ -90,7 +91,6 @@ namespace BLOCKS{
                     ImGui::Text("%d", N_IN);
 
                     ImGui::InputText(("Window"), (char*)Properties.windowName.c_str() , size_t(Properties.windowName.c_str()));
-                    
                     ImGui::Checkbox("Maximized",&Properties.maximized);
 
                     for(int i = 0 ; i < N_IN ; i++){
@@ -124,7 +124,7 @@ namespace BLOCKS{
                 N_OUT = 0;
                 
                 updateN_IN();
-             
+                         
             }
 
             virtual void Exec() override{
@@ -152,6 +152,11 @@ namespace BLOCKS{
             
             virtual void DrawADD(){
                 
+                if(VARS.firstTime){
+                    Properties.windowName = name;
+                    VARS.firstTime = false;
+                }
+
                 ImDrawList* draw_list = ImGui::GetWindowDrawList();
                 
                 for(int i  = 1 ; i <= N_IN ; i++)

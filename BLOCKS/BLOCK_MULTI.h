@@ -21,7 +21,7 @@ namespace BLOCKS{
             }VARS;
 
             struct Properties{
-                arma::fmat K = {0.0f};
+                arma::fmat K = {1.0f};
             }Properties;
 
             virtual void showProperties(){
@@ -59,8 +59,8 @@ namespace BLOCKS{
 
             virtual void Exec() override{
                 if((*IN_ARMA[2]).size()>=1)
-                     OUT_ARMA[1] = (*IN_ARMA[1]) + Properties.K + (*IN_ARMA[2]);
-                else OUT_ARMA[1] = (*IN_ARMA[1]) + Properties.K;
+                     OUT_ARMA[1] = (*IN_ARMA[1]) * Properties.K * (*IN_ARMA[2]);
+                else OUT_ARMA[1] = (*IN_ARMA[1]) * Properties.K;
             }
             
             virtual BLOCK * Create(){

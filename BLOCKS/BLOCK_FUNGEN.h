@@ -94,7 +94,9 @@ namespace BLOCKS{
                         break;
                 
                     default:
-                        VARS.wave += (sineWave.at(0) >= 0) ? SIM::EVENTS::Ts : -SIM::EVENTS::Ts;
+                        //VARS.wave += (sineWave.at(0) >= 0) ? SIM::EVENTS::Ts : -SIM::EVENTS::Ts;
+                        VARS.wave = asin(sineWave)*2.0f/datum::pi *  Properties.Amplitude;
+                        
                         break;
                 }
                 
