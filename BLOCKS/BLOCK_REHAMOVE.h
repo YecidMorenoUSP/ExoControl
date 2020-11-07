@@ -17,7 +17,10 @@ namespace BLOCKS{
             static int count;
             RehamoveDevice * FES;
             struct VARS{
-                
+                ImVec4 colors[4] = {ImVec4(0.06f, 0.59f, 0.87f, 1.00f),
+                                    ImVec4(1.00f, 0.46f, 0.00f, 1.00f),
+                                    ImVec4(0.31f, 0.94f, 0.11f, 1.00f),      
+                                    ImVec4(0.62f, 0.10f, 1.00f, 1.00f)};
             }VARS;
 
             struct Properties{
@@ -40,6 +43,8 @@ namespace BLOCKS{
                 N_IN  = 4;
                 N_OUT = 0;
                 
+                sizeBlock = ImVec2(90,60);
+
                 N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
                 N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
 
@@ -78,8 +83,10 @@ namespace BLOCKS{
             }
             
             virtual void DrawADD(){
-                //ImDrawList* draw_list = ImGui::GetWindowDrawList();
-                //draw_list->AddCircleFilled(LOCAL.posBlock_Global.Min,5,GUI::getColorU32(GUICol_Amarillo));
+                ImDrawList* draw_list = ImGui::GetWindowDrawList();
+                for(int i  = 1 ; i <= N_IN ; i++)
+                    draw_list->AddCircleFilled(posIn[i],5,ImGui::GetColorU32(VARS.colors[i-1]));
+                
             }    
             
     };
