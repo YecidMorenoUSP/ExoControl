@@ -4,6 +4,7 @@
 
 #define DefineBLOCKS BlockSUM_INIT();       \
                      BlockPOW_INIT();       \
+                     BlockABS_INIT();       \
                      BlockMULTI_INIT();       \
                      BlockNUMK_INIT();       \
                      BlockFUNGEN_INIT();    \
@@ -35,6 +36,9 @@
 
 #define name_of_object NUMK
 #include "BLOCKS/BLOCK_NUMK.h"
+
+#define name_of_object ABS
+#include "BLOCKS/BLOCK_ABS.h"
 
 
 namespace BLOCKS{

@@ -6,7 +6,8 @@
 namespace SIM{
     
     namespace EVENTS{
-        float Ts = 5e-3;
+        //float Ts = 1.0f/2000.0f;
+        float Ts = 1.0f/200.0f;
         
         std::atomic<bool> SimulationTaskMutex_end(true);
 

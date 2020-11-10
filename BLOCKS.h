@@ -11,6 +11,7 @@ enum TypeBlock_{
     BLKType_SCOPE,
     BLKType_DELSYS,
     BLKType_REHAMOVE,
+    BLKType_ABS,
     BLKType_COUNT
 };
 
