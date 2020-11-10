@@ -90,7 +90,7 @@ namespace BLOCKS{
                         VARS.wave = sineWave;
                         break;
                     case 1:
-                        VARS.wave = arma::sign(sineWave);
+                        VARS.wave = arma::sign(sineWave) * Properties.Amplitude;
                         break;
                 
                     default:

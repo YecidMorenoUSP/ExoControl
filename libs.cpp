@@ -56,7 +56,6 @@ using namespace arma;
 #define initWithPyC(A) PPCAT( A, _INIT(); )
 
 
-#include "SerialPort.h"
 
 #include "GLOBAL.h"
 
