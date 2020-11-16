@@ -28,7 +28,13 @@ namespace BLOCKS{
                     float FrequencyGUI = 1.0f;
                     float FrequencyW = 1.0f;
 
+                    float PhaseGUI = 0;
+                    float PhaseW = 0;
+                    
                     float Amplitude = 1;
+
+                    float Offset = 0;
+                    
 
                     char strBuffer[100];                
                     
@@ -43,11 +49,14 @@ namespace BLOCKS{
                         ImGui::RadioButton("Radians  ", &Properties.Rad_or_Hz, 0); ImGui::SameLine();
                         ImGui::RadioButton("Hertz ", &Properties.Rad_or_Hz, 1); 
                         
+                        ImGui::InputFloat("Phase" , &Properties.PhaseGUI, -10.0f, 10.0f, "%.3f");
+                        ImGui::InputFloat("Offset", &Properties.Offset  , -10.0f, 10.0f, "%.3f");
                         ImGui::InputFloat( Properties.Rad_or_Hz == 1? "Hz" : "rad/s", &Properties.FrequencyGUI, 0.1f, 10.0f, "%.3f");
 
                         ImGui::InputFloat("U", &Properties.Amplitude, -5.0f, 5.0f, "%.3f");
 
                         Properties.FrequencyW = Properties.Rad_or_Hz == 1 ? Properties.FrequencyGUI*2.0f*datum::pi : Properties.FrequencyGUI ;
+                        Properties.PhaseW = Properties.Rad_or_Hz == 1 ? Properties.PhaseGUI*2.0f*datum::pi : Properties.PhaseW ;
                         ShowDemoWindowWidgets();
 
                  
@@ -82,20 +91,20 @@ namespace BLOCKS{
                  if(SIM::EVENTS::time_index == -1)return;
                 
                 arma::fmat time = {SIM::GET_NANOS()};
-                arma::fmat sineWave =  Properties.Amplitude * arma::sin(time*Properties.FrequencyW);
+                arma::fmat sineWave =    Properties.Amplitude * arma::sin(time*Properties.FrequencyW + Properties.PhaseW);
                 
                 switch (Properties.TypeSelected)
                 {
                     case 0:
-                        VARS.wave = sineWave;
+                        VARS.wave = Properties.Offset + sineWave;
                         break;
                     case 1:
-                        VARS.wave = arma::sign(sineWave) * Properties.Amplitude;
+                        VARS.wave = Properties.Offset + arma::sign(sineWave) * Properties.Amplitude;
                         break;
                 
                     default:
                         //VARS.wave += (sineWave.at(0) >= 0) ? SIM::EVENTS::Ts : -SIM::EVENTS::Ts;
-                        VARS.wave = asin(sineWave)*2.0f/datum::pi *  Properties.Amplitude;
+                        VARS.wave = Properties.Offset + asin(sineWave)*2.0f/datum::pi *  Properties.Amplitude;
                         
                         break;
                 }
