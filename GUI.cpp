@@ -67,6 +67,8 @@
 
 namespace GUI{
 
+    std::string LOG_MSG = ". . . Seja Bemvindo . . .\n";
+
     namespace MODAL_WARNING{
         void setModal(std::string Title,std::string Body,std::string Ask){
             MODAL_WARNING::Title = Title;
@@ -92,7 +94,7 @@ namespace GUI{
     };
 
     void init(){
-        cout << "\n>> Cargando Texturas : ";
+        GUI::LOG_MSG += "\n>> Cargando Texturas : ";
         loadTextures("Textures/GUITex_Default.png",GUITex_Default);
         loadTextures("Textures/GUITex_Exo1.png",GUITex_Exo1);
         loadTextures("Textures/GUITex_Exo2.png",GUITex_Exo2);
@@ -239,6 +241,7 @@ namespace GUI{
                 ImGui::MenuItem("Blocks"        , NULL, &EVENTS::showBlocks);
                 ImGui::MenuItem("Graphs"        , NULL, &EVENTS::showGraphs);
                 ImGui::MenuItem("Real-Time"     , NULL, &EVENTS::showRealTime);
+                ImGui::MenuItem("LOG      "     , NULL, &EVENTS::showLOG);
                 ImGui::MenuItem("Game Serius"   , NULL, &EVENTS::showGameSerius);
                 ImGui::MenuItem("Game Serius"   , NULL, &EVENTS::showBlocksProgramming);
                 ImGui::MenuItem("Properties"    , NULL, &EVENTS::showProperties);
@@ -288,6 +291,11 @@ namespace GUI{
             ImGui::Begin("Real-Time",&EVENTS::showRealTime,0);  
             ImGui::End();
         }
+        if(EVENTS::showLOG){
+            ImGui::Begin("LOG",&EVENTS::showLOG,0);  
+            ImGui::Text(GUI::LOG_MSG.c_str());
+            ImGui::End();
+        }
         if(EVENTS::showBlocks){
             ImGui::Begin("Blocks",&EVENTS::showBlocks,0);  
             displayBlocksGUI();
@@ -318,6 +326,17 @@ namespace GUI{
 
     }
 
+    BLOCKS::BLOCK* BLOCK_findByName(std::string name){
+         iterateBLOCKS_GUI{
+            if(name == (*it)->name) return (*it);
+            //cout<<"\n "<<(*(*it)->IN_ARMA[2])<<"  ";
+            
+        }  
+
+        return NULL;
+        
+    }
+
     void displayBlocksLogic(){
 
         ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -331,7 +350,7 @@ namespace GUI{
                     SIM::EVENTS::SimulationTaskMutex_end.store(true); 
                     SIM::EVENTS::SimulationThread_.join();
                 }          
-        } 
+        }   
 
         iterateBLOCKS_GUI{
             //cout<<"\n "<<(*(*it)->IN_ARMA[2])<<"  ";
@@ -402,5 +421,8 @@ namespace GUI{
 
     }
     
+    void showLOG(std::string text){
+        LOG_MSG = GUI::LOG_MSG + text;
+    }
 }
 

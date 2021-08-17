@@ -12,7 +12,10 @@ enum TypeBlock_{
     BLKType_DELSYS,
     BLKType_REHAMOVE,
     BLKType_ABS,
-    BLKType_COUNT
+    BLKType_CAN_CFG,
+    BLKType_EPOS,
+    BLKType_COUNT, //Deixar no final do Enum
+
 };
 
 namespace BLOCKS{
@@ -57,6 +60,8 @@ namespace BLOCKS{
 
             bool ENABLED = false;
             bool ACTIVE  = false;
+
+            int8_t priority = 5;
 
             ImVec2 posBlock  = ImVec2(10,10);
             ImVec2 sizeBlock = ImVec2(80,40);

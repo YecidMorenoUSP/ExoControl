@@ -70,13 +70,12 @@ namespace GUI{
         bool showGraphs              = true;
         bool showRealTime            = true;
         bool showGameSerius          = true;
+        bool showLOG                 = true;
         bool showBlocksProgramming   = true;
 
     }
 
     void init();
-
-    
 
     void createDocking();
 
@@ -93,5 +92,7 @@ namespace GUI{
     void displayBlocksLogic();
 
     void displayMenu();
+
+    void showLOG(std::string text);
 
 }

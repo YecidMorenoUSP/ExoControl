@@ -10,33 +10,40 @@
                     "-g",   "main.cpp",//"${fileBasename}", 
                     "-o",   "\"${workspaceFolder}\\build\\main",
 
+                    //ImGUI 
                     "-I",   "C:\\DEV2\\LIB\\ImGuiDocking\\examples",
                     "-I",   "C:\\DEV2\\LIB\\ImGuiDocking\\backends",
                     "-I",   "C:\\DEV2\\LIB\\ImGuiDocking",
                     "-I",   "C:\\DEV2\\LIB\\SDL2\\include\\SDL2",
                     "-I",   "C:\\DEV2\\LIB\\Image",
-
-                    "-I",   "\"${env:DEV2}\\LIB\\Armalillo\\include",
-                    
-                    "-L",   "\"${env:DEV2}\\LIB\\Armalillo\\lib",
-                    
                     "-L",    "C:\\DEV2\\LIB\\SDL2\\lib",
-                    
                     "-l",     "SDL2",
                     "-l",     "SDL2main",
                     "-l",     "opengl32",
                     "-l",     "gdi32",
                     "-l",     "shell32",
+
+                    //ARMADILLO
+                    "-I",   "\"${env:DEV2}\\LIB\\Armalillo\\include",
+                    "-L",   "\"${env:DEV2}\\LIB\\Armalillo\\lib",
                     "-l",     "blas_win64_MT",
                     "-l",     "lapack_win64_MT",
                     
+                    //SERVER LAN
                     "-l",     "wsock32",
                     "-l",     "Ws2_32",
-
+                    
+                    //REHAMOVE FES
                     "-I",     "\"${env:DEV2}\\LIB\\RehaMove\\include",
                     "-L",     "\"${env:DEV2}\\LIB\\RehaMove\\lib",
-                      
-					"-l",     "libsmpt"
+                   
+                    //EPOS NETWORK
+                    "-L","C:\\DEV2\\LIB\\EPOS\\Microsoft Visual C++\\Definition Files",
+				    "-I","C:\\DEV2\\LIB\\EPOS\\Microsoft Visual C++\\Definition Files",  
+                    "-l","EposCmd64",
+                    
+                    //DELSYS
+					"-l",     "libsmpt",
                     
 
                     ], 

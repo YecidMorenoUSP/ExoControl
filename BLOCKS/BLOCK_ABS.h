@@ -49,7 +49,7 @@ namespace BLOCKS{
                 auxOut << 0.0f;
                 
                 OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
-                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);            
+                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);     
             
             }
 

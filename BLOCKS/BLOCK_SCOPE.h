@@ -178,7 +178,7 @@ namespace BLOCKS{
 
     void name_of_init(){
         ALL_BLOCKS_GUI[name_of_type] = new name_of_class();
-        cout << "\n   "<< STRINGIZE(name_of_class)  <<": Cargado ";
+        GUI::LOG_MSG =GUI::LOG_MSG + "\n   " + STRINGIZE(name_of_class)   + ": Cargado " ;
     }
  
  

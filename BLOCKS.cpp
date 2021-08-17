@@ -11,6 +11,8 @@
                      BlockSCOPE_INIT();     \
                      BlockDELSYS_INIT();     \
                      BlockREHAMOVE_INIT();     \
+                     BlockCAN_CFG_INIT();     \
+                     BlockEPOS_INIT();     \
                      
                     
 #define name_of_object SUM
@@ -40,12 +42,18 @@
 #define name_of_object ABS
 #include "BLOCKS/BLOCK_ABS.h"
 
+#define name_of_object CAN_CFG
+#include "BLOCKS/BLOCK_CAN_CFG.h"
+
+#define name_of_object EPOS
+#include "BLOCKS/BLOCK_EPOS.h"
+
 
 namespace BLOCKS{
     
     void Init(){
                
-        cout << "\n>> Cargando Bloques : ";
+        GUI::LOG_MSG += "\n>> Cargando Bloques : ";
         
         DefineBLOCKS;   
                

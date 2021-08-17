@@ -58,7 +58,11 @@
         "xhash": "cpp",
         "xtree": "cpp",
         "xfunctional": "cpp",
-        "xxatomic": "cpp"
+        "xxatomic": "cpp",
+        "cctype": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "iterator": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
