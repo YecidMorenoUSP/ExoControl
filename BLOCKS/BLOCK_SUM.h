@@ -2,8 +2,6 @@
     #include "BLOCKS.h"   
 #endif
 
-
-
 #define name_of_class  PPCAT(Block, name_of_object)
 #define name_of_type   PPCAT(BLKType_, name_of_object)
 #define name_of_block  STRINGIZE(name_of_object)
@@ -29,13 +27,14 @@ namespace BLOCKS{
                   
         
                     ImGui::InputFloat( "Value", &(Properties.K[0]), -10.0f, 10.0f, "%.3f");
+                    
 
                     ShowDemoWindowWidgets();
                 ImGui::End();
             }
 
         public:
-        
+
             name_of_class(){
                 name = name_of_block;
                 TYPE = name_of_type;
@@ -53,8 +52,15 @@ namespace BLOCKS{
                 auxOut << 0.0f;
                 
                 OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
-                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);            
+                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);    
+                for (int i = 1 ; i <= N_IN ; i++ ){
+                    (*IN_ARMA[i]) = 0.0f;
+                }     
             
+            }
+            name_of_class(bool N){
+                name = name_of_block;
+                TYPE = name_of_type;
             }
 
             virtual void Exec() override{
@@ -75,7 +81,7 @@ namespace BLOCKS{
     };
 
     void name_of_init(){
-        ALL_BLOCKS_GUI[name_of_type] = new name_of_class();
+        ALL_BLOCKS_GUI[name_of_type] = new name_of_class(true);
         GUI::LOG_MSG = GUI::LOG_MSG + "\n   " + STRINGIZE(name_of_class)   + ": Cargado " ;
     }
  

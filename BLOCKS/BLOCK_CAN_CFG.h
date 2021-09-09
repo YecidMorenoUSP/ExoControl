@@ -16,9 +16,7 @@ namespace BLOCKS{
         private:
             static int count;
 
-            struct VARS{
-                
-            }VARS;
+          
 
             struct Properties{
                 std::string deviceName = "EPOS2";
@@ -43,7 +41,7 @@ namespace BLOCKS{
             }
 
         public:
-        
+            // Esta variable esuna instancia del nodo central, "EPOS1   "
             CAN_Network * CAN;
 
             name_of_class(){
@@ -54,25 +52,121 @@ namespace BLOCKS{
                 N_OUT = 0;
 
                 priority = 8;
-                
+                VARS.running_mutex.store(true);
             }
 
+            
+            
+            class foo
+            {
+            public:
+                void bar()
+                {   //std::unordered_map<int, int>::iterator itr;
+                    //std::unordered_map<int, int>::iterator itr2;
+                    int n = 0;
+                    while (true)
+                    {   
+                        std::this_thread::yield();
+                        if (running_mutex.load()) break;
+
+                        mtx.lock();
+                        std::this_thread::yield();
+                        std::unordered_map<int, int> aux;
+                        aux.swap(writeEpos);
+                        std::unordered_map<int, float*> aux2;
+                        aux2.swap(readPosition);
+                        std::unordered_map<int, float*> aux3;
+                        aux3.swap(readAnalog);
+                        mtx.unlock();
+                      
+                        for (auto x : aux){
+                            CAN->setVelocity(x.first,x.second); 
+                            std::this_thread::yield();
+                        }
+                        std::unordered_map<int, float*>::iterator it = aux2.begin();
+                        while(it != aux2.end()){
+                            std::this_thread::yield();
+                            (*it->second) = CAN->positionRead(it->first);
+                            it++;
+                        }
+
+                        std::unordered_map<int, float*>::iterator it2 = aux3.begin();
+                        while(it2 != aux3.end()){
+                            std::this_thread::yield();
+                            (*it2->second) = CAN->analogRead(it2->first/1000,it2->first%1000);
+                            it2++;
+                        }
+                        if(SIM::EVENTS::pauseSimulation.load()) n++;
+
+                        if(n>=2){
+                            n = 0;
+                            SIM::EVENTS::pauseSimulation.store(false);
+                        }
+
+                        
+                    
+                    }
+                }
+                int n = 0;
+                std::atomic<bool>  running_mutex;
+                
+                std::mutex mtx;
+                
+                std::unordered_map<int, int> writeEpos;
+                std::unordered_map<int, float*> readPosition;
+                std::unordered_map<int, float*> readAnalog;
+                
+                CAN_Network * CAN;
+            };
+
+            struct VARS{
+                std::atomic<bool> running_mutex;
+                std::thread EposThread_;
+                foo f;
+            }VARS;
+
             virtual void Exec() override{
+        
+                
+
                 if(SIM::EVENTS::time_index == FIRST_LAP){
                   
-
                     CAN = new CAN_Network((char*)Properties.deviceName.c_str(),
                                                     (char*)Properties.protocolStackName.c_str(),
                                                     (char*)Properties.interfaceName.c_str(),
                                                     (char*)Properties.portName.c_str());
                     CAN->connect();
-                     return;
+                     
                  }
                  if(SIM::EVENTS::time_index == LAST_LAP){
-                     
+                     iterateBLOCKS_GUI{
+                         if((*it)->TYPE == BLKType_EPOS){
+                             (*it)->Exec();
+                             std::cout<<(*it)->name<<" + ";
+                         }
+                     }
                      CAN->close();
-                     return;
+                     
                  }
+
+                 if(SIM::EVENTS::time_index == FIRST_LAP){
+                    // SIM::EVENTS::pauseSimulation.store(true);
+                    VARS.f.CAN = CAN;
+                    if(VARS.EposThread_.joinable())VARS.EposThread_.join();
+                    VARS.running_mutex.store(false);  
+                    VARS.f.running_mutex.store(false);
+                    
+                    VARS.EposThread_ =  std::thread(&foo::bar, &VARS.f);
+                 }
+
+                 
+                if(SIM::EVENTS::time_index == LAST_LAP){
+                    VARS.running_mutex.store(true); 
+                    VARS.f.running_mutex.store(true);
+                    if(VARS.EposThread_.joinable())VARS.EposThread_.join();
+                    std::cout<<"N thread: "<<VARS.f.n;
+                }
+                
             }
             
             virtual BLOCK * Create(){

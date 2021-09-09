@@ -2,6 +2,11 @@
 
 #define iterateBLOCKS_GUI for (std::vector<BLOCKS::BLOCK*>::iterator it = BLOCKS::ALL_BLOCKS_GUI.begin() + BLKType_COUNT ; it != BLOCKS::ALL_BLOCKS_GUI.end(); it++)
 #define iterateLINES_GUI for  (std::vector<LINES::LINE*>::iterator   it = LINES::ALL_LINES_GUI.begin() ; it != LINES::ALL_LINES_GUI.end(); it++)
+#define iterateLINES_GUIL for  (std::vector<LINES::LINE*>::iterator   itL = LINES::ALL_LINES_GUI.begin() ; itL != LINES::ALL_LINES_GUI.end(); itL++)
+#define iterateBLOCK_QUEUE for  (std::vector<BLOCKS::BLOCK*>::iterator it = BLOCK_QUEUE.begin() ; it != BLOCK_QUEUE.end(); it++)
+#define iterateBLOCK_ORDER for  (std::vector<BLOCKS::BLOCK*>::iterator it = BLOCK_ORDER.begin() ; it != BLOCK_ORDER.end(); it++)
+#define if_exist_BLOCK_QUEUE if((std::find(BLOCK_QUEUE.begin(),BLOCK_QUEUE.end(),(*it))-BLOCK_QUEUE.end()) == 0)
+#define if_exist_BLOCK_ORDER if((std::find(BLOCK_ORDER.begin(),BLOCK_ORDER.end(),(*it))-BLOCK_ORDER.end()) == 0)
 
 enum GUI_Colors_{
     GUICol_BlockFill,
@@ -34,6 +39,8 @@ enum GUI_Textures_{
     GUITex_Btn_Run,
     GUITex_Btn_Pause,
     GUITex_REROB,
+    GUITex_SPAR1,
+    GUITex_SPAR2,
     GUITexture_COUNT
 };
 

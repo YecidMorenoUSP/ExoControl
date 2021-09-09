@@ -109,6 +109,8 @@ namespace GUI{
         loadTextures("Textures/GUITex_Btn_Run.png",GUITex_Btn_Run);
         loadTextures("Textures/GUITex_Btn_Pause.png",GUITex_Btn_Pause);
         loadTextures("Textures/GUITex_REROB.png",GUITex_REROB);
+        loadTextures("Textures/GUITex_SPAR1.png",GUITex_SPAR1);
+        loadTextures("Textures/GUITex_SPAR2.png",GUITex_SPAR2);
         cout << "\n   Texturas cargadas ";
     }
 
@@ -404,6 +406,25 @@ namespace GUI{
 
         ImGui::Text("FPS : %.1f", ImGui::GetIO().Framerate);
         if(ImGui::Button("Exit")) EVENTS::DONE = true;
+        if(ImGui::Button("SPARK")) {
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_CAN_CFG);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,100);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(300,200);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(300,300);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_FUNGEN);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(150,250);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_SCOPE);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(450,200);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_SPAR);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(450,300);
+        };
         
         ImGui::SetCursorPos(windowCur->Size - ImVec2(windowCur->Size.x/2.f+50,170));
         ImGui::Image((void*)GUI::Texture[GUITex_REROB].texture,ImVec2(100,100));

@@ -6,7 +6,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
     {
         printf("Error: %s\n", SDL_GetError());
         return -1; 
-    }             
+    }              
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -90,6 +90,85 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
         ImGui::NewFrame();
 
         GUI::createControls();
+        
+        int x = 0;
+        int y = 100;
+
+        static bool a = false;
+        if(a){
+            a = false;
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_CAN_CFG);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,100);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(300,200);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(300,300);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_FUNGEN);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(150,250);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_SCOPE);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(450,200);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_SPAR);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(450,300);
+
+            // LINES::LINE * ln0 = new LINES::LINE();
+            // ln0->posIn = 1;
+            // ln0->posOut = 1;
+            // ln0->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 0];
+            // ln0->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 1];
+            // ln0->blockIn->IN_ARMA[ln0->posIn] = &(ln0->blockOut->OUT_ARMA[ln0->posOut]);
+            // LINES::ALL_LINES_GUI.push_back(ln0);
+        }
+        static bool b = false;
+        if(b){
+            b = false;
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_FUNGEN);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(x+=150,y);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_SUM);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(x+=150,y);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_ABS);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(x,y+150);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_SCOPE);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(x+=150,y);
+
+            LINES::LINE * ln = new LINES::LINE();
+            ln->posIn = 1;
+            ln->posOut = 1;
+            ln->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 0];
+            ln->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 1];
+            LINES::ALL_LINES_GUI.push_back(ln);
+
+            LINES::LINE * ln2 = new LINES::LINE();
+            ln2->posIn = 1;
+            ln2->posOut = 1;
+            ln2->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 1];
+            ln2->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 2];
+            LINES::ALL_LINES_GUI.push_back(ln2);
+
+            LINES::LINE * ln3 = new LINES::LINE();
+            ln3->posIn = 2;
+            ln3->posOut = 1;
+            ln3->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 2];
+            ln3->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 1];
+            LINES::ALL_LINES_GUI.push_back(ln3);
+
+            LINES::LINE * ln4 = new LINES::LINE();
+            ln4->posIn = 1;
+            ln4->posOut = 1;
+            ln4->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 1];
+            ln4->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
+            LINES::ALL_LINES_GUI.push_back(ln4);
+
+            
+        }
 
         ImGui::Render();
         glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);

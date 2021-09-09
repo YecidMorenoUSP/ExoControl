@@ -5,15 +5,15 @@
 #define DefineBLOCKS BlockSUM_INIT();       \
                      BlockPOW_INIT();       \
                      BlockABS_INIT();       \
-                     BlockMULTI_INIT();       \
-                     BlockNUMK_INIT();       \
+                     BlockMULTI_INIT();     \
+                     BlockNUMK_INIT();      \
                      BlockFUNGEN_INIT();    \
                      BlockSCOPE_INIT();     \
-                     BlockDELSYS_INIT();     \
-                     BlockREHAMOVE_INIT();     \
-                     BlockCAN_CFG_INIT();     \
-                     BlockEPOS_INIT();     \
-                     
+                     BlockDELSYS_INIT();    \
+                     BlockREHAMOVE_INIT();  \
+                     BlockCAN_CFG_INIT();   \
+                     BlockEPOS_INIT();      \
+                     BlockSPAR_INIT();      \
                     
 #define name_of_object SUM
 #include "BLOCKS/BLOCK_SUM.h"
@@ -21,7 +21,7 @@
 #define name_of_object POW
 #include "BLOCKS/BLOCK_POW.h"
 
-#define name_of_object MULTI
+    #define name_of_object MULTI
 #include "BLOCKS/BLOCK_MULTI.h"
 
 #define name_of_object FUNGEN
@@ -48,6 +48,9 @@
 #define name_of_object EPOS
 #include "BLOCKS/BLOCK_EPOS.h"
 
+#define name_of_object SPAR
+#include "BLOCKS/BLOCK_SPAR.h"
+
 
 namespace BLOCKS{
     
@@ -60,7 +63,7 @@ namespace BLOCKS{
     }
    
     void AddBLOCK(TypeBlock_ TypeBlock){
-        
+            
         
         BLOCK * aux = ALL_BLOCKS_GUI[TypeBlock]->Create();
         aux->indexType = ++ALL_BLOCKS_GUI[TypeBlock]->indexType;

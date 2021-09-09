@@ -32,12 +32,20 @@
 #include <atomic>
 #include <chrono>
 #include <vector>
-
+#include <unordered_map>
+#include <mutex> 
 
 #include <imgui_demo.cpp>
 
 #include <armadillo>
 using namespace arma;
+
+#define __T1__  std::chrono::steady_clock::time_point T_T1;
+#define __TIC__ T_T1 = std::chrono::steady_clock::now();
+#define __T2__  std::chrono::steady_clock::time_point T_T2;
+#define __TOC__ T_T2 = std::chrono::steady_clock::now();
+#define __SHOWTL__ std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::milliseconds> (T_T2 - T_T1).count() << "[ms]" << std::endl;
+
 
 
 
@@ -70,7 +78,6 @@ using namespace arma;
 #include "BLOCKS.cpp"
 #include "LINES.cpp"
 #include "SIMULATION.cpp"
-
 
 
 

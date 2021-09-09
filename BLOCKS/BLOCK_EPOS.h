@@ -3,7 +3,6 @@
 #endif
 
 
-
 #define name_of_class  PPCAT(Block, name_of_object)
 #define name_of_type   PPCAT(BLKType_, name_of_object)
 #define name_of_block  STRINGIZE(name_of_object)
@@ -17,7 +16,7 @@ namespace BLOCKS{
             static int count;
 
             struct VARS{
-                
+               
             }VARS;
 
             struct Properties{
@@ -31,13 +30,15 @@ namespace BLOCKS{
             }
 
         public:
+
+            
         
             name_of_class(){
                 name = name_of_block;
                 TYPE = name_of_type;
 
                 N_IN  = 1;
-                N_OUT = 2;
+                N_OUT = 3;
                 
                 N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
                 N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
@@ -51,34 +52,77 @@ namespace BLOCKS{
                 OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
                 IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);            
                 
+                
             }
 
+          
+
             CAN_Network * CAN;
+            BlockCAN_CFG * BlockCAN;
+            
 
             virtual void Exec() override{
+                //static __T1__
+                //static __T2__
+                
+                
                 if(SIM::EVENTS::time_index == FIRST_LAP){
                     // cout<<"Cargando  "<<GUI::BLOCK_findByName("CAN_CFG(1)")->name;
                     CAN =  ((BlockCAN_CFG*)(GUI::BLOCK_findByName("CAN_CFG(1)")))->CAN;
-                    CAN->nodeId = Properties.nodeId;
-                    CAN->configure();
-                    CAN->setState(ST_ENABLED);
-                    // CAN->setVelocity(100);
+                    BlockCAN = ((BlockCAN_CFG*)(GUI::BLOCK_findByName("CAN_CFG(1)")));                    
+                    
+                    CAN->configure(Properties.nodeId);
+                    CAN->setState(Properties.nodeId,ST_ENABLED);
+                    CAN->configureInputs(Properties.nodeId);
 
+                    BlockCAN->VARS.f.mtx.lock();
+                    BlockCAN->VARS.f.writeEpos [Properties.nodeId] = (int)(*IN_ARMA[1])[0];
+                    BlockCAN->VARS.f.readPosition [Properties.nodeId] = (float*)OUT_ARMA[1].memptr();
+                    BlockCAN->VARS.f.readAnalog   [Properties.nodeId*1000 + 1] = (float*)OUT_ARMA[2].memptr();
+                    BlockCAN->VARS.f.readAnalog   [Properties.nodeId*1000 + 2] = (float*)OUT_ARMA[3].memptr();
+                    SIM::EVENTS::pauseSimulation.store(true);
+                    BlockCAN->VARS.f.mtx.unlock();
+                    
+
+                    // CAN->setVelocity(100);
+                    
                     cout<<"Cargado";
                     return;
                  }
-                CAN->nodeId = Properties.nodeId;
-                CAN->setVelocity((int)(*IN_ARMA[1])[0]);
-                OUT_ARMA[1] = CAN->positionRead();
-                OUT_ARMA[2] = CAN->analogRead(1);
                 
                  if(SIM::EVENTS::time_index == LAST_LAP){
-                    CAN->setState(ST_DISABLED);
+                    
+                    CAN->setVelocity(Properties.nodeId,0);
+                    CAN->setState(Properties.nodeId,ST_DISABLED);
                     return;
-                 }
+                }
+                //__TIC__
+
+
+                if((*IN_ARMA[1]).size()>=1){
+                    BlockCAN->VARS.f.mtx.lock();
+                    BlockCAN->VARS.f.writeEpos [Properties.nodeId] = (int)(*IN_ARMA[1])[0];
+                    BlockCAN->VARS.f.mtx.unlock();
+                }
+                if (N_OUT >= 1 && true){
+                    BlockCAN->VARS.f.mtx.lock();
+                    BlockCAN->VARS.f.readPosition [Properties.nodeId] = (float*)OUT_ARMA[1].memptr();
+                    BlockCAN->VARS.f.readAnalog   [Properties.nodeId*1000 + 1] = (float*)OUT_ARMA[2].memptr();
+                    BlockCAN->VARS.f.readAnalog   [Properties.nodeId*1000 + 2] = (float*)OUT_ARMA[3].memptr();
+                    BlockCAN->VARS.f.mtx.unlock();
+                }
+                
+
+
+                            
+                //__TOC__
+                //std::cout<<"Epos: "<<name;
+                //__SHOWTL__
+              
             }
             
             virtual BLOCK * Create(){
+                
                 return new name_of_class();
             }
             

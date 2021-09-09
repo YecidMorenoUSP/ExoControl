@@ -14,6 +14,7 @@ enum TypeBlock_{
     BLKType_ABS,
     BLKType_CAN_CFG,
     BLKType_EPOS,
+    BLKType_SPAR,
     BLKType_COUNT, //Deixar no final do Enum
 
 };
@@ -35,6 +36,10 @@ namespace BLOCKS{
 
     class BLOCK {
         public:
+
+            BLOCK(){
+
+            }
 
             struct LOCAL{
                 int double_clicked_count = 0;
@@ -62,6 +67,11 @@ namespace BLOCKS{
             bool ACTIVE  = false;
 
             int8_t priority = 5;
+            
+            bool use1 = false;
+            bool use2 = false;
+            bool use3 = false;
+            bool use4 = false;
 
             ImVec2 posBlock  = ImVec2(10,10);
             ImVec2 sizeBlock = ImVec2(80,40);
