@@ -7,8 +7,9 @@
                 "C:\\DEV2\\LIB\\ImGuiDocking\\**",
                 "C:\\DEV2\\LIB\\**",
                 
-                //EPOS NETWORK
-                "C:/DEV2/LIB/EPOS/Microsoft Visual C++/Example VC++",            ],
+                
+                "C:/DEV2/LIB/EPOS/Microsoft Visual C++/Example VC++"
+            ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
