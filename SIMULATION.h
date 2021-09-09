@@ -9,7 +9,7 @@ namespace SIM{
 
     namespace EVENTS{
         //float Ts = 1.0f/2000.0f;
-        float Ts = 1.0f/200.0f;
+        float Ts = 1.0f/200.00f;
 
         
         std::atomic<bool> pauseSimulation(false);
