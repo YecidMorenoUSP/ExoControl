@@ -1,4 +1,4 @@
-# ExoControl **v0.2**
+# ExoControl **v0.3**
 Este respositorio foi feito para o trabalho de mentrado do aluno Yecid Moreno.
 O objetivo principal é criam uma GUI intuitiva que seja programavel usamdo blocos para o controle do exoesquelo de rehabilitação robótica.
 
