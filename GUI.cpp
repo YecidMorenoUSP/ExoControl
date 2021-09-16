@@ -407,23 +407,75 @@ namespace GUI{
         ImGui::Text("FPS : %.1f", ImGui::GetIO().Framerate);
         if(ImGui::Button("Exit")) EVENTS::DONE = true;
         if(ImGui::Button("SPARK")) {
+
             BLOCKS::AddBLOCK((TypeBlock_)BLKType_CAN_CFG);
             BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,100);
-
-            BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
-            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(300,200);
-
-            BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
-            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(300,300);
+            
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_NUMK);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,200);
 
             BLOCKS::AddBLOCK((TypeBlock_)BLKType_FUNGEN);
-            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(150,250);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,300);
 
-            BLOCKS::AddBLOCK((TypeBlock_)BLKType_SCOPE);
-            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(450,200);
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,400);
 
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,500);
+            
             BLOCKS::AddBLOCK((TypeBlock_)BLKType_SPAR);
-            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(450,300);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(300,200);
+
+            
+            LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
+            LINES::ALL_LINES_GUI.back()->posIn = 1;
+            LINES::ALL_LINES_GUI.back()->posOut = 1;
+            LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 1];
+            LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+
+            LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
+            LINES::ALL_LINES_GUI.back()->posIn = 2;
+            LINES::ALL_LINES_GUI.back()->posOut = 1;
+            LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 1];
+            LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+
+            LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
+            LINES::ALL_LINES_GUI.back()->posIn = 3;
+            LINES::ALL_LINES_GUI.back()->posOut = 1;
+            LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 2];
+            LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+
+            LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
+            LINES::ALL_LINES_GUI.back()->posIn = 4;
+            LINES::ALL_LINES_GUI.back()->posOut = 1;
+            LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
+            LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+
+            LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
+            LINES::ALL_LINES_GUI.back()->posIn = 5;
+            LINES::ALL_LINES_GUI.back()->posOut = 2;
+            LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
+            LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+
+            LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
+            LINES::ALL_LINES_GUI.back()->posIn = 6;
+            LINES::ALL_LINES_GUI.back()->posOut = 3;
+            LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
+            LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+
+            LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
+            LINES::ALL_LINES_GUI.back()->posIn = 7;
+            LINES::ALL_LINES_GUI.back()->posOut = 1;
+            LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 4];
+            LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+
+            LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
+            LINES::ALL_LINES_GUI.back()->posIn = 1;
+            LINES::ALL_LINES_GUI.back()->posOut = 1;
+            LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+            LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
+
+            
         };
         
         ImGui::SetCursorPos(windowCur->Size - ImVec2(windowCur->Size.x/2.f+50,170));

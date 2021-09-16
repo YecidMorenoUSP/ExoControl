@@ -62,7 +62,16 @@
         "cctype": "cpp",
         "compare": "cpp",
         "concepts": "cpp",
-        "iterator": "cpp"
+        "iterator": "cpp",
+        "codecvt": "cpp",
+        "filesystem": "cpp",
+        "iomanip": "cpp",
+        "locale": "cpp",
+        "set": "cpp",
+        "xlocbuf": "cpp",
+        "xlocmes": "cpp",
+        "xlocmon": "cpp",
+        "xloctime": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

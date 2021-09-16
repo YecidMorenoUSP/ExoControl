@@ -3,6 +3,8 @@
 #define FIRST_LAP -1
 #define LAST_LAP  -2
 
+
+
 namespace SIM{
     
     void setLOG(std::string txt);
@@ -31,12 +33,12 @@ namespace SIM{
 
     int getActivesGrafo(std::string name){
         int count = 0;
-        std::cout<<"\n["<<name<<"]";
+        // std::cout<<"\n["<<name<<"] Req : ";
         iterateLINES_GUI{
             if((*it)->usedGrafo == true) continue;
             if((*it)->blockIn->name.compare(name) == 0){
                 count ++;
-                std::cout<<" "<<(*it)->blockOut->name<<" & ";
+                // std::cout<<" "<<(*it)->blockOut->name<<" & ";
             }
         }
         return count;
@@ -44,12 +46,49 @@ namespace SIM{
 
     int getActivesGrafoOUT(std::string name){
         int count = 0;
+        // std::cout<<"\n["<<name<<"] Open : ";
         iterateLINES_GUIL{
             if((*itL)->usedGrafo == true) continue;
-            if((*itL)->blockOut->name.compare(name) == 0) count ++;
+            if((*itL)->blockOut->name.compare(name) == 0){
+                count ++;
+                // std::cout<<" "<<(*itL)->blockIn->name<<" & ";
+            }
         }
         return count;
     }
+
+    std::vector<BLOCKS::BLOCK*> getReqBlocks(std::string name){
+        std::vector<BLOCKS::BLOCK*> aux;
+
+        // std::cout<<"\n["<<name<<"] Req : ";
+        iterateLINES_GUI{
+            if((*it)->usedGrafo == true) continue;
+            if((*it)->blockIn->name.compare(name) == 0){
+                // std::cout<<" "<<(*it)->blockOut->name<<" & ";
+                aux.push_back((*it)->blockOut);
+            }
+        }
+
+        return aux;
+    }
+
+    std::vector<BLOCKS::BLOCK*> getOpenBlocks(std::string name){
+        std::vector<BLOCKS::BLOCK*> aux;
+
+        // std::cout<<"\n["<<name<<"] Req : ";
+        iterateLINES_GUI{
+            if((*it)->usedGrafo == true) continue;
+            if((*it)->blockOut->name.compare(name) == 0){
+                if(std::find(aux.begin(),aux.end(),(*it)->blockIn) == aux.end()){
+                    aux.push_back((*it)->blockIn);
+                }
+                
+            }
+        }        
+
+        return aux;
+    }
+
  
     int getIndexBLOCKS(BLOCKS::BLOCK* block){
         int index = -1;
@@ -61,6 +100,15 @@ namespace SIM{
         }
 
         return -1;
+    }
+
+    void releaseGrafosOpen(std::string name){
+        iterateLINES_GUI{
+            if((*it)->usedGrafo == true) continue;
+            if((*it)->blockOut->name.compare(name) == 0){
+                (*it)->usedGrafo = true;
+            }
+        }
     }
 
     bool BackPath(BLOCKS::BLOCK* block,std::string name){
@@ -116,6 +164,10 @@ namespace SIM{
             if((*itL)->blockIn->name.compare((*itL)->blockOut->name) == 0)
                 (*itL)->usedGrafo = true;
         }
+        // Limpiamos los bloques visitados
+        iterateBLOCKS_GUI{
+            (*it)->VISITED = false;
+        }
 
         /*
             1. Lo primero que debemos hacer es agregar a la cola los bloques existentes con máxima prioridad 6-10.
@@ -146,65 +198,37 @@ namespace SIM{
         while (BLOCK_QUEUE.size()>0)
         {
             BLOCKS::BLOCK *blocCur = BLOCK_QUEUE.back();
-            BLOCK_QUEUE.pop_back();
-            continue;
 
-            /*
-                (*itL)->blockOut Bloque de salida que da la aentrada al grafo, si, está invertida esa vrga
-            */
-            
-            int gag = getActivesGrafo(blocCur->name);
-            std::cout<<"GAG"<<gag<<" + ";
-            if(gag == 0){
-                BLOCK_ORDER.push_back(blocCur);   
-                BLOCK_QUEUE.pop_back();
+            std::vector<BLOCKS::BLOCK*> reqs = getReqBlocks(blocCur->name);
+            if(reqs.size() == 0 || blocCur->VISITED == true){
 
-                iterateLINES_GUIL{
-                    if((*itL)->usedGrafo == true ) continue;
-                    if((*itL)->blockOut->name.compare(blocCur->name) == 0){
-                        (*itL)->usedGrafo = true;
-                        
-                        BLOCK_QUEUE.push_back((*itL)->blockIn);
-                    }
-                    
-                }
+                 if(std::find(BLOCK_ORDER.begin(),BLOCK_ORDER.end(),BLOCK_QUEUE.back())==BLOCK_ORDER.end())
+                    BLOCK_ORDER.push_back(BLOCK_QUEUE.back());
 
-            }else{
-                iterateLINES_GUIL{
-                    if((*itL)->usedGrafo == true )continue;
-                    if((*itL)->blockIn->name.compare(blocCur->name) == 0){
-                        if(BackPath((*itL)->blockOut,blocCur->name)){
-                            (*itL)->usedGrafo = true;
-                            std::cout<<"\n  "<<(*itL)->blockOut->name<<" - - "<<(*itL)->blockIn->name;
-                        }else{
-                            BLOCK_QUEUE.pop_back();
-                        }
-                    }
-                    
-                    //Agregar de nuevoi el bloque
-                    
-                }
-                
-                
-                
-                
-                // // verificar que no exista en el orden
-                // bool existOrder = false;
-                // iterateBLOCK_QUEUE{
-                //     if((*it)->name.compare(blocCur->name)){
-                //         BLOCK_QUEUE.erase(it);
-                //         existOrder = true;
-                //     }
-                // }
-                // if(!existOrder){
-                //     BLOCK_QUEUE.push_back(blocCur);
+                 BLOCK_QUEUE.pop_back();
+                 
+                 std::vector<BLOCKS::BLOCK*> open = getOpenBlocks(blocCur->name);
 
-                // }
+                 if(open.size()>0){
+                     releaseGrafosOpen(blocCur->name);
+                     for  (std::vector<BLOCKS::BLOCK*>::iterator it = open.begin() ; it != open.end(); it++){
+                         if(std::find(BLOCK_QUEUE.begin(),BLOCK_QUEUE.end(),(*it))==BLOCK_QUEUE.end())
+                                 BLOCK_QUEUE.insert(BLOCK_QUEUE.begin(),(*it));
+
+                     }
+
+                 }
             }
+            else{
+                // BLOCK_QUEUE.insert(BLOCK_QUEUE.end(),reqs.begin(),reqs.end());
+                for  (std::vector<BLOCKS::BLOCK*>::iterator it = reqs.begin() ; it != reqs.end(); it++){
+                         if(std::find(BLOCK_QUEUE.begin(),BLOCK_QUEUE.end(),(*it))==BLOCK_QUEUE.end())
+                                 BLOCK_QUEUE.insert(BLOCK_QUEUE.begin(),(*it));
 
-            
+                }
+            }
           
-
+            blocCur->VISITED = true;
         }
         
         // * * * * * * * * * * * INICIO TEST * * * * * * * * * * * *
@@ -215,7 +239,7 @@ namespace SIM{
         
         // * * * * * * * * * * * FIN TEST * * * * * * * * * * * * *
 
-        return;
+        // return;
 
 
         cout<<"\n**********************INICIANDO**********************\n";

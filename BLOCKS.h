@@ -65,6 +65,7 @@ namespace BLOCKS{
 
             bool ENABLED = false;
             bool ACTIVE  = false;
+            bool VISITED = false;
 
             int8_t priority = 5;
             
