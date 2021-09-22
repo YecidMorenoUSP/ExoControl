@@ -1,6 +1,5 @@
 #define BLOCKS_H
 
-
 enum TypeBlock_{
     BLKType_Default,
     BLKType_SUM,

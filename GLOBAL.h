@@ -368,7 +368,8 @@ if(modo <= s){
           for(int jt=0;jt < s; jt++){
 
             AUX_f= AUX_f+ prob(it,jt)*Pk1.slice(it);
-
+     
+            
 
           }
 

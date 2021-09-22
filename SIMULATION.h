@@ -239,22 +239,25 @@ namespace SIM{
         
         // * * * * * * * * * * * FIN TEST * * * * * * * * * * * * *
 
-        // return;
-
+        // return; 
 
         cout<<"\n**********************INICIANDO**********************\n";
         EVENTS::time_index = FIRST_LAP;
         EVENTS::time_begin = std::chrono::steady_clock::now();
         if(BLOCK_ORDER.size()>= 1){
             for  (std::vector<BLOCKS::BLOCK*>::iterator   itL = BLOCK_ORDER.begin() ; itL != BLOCK_ORDER.end(); itL++){
-                 (*itL)->Exec();
-                 cout<<" || "<<(*itL)->name;
+                cout<<" || "<<(*itL)->name;
+                try{
+                    (*itL)->Exec();
+                }catch(...){
+                    EVENTS::SimulationTaskMutex_end.store(true);
+                    cout<<"error menino do ceu";
+                }
                  if (EVENTS::SimulationTaskMutex_end.load()) break;
                  while (SIM::EVENTS::pauseSimulation.load()){std::this_thread::yield();};
                  
             }       
         }
-
 
         if (EVENTS::SimulationTaskMutex_end.load()) return;
 
@@ -263,7 +266,6 @@ namespace SIM{
         while (true)
         {   
             if (EVENTS::SimulationTaskMutex_end.load()) break;
-            
             
             if(BLOCK_ORDER.size()>= 1){
                 for  (std::vector<BLOCKS::BLOCK*>::iterator   itL = BLOCK_ORDER.begin() ; itL != BLOCK_ORDER.end(); itL++){
@@ -297,52 +299,3 @@ namespace SIM{
         }
     }
 };
-
-/*
- iterateLINES_GUI{
-            (*it)->usedGrafo = false;
-        }
-
-        //Adicionamos a la cola de ejecucuion las fuentes    
-        iterateBLOCKS_GUI{
-            if((*it)->N_IN == 0) BLOCK_QUEUE.push_back((*it));
-        }
-
-        int i = 0;
-        while (BLOCK_QUEUE.size()>0)
-        {
-            if(i>=20) break;
-            BLOCKS::BLOCK *blocCur = BLOCK_QUEUE.back();
-            BLOCK_ORDER.push_back(blocCur);
-            BLOCK_QUEUE.pop_back();
-
-            // printf("\n %d  ->  %s",i++,blocCur->name.c_str());
-            
-            
-            for  (std::vector<LINES::LINE*>::iterator   itL = LINES::ALL_LINES_GUI.begin() ; itL != LINES::ALL_LINES_GUI.end(); itL++){
-                if((*itL)->usedGrafo == true ) continue;
-                if((*itL)->blockOut->name.compare(blocCur->name) == 0 ) (*itL)->usedGrafo = true;
-
-                //if((*itL)->blockOut->name.compare(blocCur->name) == 0){
-                //    
-                //    int gaG = getActivesGrafo((*itL)->blockIn->name);
-                //    cout<<"gag "<<(*itL)->blockIn->name<<" : "<<gaG<<" | ";
-                //    if(gaG>=1){
-                //        (*itL)->usedGrafo == true;
-                //    } 
-                //    if(gaG == 1) BLOCK_QUEUE.push_back((*itL)->blockIn);
-                //}
-            }
-
-            for  (std::vector<LINES::LINE*>::iterator   itL = LINES::ALL_LINES_GUI.begin() ; itL != LINES::ALL_LINES_GUI.end(); itL++){
-                if((*itL)->usedGrafo == true ) continue;
-                int gaG = getActivesGrafo((*itL)->blockOut->name);
-                if(gaG == 0) BLOCK_QUEUE.push_back((*itL)->blockOut);
-            }
-
-        }
-        
-        iterateBLOCKS_GUI{
-            if((*it)->N_OUT == 0) BLOCK_ORDER.push_back((*it));
-        }
-*/

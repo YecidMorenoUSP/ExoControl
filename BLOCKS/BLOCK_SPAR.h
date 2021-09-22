@@ -163,7 +163,9 @@ namespace BLOCKS{
             }
 
             virtual void Exec() override{
+                
                 if(SIM::EVENTS::time_index == FIRST_LAP){
+                     VARS.set_ref = false;
                      model.K1.load(std::string(name_of_path)+"K1.dat");
                      model.K2.load(std::string(name_of_path)+"K2.dat");
                      model.K3.load(std::string(name_of_path)+"K3.dat");
@@ -200,7 +202,9 @@ namespace BLOCKS{
                      model.prob.load(std::string(name_of_path)+"prob.dat");
                      model.xest.load(std::string(name_of_path)+"xest.dat");
                      
+                     model.X.zeros(4,1);
                      GUI::LOG_MSG = GUI::LOG_MSG + "\nTodos os .dat foram carregados \n" ;
+
 
                     //  model.LPr_campo.load(std::string(name_of_path)+"LPr_campo.dat");
                      return;
@@ -209,16 +213,18 @@ namespace BLOCKS{
                     return;
                 }
                 
+             
+                
                 //Variables de entrada al bloque
                 double emg_signal1   = as_scalar(arma::abs((*IN_ARMA[1])));
                 double emg_signal2   = as_scalar(arma::abs((*IN_ARMA[2])));
-                double Analog1       = as_scalar(arma::abs((*IN_ARMA[3])));
-                double Analog2       = as_scalar(arma::abs((*IN_ARMA[4])));
-
-                double theta_d       = as_scalar(arma::abs((*IN_ARMA[5])));
-                int    encoder_m     = as_scalar(arma::abs((*IN_ARMA[6])));
+                double theta_d       = as_scalar(arma::abs((*IN_ARMA[3])));
+                int    encoder_m     = as_scalar(arma::abs((*IN_ARMA[4])));
+                double Analog1       = as_scalar(arma::abs((*IN_ARMA[5])));
+                double Analog2       = as_scalar(arma::abs((*IN_ARMA[6])));
                 int    encoder_l     = as_scalar(arma::abs((*IN_ARMA[7])));
-                return;
+
+                
 
                 if(!VARS.set_ref){
                     // Esperar 0.5s;
@@ -232,7 +238,7 @@ namespace BLOCKS{
                                          VARS.POLY.p7*VARS.refTension        + 
                                          VARS.POLY.p8 )/1000;	
                     VARS.ZERO_02 =  encoder_m;
-                    VARS.ZERO_02 =  encoder_l;       
+                    VARS.ZERO_03 =  encoder_l;       
                     VARS.set_ref = true;
                 }
                 
@@ -281,6 +287,8 @@ namespace BLOCKS{
                 
                 VARS.force[0]   = VARS.Fl1;
                 VARS.force_f[0] = VARS.Fl1;
+                
+
 
                 // ------------------- Controladores ------------------------------------------------------------ //
 
@@ -314,6 +322,7 @@ namespace BLOCKS{
                     VARS.modo = 3;
                     model.K = model.K3;
                 }
+                
 
                 VARS.filtro_emg1[0] = emg_signal1;
                 model.F_est2k1_emg1 = model.A_f2*model.F_est2k_emg1 + model.L_f2*(VARS.filtro_emg1[0] - as_scalar(model.C_ff2*model.F_est2k_emg1));
@@ -324,7 +333,8 @@ namespace BLOCKS{
                 model.F_est2k1_emg2 = model.A_f2*model.F_est2k_emg2 + model.L_f2*(VARS.filtro_emg2[0] - as_scalar(model.C_ff2*model.F_est2k_emg2));
                 VARS.y_est_emg2 = as_scalar(model.C_ff2*model.F_est2k_emg2);
                 model.F_est2k_emg2 = model.F_est2k1_emg2;
-
+                
+                
                 model.X(0,0) = VARS.dot_force[0];
                 model.X(1,0) = VARS.force_f[0];
                 model.X(2,0) = VARS.theta_l;
@@ -336,6 +346,7 @@ namespace BLOCKS{
                 model.K_2 = as_scalar(model.K(0,1));
                 model.K_3 = as_scalar(model.K(0,2));
                 model.K_4 = as_scalar(model.K(0,3));
+                
 
                 model.y = VARS.force_f[0];
                 model.u1 = model.K(0,0)*model.xest(0,0) + 
@@ -343,9 +354,15 @@ namespace BLOCKS{
                            model.K(0,2)*model.X(2,0)    + 
                            model.K(0,3)*model.X(3,0);
 
+            
+                
+
                 cube x_cube(2,1,1);
                 mat xest_act = model.xest;
+ 
                 model.LPr_campo = rkf_slsm(model.Pk1, model.R_f, model.Q_f, model.F_f, model.G_f, model.Ef_f, model.Eg_f, model.Ec_f, model.Ed_f, model.C_f, model.D_f, model.B_f, model.Eb_f, model.xest, model.y, model.u1, model.M_f, model.N_f, model.mu_f, model.alpha_f, model.s, model.prob, VARS.modo);
+       
+               
 
                 x_cube = model.LPr_campo(1,0);
                 model.xest = x_cube.slice(0);   
@@ -356,6 +373,8 @@ namespace BLOCKS{
                 VARS.velocity_d = as_scalar(model.u1);
 
                 OUT_ARMA[1] = VARS.velocity_d;
+
+                printf("\n %8f %8f %8f %8f %8f",VARS.velocity_d,VARS.theta_l,VARS.theta_m,VARS.tension[0],VARS.y_est_emg1);
 
                 VARS.force[6] = VARS.force[5];
                 VARS.force[5] = VARS.force[4];

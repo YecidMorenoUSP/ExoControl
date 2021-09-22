@@ -389,33 +389,33 @@ void modelSPAR(std::string path){
       RLQR_Lr = RLQR(2,0);
 
       RLQR_Pr_mat_modo1 = RLQR_Pr.slice(0);
-      RLQR_Pr_mat_modo1.save(path+"Pr_modo1.dat", raw_ascii);
+      RLQR_Pr_mat_modo1.save(path+"Pr_modo1.dat", arma_ascii);
 
       RLQR_Pr_mat_modo2 = RLQR_Pr.slice(1);
-      RLQR_Pr_mat_modo2.save(path+"Pr_modo2.dat", raw_ascii);
+      RLQR_Pr_mat_modo2.save(path+"Pr_modo2.dat", arma_ascii);
 
       RLQR_Pr_mat_modo3 = RLQR_Pr.slice(2);
-      RLQR_Pr_mat_modo3.save(path+"Pr_modo3.dat", raw_ascii);
+      RLQR_Pr_mat_modo3.save(path+"Pr_modo3.dat", arma_ascii);
 
 
 
       RLQR_Kr_mat_modo1 = RLQR_Kr.slice(0);
-      RLQR_Kr_mat_modo1.save(path+"Kr_modo1.dat", raw_ascii);
+      RLQR_Kr_mat_modo1.save(path+"Kr_modo1.dat", arma_ascii);
 
       RLQR_Kr_mat_modo2 = RLQR_Kr.slice(1);
-      RLQR_Kr_mat_modo2.save(path+"Kr_modo2.dat", raw_ascii);
+      RLQR_Kr_mat_modo2.save(path+"Kr_modo2.dat", arma_ascii);
 
       RLQR_Kr_mat_modo3 = RLQR_Kr.slice(2);
-      RLQR_Kr_mat_modo3.save(path+"Kr_modo3.dat", raw_ascii);
+      RLQR_Kr_mat_modo3.save(path+"Kr_modo3.dat", arma_ascii);
 
       RLQR_Lr_mat_modo1 = RLQR_Lr.slice(0);
-      RLQR_Lr_mat_modo1.save(path+"Lr_modo1.dat", raw_ascii);
+      RLQR_Lr_mat_modo1.save(path+"Lr_modo1.dat", arma_ascii);
 
       RLQR_Lr_mat_modo2 = RLQR_Lr.slice(1);
-      RLQR_Lr_mat_modo2.save(path+"Lr_modo2.dat", raw_ascii);
+      RLQR_Lr_mat_modo2.save(path+"Lr_modo2.dat", arma_ascii);
 
       RLQR_Lr_mat_modo3 = RLQR_Lr.slice(2);
-      RLQR_Lr_mat_modo3.save(path+"Lr_modo3.dat", raw_ascii);
+      RLQR_Lr_mat_modo3.save(path+"Lr_modo3.dat", arma_ascii);
 
 
       
@@ -427,13 +427,13 @@ void modelSPAR(std::string path){
       K3a = RLQR_Kr_mat_modo3.submat(0,Nk-2,3,Nk-2);
 
       K1 = K1a.t();
-      K1.save(path+"K1.dat", raw_ascii);
+      K1.save(path+"K1.dat", arma_ascii);
       
       K2 = K2a.t();
-      K2.save(path+"K2.dat", raw_ascii);
+      K2.save(path+"K2.dat", arma_ascii);
 
       K3 = K3a.t();
-      K3.save(path+"K3.dat", raw_ascii);
+      K3.save(path+"K3.dat", arma_ascii);
 
       double modo_s = 0.0;
       int modo = 0, modov = 0;
@@ -922,44 +922,44 @@ field<cube> LPr_campo(4,1);
     mat omega_est2k;
     omega_est2k.zeros(4,1);
 
-    C_ff2b.save(path+"C_ff2b.dat", raw_ascii);
-    A_f2b.save(path+"A_f2b.dat", raw_ascii);
-    L_f2b.save(path+"L_f2b.dat", raw_ascii);
-    omega_est2k.save(path+"omega_est2k.dat", raw_ascii);
-    omega_est2k1.save(path+"omega_est2k1.dat", raw_ascii);
+    C_ff2b.save(path+"C_ff2b.dat", arma_ascii);
+    A_f2b.save(path+"A_f2b.dat", arma_ascii);
+    L_f2b.save(path+"L_f2b.dat", arma_ascii);
+    omega_est2k.save(path+"omega_est2k.dat", arma_ascii);
+    omega_est2k1.save(path+"omega_est2k1.dat", arma_ascii);
     
 
-    F_est2k1_emg1.save(path+"F_est2k1_emg1.dat", raw_ascii);
-    F_est2k_emg1.save(path+"F_est2k_emg1.dat", raw_ascii);
-    F_est2k1_emg2.save(path+"F_est2k1_emg2.dat", raw_ascii);
-    F_est2k_emg2.save(path+"F_est2k_emg2.dat", raw_ascii);
-    A_f2.save(path+"A_f2.dat", raw_ascii);
-    L_f2.save(path+"L_f2.dat", raw_ascii);
-    C_ff2.save(path+"C_ff2.dat", raw_ascii);
+    F_est2k1_emg1.save(path+"F_est2k1_emg1.dat", arma_ascii);
+    F_est2k_emg1.save(path+"F_est2k_emg1.dat", arma_ascii);
+    F_est2k1_emg2.save(path+"F_est2k1_emg2.dat", arma_ascii);
+    F_est2k_emg2.save(path+"F_est2k_emg2.dat", arma_ascii);
+    A_f2.save(path+"A_f2.dat", arma_ascii);
+    L_f2.save(path+"L_f2.dat", arma_ascii);
+    C_ff2.save(path+"C_ff2.dat", arma_ascii);
     
-    Pk1.save(path+"Pk1.dat", raw_ascii);
-    R_f.save(path+"R_f.dat", raw_ascii);
-    Q_f.save(path+"Q_f.dat", raw_ascii);
-    F_f.save(path+"F_f.dat", raw_ascii);
-    G_f.save(path+"G_f.dat", raw_ascii);
-    Ef_f.save(path+"Ef_f.dat", raw_ascii);
-    Eg_f.save(path+"Eg_f.dat", raw_ascii);
-    Ec_f.save(path+"Ec_f.dat", raw_ascii);
-    Ed_f.save(path+"Ed_f.dat", raw_ascii);
-    C_f.save(path+"C_f.dat", raw_ascii);
-    D_f.save(path+"D_f.dat", raw_ascii);
-    B_f.save(path+"B_f.dat", raw_ascii);
-    Eb_f.save(path+"Eb_f.dat", raw_ascii);
-    y.save(path+"y.dat", raw_ascii);
-    u1.save(path+"u1.dat", raw_ascii);
-    M_f.save(path+"M_f.dat", raw_ascii);
-    N_f.save(path+"N_f.dat", raw_ascii);
-    prob.save(path+"prob.dat", raw_ascii);
-    xest.save(path+"xest.dat", raw_ascii);
-
-    LPr_campo.save(path+"LPr_campo.dat", raw_ascii);
+    R_f.save(path+"R_f.dat", arma_ascii);
+    Q_f.save(path+"Q_f.dat", arma_ascii);
+    F_f.save(path+"F_f.dat", arma_ascii);
+    G_f.save(path+"G_f.dat", arma_ascii);
+    Ef_f.save(path+"Ef_f.dat", arma_ascii);
+    Eg_f.save(path+"Eg_f.dat", arma_ascii);
+    Ec_f.save(path+"Ec_f.dat", arma_ascii);
+    Ed_f.save(path+"Ed_f.dat", arma_ascii);
+    C_f.save(path+"C_f.dat", arma_ascii);
+    D_f.save(path+"D_f.dat", arma_ascii);
+    B_f.save(path+"B_f.dat", arma_ascii);
+    Eb_f.save(path+"Eb_f.dat", arma_ascii);
+    y.save(path+"y.dat", arma_ascii);
+    u1.save(path+"u1.dat", arma_ascii);
+    M_f.save(path+"M_f.dat", arma_ascii);
+    N_f.save(path+"N_f.dat", arma_ascii);
+    prob.save(path+"prob.dat", arma_ascii);
+    xest.save(path+"xest.dat", arma_ascii);
+    Pk1.save(path+"Pk1.dat", arma_ascii);
+    LPr_campo.save(path+"LPr_campo.dat", arma_ascii);
 
     std::cout<<"Terminado";
+
 
       
 

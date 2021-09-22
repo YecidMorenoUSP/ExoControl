@@ -422,9 +422,15 @@ namespace GUI{
 
             BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
             BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,500);
+            // (BLOCKS::BlockEPOS) BLOCKS::ALL_BLOCKS_GUI.back();
+            // new BLOCKS::BlockEPOS();
+            
             
             BLOCKS::AddBLOCK((TypeBlock_)BLKType_SPAR);
             BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(300,200);
+
+            BLOCKS::AddBLOCK((TypeBlock_)BLKType_NUMK);
+            BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(50,500);
 
             
             LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
@@ -432,48 +438,72 @@ namespace GUI{
             LINES::ALL_LINES_GUI.back()->posOut = 1;
             LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 1];
             LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+            LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
+
 
             LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
             LINES::ALL_LINES_GUI.back()->posIn = 2;
             LINES::ALL_LINES_GUI.back()->posOut = 1;
             LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 1];
             LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+            LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
+
 
             LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
             LINES::ALL_LINES_GUI.back()->posIn = 3;
             LINES::ALL_LINES_GUI.back()->posOut = 1;
             LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 2];
             LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+            LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
+
 
             LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
             LINES::ALL_LINES_GUI.back()->posIn = 4;
             LINES::ALL_LINES_GUI.back()->posOut = 1;
             LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
             LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+            LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
+
 
             LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
             LINES::ALL_LINES_GUI.back()->posIn = 5;
             LINES::ALL_LINES_GUI.back()->posOut = 2;
             LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
             LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+            LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
+
 
             LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
             LINES::ALL_LINES_GUI.back()->posIn = 6;
             LINES::ALL_LINES_GUI.back()->posOut = 3;
             LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
             LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+            LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
+
 
             LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
             LINES::ALL_LINES_GUI.back()->posIn = 7;
             LINES::ALL_LINES_GUI.back()->posOut = 1;
             LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 4];
             LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
+            LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
+
 
             LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
             LINES::ALL_LINES_GUI.back()->posIn = 1;
             LINES::ALL_LINES_GUI.back()->posOut = 1;
             LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
             LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
+            LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
+
+
+            LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
+            LINES::ALL_LINES_GUI.back()->posIn = 1;
+            LINES::ALL_LINES_GUI.back()->posOut = 1;
+            LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 6];
+            LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 4];
+            LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
+
 
             
         };

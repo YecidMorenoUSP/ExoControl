@@ -14,7 +14,7 @@ namespace BLOCKS{
  class name_of_class : public BLOCK {
         private:
             static int count;
-
+        public:
             struct VARS{
                
             }VARS;
@@ -29,9 +29,7 @@ namespace BLOCKS{
                 ImGui::End();
             }
 
-        public:
-
-            
+               
         
             name_of_class(){
                 name = name_of_block;
@@ -50,7 +48,7 @@ namespace BLOCKS{
                 auxOut << 0.0f;
                 
                 OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
-                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);            
+                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat(1,1,fill::zeros));            
                 
                 
             }
@@ -75,6 +73,8 @@ namespace BLOCKS{
                     CAN->setState(Properties.nodeId,ST_ENABLED);
                     CAN->configureInputs(Properties.nodeId);
 
+               
+
                     BlockCAN->VARS.f.mtx.lock();
                     BlockCAN->VARS.f.writeEpos [Properties.nodeId] = (int)(*IN_ARMA[1])[0];
                     BlockCAN->VARS.f.readPosition [Properties.nodeId] = (float*)OUT_ARMA[1].memptr();
@@ -88,9 +88,9 @@ namespace BLOCKS{
                     
                     cout<<"Cargado";
                     return;
-                 }
+                }
                 
-                 if(SIM::EVENTS::time_index == LAST_LAP){
+                if(SIM::EVENTS::time_index == LAST_LAP){
                     
                     CAN->setVelocity(Properties.nodeId,0);
                     CAN->setState(Properties.nodeId,ST_DISABLED);
@@ -98,7 +98,7 @@ namespace BLOCKS{
                 }
                 //__TIC__
 
-
+                // Revisar si existen estradas para evitar el error
                 if((*IN_ARMA[1]).size()>=1){
                     BlockCAN->VARS.f.mtx.lock();
                     BlockCAN->VARS.f.writeEpos [Properties.nodeId] = (int)(*IN_ARMA[1])[0];

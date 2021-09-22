@@ -136,6 +136,14 @@ namespace BLOCKS{
                                                     (char*)Properties.interfaceName.c_str(),
                                                     (char*)Properties.portName.c_str());
                     CAN->connect();
+                    
+                    if(!CAN->connect()){
+                        LOCAL.double_clicked_count = 50;
+                        GUI::MODAL_WARNING::setModal("SIMULATION FAILED","CAN NOT CONNECTED","");
+                        SIM::EVENTS::SimulationTaskMutex_end.store(true); 
+                    }
+
+
                      
                  }
                  if(SIM::EVENTS::time_index == LAST_LAP){
