@@ -14,6 +14,10 @@
                      BlockCAN_CFG_INIT();   \
                      BlockEPOS_INIT();      \
                      BlockSPAR_INIT();      \
+                     BlockSERVER_TCP_INIT();      \
+                     BlockCLIENT_TCP_INIT();      \
+                     BlockDECODE_TCP_INIT();      \
+                     BlockENCODE_TCP_INIT();      \
                     
 #define name_of_object SUM
 #include "BLOCKS/BLOCK_SUM.h"
@@ -50,6 +54,18 @@
 
 #define name_of_object SPAR
 #include "BLOCKS/BLOCK_SPAR.h"
+
+#define name_of_object SERVER_TCP
+#include "BLOCKS/BLOCK_SERVER_TCP.h"
+
+#define name_of_object CLIENT_TCP
+#include "BLOCKS/BLOCK_CLIENT_TCP.h"
+
+#define name_of_object DECODE_TCP
+#include "BLOCKS/BLOCK_DECODE_TCP.h"
+
+#define name_of_object ENCODE_TCP
+#include "BLOCKS/BLOCK_ENCODE_TCP.h"
 
 
 namespace BLOCKS{

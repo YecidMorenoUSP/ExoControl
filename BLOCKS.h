@@ -15,6 +15,10 @@ enum TypeBlock_{
     BLKType_CAN_CFG,
     BLKType_EPOS,
     BLKType_SPAR,
+    BLKType_SERVER_TCP,
+    BLKType_CLIENT_TCP,
+    BLKType_DECODE_TCP,
+    BLKType_ENCODE_TCP,
     BLKType_COUNT, //Deixar no final do Enum
 
 };

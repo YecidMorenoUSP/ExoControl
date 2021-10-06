@@ -1,3 +1,7 @@
+#if !defined(LIBS_H_MAIN)
+#define LIBS_H_MAIN
+
+
 #include <imgui.h>
 #include <imgui.cpp>
 #include <imgui_internal.h>
@@ -80,5 +84,4 @@ using namespace arma;
 #include "LINES.cpp"
 #include "SIMULATION.cpp"
 
-
-
+#endif // LIBS_H_MAIN

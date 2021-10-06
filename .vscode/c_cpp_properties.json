@@ -7,7 +7,9 @@
                 "C:\\DEV2\\LIB\\ImGuiDocking\\**",
                 "C:\\DEV2\\LIB\\**",
                 
-                "C:/DEV2/LIB/EPOS/Microsoft Visual C++/Example VC++"
+                "C:/DEV2/LIB/EPOS/Microsoft Visual C++/Example VC++",
+                "C:\\DEV2\\SRC\\Empty_projects",
+
             ],
             "defines": [
                 "_DEBUG",

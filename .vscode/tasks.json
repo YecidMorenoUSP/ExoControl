@@ -29,7 +29,8 @@
                     "-l",     "blas_win64_MT",
                     "-l",     "lapack_win64_MT",
                     
-                    //SERVER LAN
+                    //SERVER TCP and Delsys
+                    "-I",     "C:\\DEV2\\SRC\\Empty_projects",
                     "-l",     "wsock32",
                     "-l",     "Ws2_32",
                     

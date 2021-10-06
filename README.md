@@ -50,3 +50,7 @@ Si desea ver la salida de un bloque sólo necesita ubicar el mouse y presionar c
 
 ### Test con Rehamove3, FES en el brazo
 ![Alt Text](https://github.com/YecidMorenoUSP/PublicFiles/blob/master/ExoControl/GIF/FES1.gif?raw=true)
+
+
+# Dicas para o futuro
+1. Usar punteros vacios en lugar de variables punteros arma para enlazar los bloques.
