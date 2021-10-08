@@ -48,20 +48,35 @@ namespace BLOCKS{
                     ImGui::PopButtonRepeat();
                     
                     if(changed){
-                        sizeBlock.y = 50.0f + (N_IN)*25;
-                        N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
-                        N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
-                        posIn.insert(posIn.begin(),N_IN+1,ImVec2(0,0));
+                        UpadateIO();
+                        // sizeBlock.y = 50.0f + (N_IN)*25;
+                        // N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
+                        // N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
+                        // posIn.insert(posIn.begin(),N_IN+1,ImVec2(0,0));
                         
-                        IN_ARMA.clear();
-                        IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);
+                        // IN_ARMA.clear();
+                        // IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);
 
-                        OUT_ARMA[1] = fmat::fixed<1,128>();
+                        // OUT_ARMA[1] = fmat::fixed<1,128>();
                     }
                     
                     ShowDemoWindowWidgets();
                 ImGui::End();
             }
+
+            virtual void UpadateIO(){
+
+                sizeBlock.y = 50.0f + (N_IN)*25;
+                N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
+                N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
+                posIn.insert(posIn.begin(),N_IN+1,ImVec2(0,0));
+                
+                IN_ARMA.clear();
+                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);
+
+                OUT_ARMA[1] = fmat::fixed<1,128>();
+    
+            };
 
         public:
     

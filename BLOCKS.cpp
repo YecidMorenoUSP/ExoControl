@@ -89,7 +89,7 @@ namespace BLOCKS{
         aux->ENABLED = true;
         aux->ACTIVE = true;
         aux->posBlock = aux->posBlock + ImVec2(30,20)*aux->indexType;
-               
+        aux->indexBLOCKS =  ALL_BLOCKS_GUI.size()-BLKType_COUNT;
 
         ALL_BLOCKS_GUI.push_back(aux);
         

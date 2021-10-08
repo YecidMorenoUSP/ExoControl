@@ -1,6 +1,60 @@
+#include <windows.h>
+#include <string.h>
+#include <iostream>
+
+std::string savefilename(char *filter = "All Files (*.blkReabRob)\0*.blkReabRob\0", HWND owner = NULL) {
+  OPENFILENAME ofn;
+  char fileName[MAX_PATH] = "";
+  ZeroMemory(&ofn, sizeof(ofn));
+
+  ofn.lStructSize = sizeof(OPENFILENAME);
+  ofn.hwndOwner = owner;
+  ofn.lpstrFilter = filter;
+  ofn.lpstrFile = fileName;
+  ofn.nMaxFile = MAX_PATH;
+  ofn.Flags = 0x00080000 | 0x00001000 | 0x00000004;
+  ofn.lpstrDefExt = "";
+
+  std::string fileNameStr;
+
+  if ( GetSaveFileName(&ofn) )
+    fileNameStr = fileName;
+
+  return fileNameStr;
+}
+
+std::string openfilename(char *filter = "All Files (*.blkReabRob)\0*.blkReabRob\0", HWND owner = NULL) {
+  OPENFILENAME ofn;
+  char fileName[MAX_PATH] = "";
+  ZeroMemory(&ofn, sizeof(ofn));
+
+  ofn.lStructSize = sizeof(OPENFILENAME);
+  ofn.hwndOwner = owner;
+  ofn.lpstrFilter = filter;
+  ofn.lpstrFile = fileName;
+  ofn.nMaxFile = MAX_PATH;
+  ofn.Flags = 0x00080000 | 0x00001000 | 0x00000004;
+  ofn.lpstrDefExt = "";
+
+  std::string fileNameStr;
+
+  if ( GetOpenFileName(&ofn) )
+    fileNameStr = fileName;
+
+  return fileNameStr;
+}
+
 #include "libs.cpp"
 
 void ADDMenuBar();
+
+#define IO_BEGIN_FILE "[BEGIN]\0"
+#define IO_BLOCK_FILE "\n[BLOCK]\0"
+#define IO_LINE_FILE  "\n[LINE]\0"
+#define IO_END_FILE   "\n[END]\0"
+
+
+
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -234,7 +288,118 @@ void ADDMenuBar(){
                     LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 4];
                     LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
                 }
+                
+                if(ImGui::MenuItem("LOAD"        , NULL, false)){
+                    
+                    std::string FileNameSTR = openfilename();
+                    if(FileNameSTR.length()>0){
 
+                        FILE *fptr;
+                        if ((fptr = fopen(FileNameSTR.c_str(),"rb")) == NULL){
+                            printf("Error! opening file");
+                            return;
+                        }
+
+                        char info[100]  = "";
+                        fread(&info, sizeof(info), 1, fptr); 
+
+                        if(strcmp(info,IO_BEGIN_FILE) == 0){
+                            while(true){
+                                
+                                fread(&info, sizeof(info), 1, fptr); 
+
+                                    if(strcmp(info,IO_BEGIN_FILE) == 0){}
+                                else if(strcmp(info,IO_END_FILE  ) == 0){break;}
+                                else if(strcmp(info,IO_BLOCK_FILE) == 0){
+                                    BLOCKS::BLOCK * blk = new BLOCKS::BLOCK();
+                                    blk->load(fptr);
+
+                                    BLOCKS::AddBLOCK((TypeBlock_)blk->dataBlock.type);
+                                    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(blk->dataBlock.posX,blk->dataBlock.posY);
+                                    BLOCKS::ALL_BLOCKS_GUI.back()->sizeBlock = ImVec2(blk->dataBlock.sizeX,blk->dataBlock.sizeY);
+                                    BLOCKS::ALL_BLOCKS_GUI.back()->N_IN  = blk->dataBlock.N_IN;
+                                    BLOCKS::ALL_BLOCKS_GUI.back()->N_OUT = blk->dataBlock.N_OUT;
+                                    BLOCKS::ALL_BLOCKS_GUI.back()->UpadateIO();
+                                }
+                                else if(strcmp(info,IO_LINE_FILE) == 0){
+                                    LINES::LINE * ln = new LINES::LINE();
+                                    ln->load(fptr);
+
+                                    LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
+                                    LINES::ALL_LINES_GUI.back()->posIn = ln->dataLine.posIn;
+                                    LINES::ALL_LINES_GUI.back()->posOut = ln->dataLine.posOut;
+                                    LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[ln->dataLine.idxOut+BLKType_COUNT];
+                                    LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[ln->dataLine.idxIn+BLKType_COUNT];
+                                    LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
+                                }
+                                else break;
+
+                            }
+                        }else{
+                            printf("ERROR con el archivo");
+                        }
+
+                        fclose(fptr);    
+                    }
+
+                }
+
+                if(ImGui::MenuItem("SAVE"        , NULL, false)){
+                    std::string FileNameSTR = savefilename();
+                    if(FileNameSTR.length()>0){
+                        FILE *fptr;
+
+                        if ((fptr = fopen(FileNameSTR.c_str(),"wb")) == NULL){
+                            printf("Error! opening file");
+                            return;
+                        }
+
+                        char info[100];
+
+                        sprintf(info,IO_BEGIN_FILE);
+                        fwrite(&info, sizeof(info), 1, fptr); 
+
+
+                        iterateBLOCKS_GUI{
+                            sprintf(info,IO_BLOCK_FILE);
+                            fwrite(&info, sizeof(info), 1, fptr); 
+                            (*it)->save(fptr);
+                        }
+
+                        iterateLINES_GUI{
+                            sprintf(info,IO_LINE_FILE);
+                            fwrite(&info, sizeof(info), 1, fptr); 
+                            (*it)->save(fptr);
+                        }
+
+                        sprintf(info,IO_END_FILE);
+                        fwrite(&info, sizeof(info), 1, fptr); 
+
+                        fclose(fptr);     
+                    }
+                    // iterateBLOCKS_GUI{
+                    //     printf("\n");
+                    //     printf("\nBLOCKS::AddBLOCK((TypeBlock_)%d);",(*it)->TYPE);
+                    //     printf("\nBLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(%ff,%ff);",(*it)->posBlock.x,(*it)->posBlock.y);
+                    //     printf("\nBLOCKS::ALL_BLOCKS_GUI.back()->sizeBlock = ImVec2(%ff,%ff);",(*it)->sizeBlock.x,(*it)->sizeBlock.y);
+                    //     printf("\nBLOCKS::ALL_BLOCKS_GUI.back()->N_IN  = %d;",(*it)->N_IN );
+                    //     printf("\nBLOCKS::ALL_BLOCKS_GUI.back()->N_OUT = %d;",(*it)->N_OUT);
+                    //     printf("\nBLOCKS::ALL_BLOCKS_GUI.back()->UpadateIO();");
+                    // }
+
+                    // iterateLINES_GUI{
+                    //     printf("\n");
+                    //     printf("\nLINES::ALL_LINES_GUI.push_back( new LINES::LINE() );");
+                    //     printf("\nLINES::ALL_LINES_GUI.back()->posIn = %d;",(*it)->posIn);
+                    //     printf("\nLINES::ALL_LINES_GUI.back()->posOut = %d;",(*it)->posOut);
+                    //     printf("\nLINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[%d+BLKType_COUNT];",(*it)->blockOut->indexBLOCKS);
+                    //     printf("\nLINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[%d+BLKType_COUNT];",(*it)->blockIn->indexBLOCKS);
+                    //     printf("\nLINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);");
+                    // }
+
+                    // BLOCKS::AddBLOCK((TypeBlock_)BLKType_CAN_CFG);
+                    // BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,100);
+                }
 
                 ImGui::EndMenu();
             }

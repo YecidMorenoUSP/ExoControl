@@ -43,6 +43,9 @@
 				    "-I","C:\\DEV2\\LIB\\EPOS\\Microsoft Visual C++\\Definition Files",  
                     "-l","EposCmd64",
                     
+                    //FILES
+                    "-l","comdlg32",
+
                     //DELSYS
 					"-l",     "libsmpt",
                     

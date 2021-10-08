@@ -40,14 +40,20 @@ namespace BLOCKS{
             virtual void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);           
                     
-                    if(ImGui::Combo("TypeFrame", &Properties.item_current, Properties.items, IM_ARRAYSIZE(Properties.items))){
-                        switch (Properties.item_current)
-                        {
-                            case  0: N_OUT = 0; break;
-                            case  1: N_OUT = 2; break;
-                            default: N_OUT = 0; break;
-                        }
-
+                    bool changed = false;
+                    ImGui::PushButtonRepeat(true);
+                    if (ImGui::ArrowButton("##left", ImGuiDir_Left)) { 
+                        N_OUT--;
+                        changed = true;
+                        if(N_OUT<=0) N_OUT = 0;}
+                    ImGui::SameLine();
+                    ImGui::Text("  %d  ", N_OUT);
+                    ImGui::SameLine();
+                    if (ImGui::ArrowButton("##right", ImGuiDir_Right)) { N_OUT++;changed = true;}
+                    ImGui::PopButtonRepeat();
+                    
+                    if(changed){
+       
                         sizeBlock.y = 50.0f + (N_OUT)*25;
 
                         N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
@@ -109,18 +115,9 @@ namespace BLOCKS{
                     return;
                 }
 
-                switch (Properties.item_current){
-                    
-                    case 0: //  - - - 
-                         (*IN_ARMA[1]).print("IN : ");
-                         break;
-                    case 1: //  - - - 
-                        OUT_ARMA[1] = (*IN_ARMA[1])[1];
-                        OUT_ARMA[2] = (*IN_ARMA[1])[2];
-                         break;
-                     
-                     default:
-                         break;
+                if(N_OUT == 0) (*IN_ARMA[1]).print("IN: "); else
+                for(int i = 1 ; i <= N_OUT ; i++){
+                    OUT_ARMA[i] = (*IN_ARMA[1])[i];
                 }
                 
             }

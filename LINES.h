@@ -27,6 +27,28 @@ namespace LINES{
                
                 draw_list->AddCircleFilled(lineCenter,2,GUI::getColorU32(GUICol_Black));                    
             }
+
+            struct data_s
+            {
+                int posIn;
+                int posOut;
+                int idxIn;
+                int idxOut;
+            }dataLine;
+
+                
+            void save(FILE *fptr){
+                dataLine.posIn = posIn;
+                dataLine.posOut = posOut;
+                dataLine.idxIn = blockIn->indexBLOCKS;
+                dataLine.idxOut = blockOut->indexBLOCKS;
+            
+                fwrite(&dataLine, sizeof(dataLine), 1, fptr); 
+            };
+            void load(FILE *fptr){
+                fread(&dataLine, sizeof(dataLine), 1, fptr); 
+            };
+
             
     };
 

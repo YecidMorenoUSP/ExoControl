@@ -45,6 +45,34 @@ namespace BLOCKS{
 
             }
 
+            struct data_s
+            {
+                int type = 0;
+                float posX = 10;
+                float posY = 20;
+                float sizeX = 100;
+                float sizeY = 60;
+                int N_IN  = 1;
+                int N_OUT = 1;
+            }dataBlock;
+
+                
+            void save(FILE *fptr){
+                
+                dataBlock.type = TYPE;
+                dataBlock.posX = posBlock.x;
+                dataBlock.posY = posBlock.y;
+                dataBlock.sizeX = sizeBlock.x;
+                dataBlock.sizeY = sizeBlock.y;
+                dataBlock.N_IN = N_IN;
+                dataBlock.N_OUT = N_OUT;
+
+                fwrite(&dataBlock, sizeof(dataBlock), 1, fptr); 
+            };
+            void load(FILE *fptr){
+                fread(&dataBlock, sizeof(dataBlock), 1, fptr); 
+            };
+
             struct LOCAL{
                 int double_clicked_count = 0;
                 bool double_clicked = false;
@@ -70,6 +98,8 @@ namespace BLOCKS{
             bool ENABLED = false;
             bool ACTIVE  = false;
             bool VISITED = false;
+
+            int indexBLOCKS;
 
             int8_t priority = 5;
             
@@ -99,6 +129,24 @@ namespace BLOCKS{
         virtual void Draw();
         virtual void DrawADD(){};
         virtual void Exec(){};
+        virtual void UpadateIO(){
+
+            N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
+            N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
+            
+            posIn.clear();
+            posOut.clear();
+
+            posIn.insert(posIn.begin(),N_IN+1,ImVec2(0,0));
+            posOut.insert(posOut.begin(),N_OUT+1,ImVec2(0,0)); 
+
+            arma::fmat auxOut ;
+            auxOut << 0.0f;
+            
+            OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
+            IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);    
+  
+        };
         virtual BLOCK * Create(){return NULL;};
     
     };
