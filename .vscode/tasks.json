@@ -16,7 +16,7 @@
                     "-I",   "C:\\DEV2\\LIB\\ImGuiDocking",
                     "-I",   "C:\\DEV2\\LIB\\SDL2\\include\\SDL2",
                     "-I",   "C:\\DEV2\\LIB\\Image",
-                    "-L",    "C:\\DEV2\\LIB\\SDL2\\lib",
+                    "-L",   "C:\\DEV2\\LIB\\SDL2\\lib",
                     "-l",     "SDL2",
                     "-l",     "SDL2main",
                     "-l",     "opengl32",
@@ -30,7 +30,7 @@
                     "-l",     "lapack_win64_MT",
                     
                     //SERVER TCP and Delsys
-                    "-I",     "C:\\DEV2\\SRC\\Empty_projects",
+                    "-I",     "C:\\DEV2\\MY_LIBS\\Utils_TCP",
                     "-l",     "wsock32",
                     "-l",     "Ws2_32",
                     

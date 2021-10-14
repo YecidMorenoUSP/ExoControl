@@ -19,7 +19,7 @@ enum TypeBlock_{
     BLKType_CLIENT_TCP,
     BLKType_DECODE_TCP,
     BLKType_ENCODE_TCP,
-    BLKType_COUNT, //Deixar no final do Enum
+    BLKType_COUNT, //<ADD_BLOCK_ENUM>
 
 };
 

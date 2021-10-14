@@ -2,42 +2,48 @@
     #include "BLOCKS.h"   
 #endif
 
-
-
 #define name_of_class  PPCAT(Block, name_of_object)
 #define name_of_type   PPCAT(BLKType_, name_of_object)
 #define name_of_block  STRINGIZE(name_of_object)
 #define name_of_init   PPCAT(name_of_class,_INIT)
+#define name_of_path   (std::string(name_of_block) + "/").c_str()
 
 
 namespace BLOCKS{
 
  class name_of_class : public BLOCK {
-        private:
-            static int count;
+        private:          
 
+            static int count;
+    
             struct VARS{
-                
             }VARS;
 
-            struct Properties{
 
-            }Properties;
+            struct Properties{     
+                
+            }Properties ;
 
             virtual void showProperties(){
-                ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);            
+                ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);                               
                     ShowDemoWindowWidgets();
                 ImGui::End();
             }
 
         public:
-        
+    
+
             name_of_class(){
+
                 name = name_of_block;
                 TYPE = name_of_type;
 
-                N_IN  = 2;
-                N_OUT = 1;
+                // priority = 7;
+
+                N_IN  = 0;
+                N_OUT = 0;
+
+                sizeBlock = ImVec2(100,50);
                 
                 N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
                 N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
@@ -49,27 +55,40 @@ namespace BLOCKS{
                 auxOut << 0.0f;
                 
                 OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
-                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);            
-            
+                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);  
+           
+                return;
+
             }
 
             virtual void Exec() override{
-                if(SIM::EVENTS::time_index == FIRST_LAP){
-                     return;
-                 }
-                 if(SIM::EVENTS::time_index == LAST_LAP){
-                     return;
-                 }
+            /*Esta função será executada com cada um das repetições da simulação
+
+                FIRST_LAP     -> Se estabelece a conexão com o hardware 
+                                 e as primeroras configurações se precisa
+
+                LAST_LAP      -> É a ultima volta da simulação, 
+                                 aquí se fecham conexões e salva os dados
+
+                n             -> Numero da entrada ou saida
+                
+                (*IN_ARMA)[n] -> Valor da entrada n
+
+                OUT_ARMA[n]   -> Valor da saida n*/
+
+                if(SIM::EVENTS::time_index == FIRST_LAP)return;
+                if(SIM::EVENTS::time_index == LAST_LAP)return;
             }
+            
+            
+            virtual void DrawADD(){ 
+                //Mudar o estilo visual do bloco
+            }    
             
             virtual BLOCK * Create(){
                 return new name_of_class();
             }
             
-            virtual void DrawADD(){
-                //ImDrawList* draw_list = ImGui::GetWindowDrawList();
-                //draw_list->AddCircleFilled(LOCAL.posBlock_Global.Min,5,GUI::getColorU32(GUICol_Amarillo));
-            }    
             
     };
 

@@ -236,26 +236,21 @@ namespace SIM{
         for  (std::vector<BLOCKS::BLOCK*>::iterator it = BLOCK_ORDER.begin() ; it != BLOCK_ORDER.end(); it++){
                 cout<<" || "<<(*it)->name;
         }    
-        
-        // * * * * * * * * * * * FIN TEST * * * * * * * * * * * * *
-
-        // return; 
+        // * * * * * * * * * * * FIN TEST * * * * * * * * * * * * * 
 
         cout<<"\n**********************INICIANDO**********************\n";
         EVENTS::time_index = FIRST_LAP;
         EVENTS::time_begin = std::chrono::steady_clock::now();
         if(BLOCK_ORDER.size()>= 1){
-            for  (std::vector<BLOCKS::BLOCK*>::iterator   itL = BLOCK_ORDER.begin() ; itL != BLOCK_ORDER.end(); itL++){
+            for (std::vector<BLOCKS::BLOCK*>::iterator   itL = BLOCK_ORDER.begin() ; itL != BLOCK_ORDER.end(); itL++){
                 cout<<" || "<<(*itL)->name;
                 try{
                     (*itL)->Exec();
                 }catch(...){
                     EVENTS::SimulationTaskMutex_end.store(true);
-                    cout<<"error menino do ceu";
                 }
-                 if (EVENTS::SimulationTaskMutex_end.load()) break;
-                 while (SIM::EVENTS::pauseSimulation.load()){std::this_thread::yield();};
-                 
+                if (EVENTS::SimulationTaskMutex_end.load()) break;
+                while (SIM::EVENTS::pauseSimulation.load()){std::this_thread::yield();};       
             }       
         }
 
@@ -265,15 +260,13 @@ namespace SIM{
         EVENTS::time_begin = std::chrono::steady_clock::now();
         while (true)
         {   
-            if (EVENTS::SimulationTaskMutex_end.load()) break;
-            
+            if (EVENTS::SimulationTaskMutex_end.load()) break;   
             if(BLOCK_ORDER.size()>= 1){
                 for  (std::vector<BLOCKS::BLOCK*>::iterator   itL = BLOCK_ORDER.begin() ; itL != BLOCK_ORDER.end(); itL++){
                     (*itL)->Exec();
                      while (SIM::EVENTS::pauseSimulation.load()){std::this_thread::yield();};
                 }       
-            }
-            
+            }  
             EVENTS::time_index ++;
             while(std::chrono::duration_cast<std::chrono::nanoseconds> (std::chrono::steady_clock::now() - EVENTS::time_begin).count()/1000000000.f <= EVENTS::time_index*EVENTS::Ts);  
         }

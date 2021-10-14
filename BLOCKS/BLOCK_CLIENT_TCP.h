@@ -11,8 +11,8 @@
 #define DEBUG_CLIENT_TCP
 #define DEFAULT_BUFLEN 512
 
-#include <Cpp_SocketServer/utilsTCP.h>
-#include <Cpp_SocketServer/ClientTCP.h>
+#include <utilsTCP.h>
+#include <ClientTCP.h>
 
 
 namespace BLOCKS{

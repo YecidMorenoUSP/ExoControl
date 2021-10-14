@@ -12,7 +12,7 @@
 #define DEBUG_SERVER_TCP
 #define DEFAULT_BUFLEN 512
 
-#include <Cpp_SocketServer/ServerTCP.h>
+#include <ServerTCP.h>
 
 
 namespace BLOCKS{
