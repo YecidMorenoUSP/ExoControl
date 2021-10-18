@@ -43,6 +43,9 @@
 				    "-I","C:\\DEV2\\LIB\\EPOS\\Microsoft Visual C++\\Definition Files",  
                     "-l","EposCmd64",
                     
+                    //ESP32
+                    "-I",     "C:\\DEV2\\MY_LIBS\\Utils_COM",
+                    
                     //FILES
                     "-l","comdlg32",
 

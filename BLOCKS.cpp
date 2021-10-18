@@ -18,7 +18,8 @@
                      BlockCLIENT_TCP_INIT();      \
                      BlockDECODE_TCP_INIT();      \
                      BlockENCODE_TCP_INIT();      \
-                     //<ADD_BLOCK_INIT>
+                     BlockESP32_INIT();		  \
+					 //<ADD_BLOCK_INIT>
 
 
 #define name_of_object SUM
@@ -68,6 +69,9 @@
 
 #define name_of_object ENCODE_TCP
 #include "BLOCKS/BLOCK_ENCODE_TCP.h"
+
+#define name_of_object ESP32
+#include "BLOCKS/BLOCK_ESP32.h"
 
 //<ADD_BLOCK_DEFINE_NAME_AND_INCLUDE_H>
 

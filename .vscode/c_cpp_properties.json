@@ -10,6 +10,9 @@
                 "C:/DEV2/LIB/EPOS/Microsoft Visual C++/Example VC++",
                 "C:\\DEV2\\SRC\\Empty_projects",
 
+                "C:\\DEV2\\MY_LIBS\\Utils_COM",
+                "C:\\DEV2\\MY_LIBS\\Utils_TCP",
+
             ],
             "defines": [
                 "_DEBUG",

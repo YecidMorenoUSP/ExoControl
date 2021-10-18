@@ -46,32 +46,7 @@ namespace BLOCKS{
 
             }Properties;
 
-            void updateN_IN(){
-                N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
-                N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
-
-                posIn.clear();
-                posOut.clear();
-                IN_ARMA.clear();
-                VARS.items.clear();
-                
-                posIn.insert(posIn.begin(),N_IN+1,ImVec2(0,0));
-                
-                arma::fmat auxOut ;
-                auxOut << 0.0f;
-                    
-                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);        
-
-
-                for(int i = 0 ; i < (N_IN) ; i++){
-                    ImGui::PlotItem A;
-                    A.label = Properties.labels[i];
-                    A.type = (ImGui::PlotItem::Type) Properties.typeLine[i]; 
-                    A.color = Properties.colors[i];
-                    A.size = 1;
-                    VARS.items.push_back(A);
-                }
-            }
+            
 
             virtual void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);  
@@ -173,6 +148,36 @@ namespace BLOCKS{
                 ImGui::End();
                 ImGui::Begin("Block logic",&GUI::EVENTS::showBlocks,0);       
             }    
+
+            virtual void updateN_IN(){
+
+                GUI::LOG_MSG =GUI::LOG_MSG + "\n  Virtual Update" ;
+
+                N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
+                N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
+
+                posIn.clear();
+                posOut.clear();
+                IN_ARMA.clear();
+                VARS.items.clear();
+                
+                posIn.insert(posIn.begin(),N_IN+1,ImVec2(0,0));
+                
+                arma::fmat auxOut ;
+                auxOut << 0.0f;
+                    
+                IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);        
+
+
+                for(int i = 0 ; i < (N_IN) ; i++){
+                    ImGui::PlotItem A;
+                    A.label = Properties.labels[i];
+                    A.type = (ImGui::PlotItem::Type) Properties.typeLine[i]; 
+                    A.color = Properties.colors[i];
+                    A.size = 1;
+                    VARS.items.push_back(A);
+                }
+            }
             
     };
 
