@@ -5,7 +5,7 @@
    Este grafo es el que tiene nivel de complejidad más bajo, su nivel de prioridad es ajustable, si se desea ejecutar al final de todo el proceso, como lo es el caso de un log, que guardará datos en un .TXT, o en el caso de una configuracion inicial, como establecer la configuracion de las EPOS.
 
     <figure align="center">
-        <img src="res/CAN_CNFG.png" />
+        <img src="res/CAN_CNFG.png" /> <br>
         <figcaption>Fig.1 BLoque encargado de la configuracion CAN.</figcaption>
     </figure>
     
