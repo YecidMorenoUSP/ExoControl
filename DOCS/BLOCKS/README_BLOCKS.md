@@ -96,22 +96,93 @@ Estos valores son un numero entero de 0 hasta 10, donde 10 es extrictamente impo
 
 ## Modo de funcionamiento
 
-La 
+La complejidad de este paradigma es unir diferentes sistemas en uno solo, asumiendo retardos y posibles ploblemas de implementacion, al momento de ejecutar un bloque algunas instrucciones suelen tardar más del tienpo que se tiene disponible por razones de conexíon y sincronizacion, basado en este problema, los bloques pueden tambien ser categorizados como ejecucion sincrona y asincrona.
 
 * Sincrono
   
+  Generalmente los bloques de procesos simples, como sumas, restas, operaciones matematicas, no llevan mucho tiempo para ser ejecutadas, por ello son ejecutados en el hilo principal de la rutina de ejecucion. 
 
 * Asincrono
   
-  Debido a que el sistema depende de otras entidades, como elementos fisicos, esternos, recursos de red y placas, existen cuellos e botella, donde si se deseam juntar en un esquema sincrono, no sería posible garantizar tiempos, por ejemplo, el exoesqueleto de rehabilitacion trabaja bajo una frecuencia de 200Hz, que es equivalente a 5ms por ciclo, ahora si se desea juntar el exoesqueleto con el sistema FES, cuya frecuencia de operacion es de 60Hz, se encuentra que si todo trabaja bajo un mismo proceso no sería posible garantizar una frecuencia mayor a 60Hz.
+  Debido a que el sistema depende de otras entidades, como elementos fisicos, esternos, recursos de red y placas, existen cuellos e botella, donde si se deseam juntar en un esquema sincrono, no sería posible garantizar tiempos, por ejemplo, el exoesqueleto de rehabilitacion trabaja bajo una frecuencia de 200Hz, que es equivalente a 5ms por ciclo, ahora si se desea juntar con el sistema FES, cuya frecuencia de operacion es de 60Hz, se encuentra que si todo trabaja bajo un mismo proceso no sería posible garantizar una frecuencia mayor a 60Hz.
 
   Los bloques asincronos trabajan usando Threads, que se ejecutan en simultaneo con el proceso principal, y sólo cuando es posible hacer un cambio este se hará, es decir, cada bloque puede manejar frecuencias diferentes internamente.
 
-  Esto tambien trae un problema, pues la cuantizacion de las variables va a verse afectada, como puede verse en la imagen 8, donde hay dos señales sinosoidales cuya frecuencia es de 2Hz, pero poseen diferentes frecuencias de cuantizacion, la curva azul está cuentizada a 200Hz y la curva verde está cuantizada a 60Hz.
+  Esto tambien trae un problema, pues la cuantizacion de las variables va a verse afectada, como puede verse en la imagen 8, donde hay dos señales identicas, sinosoidales cuya frecuencia es de 2Hz, pero poseen diferentes frecuencias de cuantizacion, la curva azul está cuentizada a 200Hz y la curva naranja está cuantizada a 60Hz.
 
     <figure align="center">
         <img src="res/cuantizado.png" /> <br> 
         <figcaption>Fig.8 Señal sinosoidal cuantizada a 200 y 60 Hz </figcaption>
     </figure>
 
-Como podemos ver encontramos un problema aquí donde las freciencias de cuantizacion más bajas tiene un problema de actualizacion del valor respecto al tiempo, dejando valores constantes en cuento se cumple el tiempo requerido. Llevando esto a un ejemplo real entre el Exoesqueleto y el actuador FES, vemos un retardo en la actuacion de aproximadamente $[1/60 - 1 /200]s \approx 11ms$
+    Como podemos ver, encontramos un problema aquí donde las freciencias de cuantizacion más bajas tiene un problema de actualizacion del valor respecto al tiempo, dejando valores constantes en cuanto se cumple el tiempo requerido. Llevando esto a un ejemplo real entre el Exoesqueleto y el actuador FES, vemos un retardo en la actuacion de $[1/60 - 1 /200]s \approx 11ms$
+
+
+# Arquitectura de los bloques
+
+El diagrama de clases pude verse en la figura 9, como podemos ver la clase principal **BLOCKS** define la pantilla de los bloques, y en cada bloque por separado podemos tener instrucciones diferentes, accediendo con el mismo nombre de metodo, *Herencia*.
+
+<figure align="center">
+    <img src="res/UML_BLOCKS.png" /> <br> 
+    <figcaption>Fig.9 Señal sinosoidal cuantizada a 200 y 60 Hz </figcaption>
+</figure>
+
+Cada metodo tiene un proposito general de acuerdo a la siguiente tabla:
+
+| Nombre |   Funcion |
+|---|---|
+|save|Este metodo no es virtual, por tal motivo todos los bloques posseen el mismo fragmento de codigo, se usa para agregar al archivo donde se guardará el proyecto|
+|load|Al igual que el metodo *save*, pero su funcion es cargar las configuraciones del archivo al proyecto actual|
+|Constructor| Crea el objeto deseado y establece alfunos parametros iniciales, como la creacion de las variables de entrada y salida de acuerdo alos requerimientos |
+|ShowProperties|Cada uno de los botones de las propiedades de los bloques son creados aquí, y estos serán visibles en la pestaña propiedades, al clicar dos veces sobre un bloque|
+|Draw|La forma del bloque, el color, el tamanho y sus interacciones con el usuario son definidas aquí, por ejemplo si desea mostrar una imegen prediseñada y cloque azul estandarm puede ser agregado aquí|
+|DrawADD|Los elementos gráficos adicionales son diseñados aquí, como ver una animacion, un led virtual pizcando, o un boton sobre el bloque.|
+|Exec|De todas, una de las mas importantes a la hora de ejecutar las instrucciones, pues todo lo que esté aquí adentro será ejecutado a cada ciclo del proceso, evite usar algoritmos lentos, si es el caso haga uso de bloques asincronos|
+|UpadateIO|Crea y altera las variables que interconectan los bloques, y ublica sus posiciones conforme a esta funcion. es util al momento de usar bloques dinámicos, como un multiplexor que va a tomar 4 entradas e una salida.|
+
+### Descripcion detallada de los metodos
+
+* virtual void Exec(){}
+    ```C++
+    virtual void Exec() override{
+     /*Esta função será executada com cada um das repetições da simulação
+ 
+        FIRST_LAP     -> Se estabelece a conexão com o hardware 
+                        e as primeroras configurações se precisa
+
+        LAST_LAP      -> É a ultima volta da simulação, 
+                        aquí se fecham conexões e salva os dados
+
+        n             -> Numero da entrada ou saida
+        
+        (*IN_ARMA)[n] -> Valor da entrada n
+
+        OUT_ARMA[n]   -> Valor da saida n*/
+
+        if(SIM::EVENTS::time_index == FIRST_LAP)return;
+        if(SIM::EVENTS::time_index == LAST_LAP)return;
+    }
+    ```
+* name_of_class(){}
+    ```C++
+    name_of_class(){
+
+                name = name_of_block;
+                TYPE = name_of_type;
+
+                priority = 7;
+
+                N_IN  = 0;
+                N_OUT = 0;
+
+                UpdateIO();
+                
+                // - - - - - - - - -
+                // Your code her
+                // - - - - - - - - -
+
+                return;
+
+            }
+    ```
+
