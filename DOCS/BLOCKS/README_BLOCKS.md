@@ -126,7 +126,7 @@ El diagrama de clases pude verse en la figura 9, como podemos ver la clase princ
 
 <figure align="center">
     <img src="res/UML_BLOCKS.png" /> <br> 
-    <figcaption>Fig.9 Señal sinosoidal cuantizada a 200 y 60 Hz </figcaption>
+    <figcaption>Fig.9 Diagrama de clases de los bloques </figcaption>
 </figure>
 
 Cada metodo tiene un proposito general de acuerdo a la siguiente tabla:
@@ -188,3 +188,77 @@ Cada metodo tiene un proposito general de acuerdo a la siguiente tabla:
             }
     ```
 
+# Cómo adicionar un bloque?
+
+## Metodo 1, Manual
+
+Mediante un ejemplo vamos a ver como agregar el bloque **BLOCK_TEST**
+
+1. Modificar el archivo ```BLOCKS.cpp```
+   
+    * Buscar el comentario ```//<ADD_BLOCK_INIT> ``` e incluir en la linea anterior la siguiente instruccion, donde NAME = BLOCK_TEST :
+        ```C++
+        Block##NAME##_INIT(); \
+        ```
+        Quedando de la siguiente manera
+        ```C++
+        #define DefineBLOCKS BlockSUM_INIT();       \
+                            BlockPOW_INIT();       \
+                            BlockABS_INIT();       \
+                            BlockMULTI_INIT();     \
+                            BlockNUMK_INIT();      \
+                            BlockFUNGEN_INIT();    \
+                            BlockSCOPE_INIT();     \
+                                    \...\
+                                    \...\
+                                    \...\
+                            BlockESP32_INIT();		 \
+                        //----------ADDED------------------
+                            BlockBLOCK_TEST_INIT();   \
+                        //----------ADDED------------------
+                            //<ADD_BLOCK_INIT>
+        ``` 
+    
+    * Buscar el comentario ```//<ADD_BLOCK_DEFINE_NAME_AND_INCLUDE_H> ``` e incluir en la linea anterior la siguiente instruccion, donde NAME = BLOCK_TEST :
+        ```C++
+        #define name_of_object ##NAME##
+        #include "BLOCKS/BLOCK_##NAME##.h"
+        ```
+        Quedando de la siguiente manera
+        ```C++
+        #define name_of_object ENCODE_TCP
+        #include "BLOCKS/BLOCK_ENCODE_TCP.h"
+
+        #define name_of_object ESP32
+        #include "BLOCKS/BLOCK_ESP32.h"
+
+        //----------ADDED------------------
+            #define name_of_object BLOCK_TEST
+            #include "BLOCKS/BLOCK_BLOCK_TEST.h"
+        //----------ADDED------------------
+
+        //<ADD_BLOCK_DEFINE_NAME_AND_INCLUDE_H>
+        ``` 
+
+2. Modificar el archivo ```BLOCKS.h```
+   * Buscar el comentario ```//<ADD_BLOCK_ENUM> ``` e incluir en la linea anterior la siguiente instruccion, donde NAME = BLOCK_TEST :
+        ```C++
+        BLKType_##NAME##,
+        ```
+        Quedando de la siguiente manera
+        ```C++
+        enum TypeBlock_{
+                BLKType_Default,
+                BLKType_ENCODE_TCP,
+                    \...\
+                    \...\
+                    \...\
+                BLKType_ESP32,
+                BLKType_BLOCK_TEST,
+                BLKType_COUNT, //<ADD_BLOCK_ENUM>
+        };
+        ```
+
+3. Compilar
+
+## Metodo 2, Via Script *ADDBLOCK.exe*
