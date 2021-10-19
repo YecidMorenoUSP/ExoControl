@@ -250,11 +250,13 @@ Mediante un ejemplo vamos a ver como agregar el bloque **BLOCK_TEST**
         enum TypeBlock_{
                 BLKType_Default,
                 BLKType_ENCODE_TCP,
-                    \...\
-                    \...\
-                    \...\
+                    //...
+                    //...
+                    //...
                 BLKType_ESP32,
+        //----------ADDED------------------
                 BLKType_BLOCK_TEST,
+        //----------ADDED------------------
                 BLKType_COUNT, //<ADD_BLOCK_ENUM>
         };
         ```
