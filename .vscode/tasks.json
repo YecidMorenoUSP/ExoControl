@@ -2,7 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build C++ (Multiple cpp files)",
+            "label": "Build C++ APP-ReabRob",
             "type": "shell",
             "command": "x86_64-w64-mingw32-g++",
 			"args": [ //"-m32",

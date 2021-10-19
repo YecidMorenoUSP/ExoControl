@@ -190,9 +190,13 @@ Cada metodo tiene un proposito general de acuerdo a la siguiente tabla:
 
 # Cómo adicionar un bloque?
 
+Mediante un ejemplo vamos a ver como agregar el bloque **BLOCK_TEST**
+
 ## Metodo 1, Manual
 
-Mediante un ejemplo vamos a ver como agregar el bloque **BLOCK_TEST**
+Es un poco tedioso, pero permite visualizar como se comporta el algoritmo para agregar un bloque, de esta misma manera tambien se puede eliminar.
+
+    NOTA: Tenga en cuenta que si ha guardado un archivo **.blkReabRob** anteriormente y realiza el procedimiento de manera errada, puede causar grandes daños. no se recomiendan eliminar los bloques una vez haya sido lanzada la version estable.
 
 1. Modificar el archivo ```BLOCKS.cpp```
    
@@ -260,7 +264,45 @@ Mediante un ejemplo vamos a ver como agregar el bloque **BLOCK_TEST**
                 BLKType_COUNT, //<ADD_BLOCK_ENUM>
         };
         ```
+3. Programar el funcionamiento
+   
+    De acuerdo a la seccion [Arquitectura de los bloques](#arquitectura-de-los-bloques) modifique los ficheros según sus requerimientos.
 
-3. Compilar
+4. Compilar
+   
+   Elecute la tarea **"Build C++ APP-ReabRob"** presionando las teclas :
+   
+        [CTRL] + [SHIFT] + [B]
+
+    Y espere hasta que el proceso termine.
 
 ## Metodo 2, Via Script *ADDBLOCK.exe*
+1. Escriba en su consola de powershell el siguiente comando.
+    ```powershell
+    ADDBLOCK.exe BLOCK_TEST
+    ```
+    Automaticamente se harán las verificaciones para determinar si es posible adicionar el nuevo bloque, si su salida es similar a esta, porfavor verifique el error e intentelo de nuevo.
+
+    <figure align="center">
+        <img src="res/ADDBLOCK_FAILED_D.png" /> <br> 
+        <figcaption>Fig.9 Diagrama de clases de los bloques </figcaption>
+    </figure>
+
+    Si su salida presenta una salida similar a esta, continue con el siguiente paso
+    
+    <figure align="center">
+        <img src="res/ADDBLOCK_SUCESS_D.png" /> <br> 
+        <figcaption>Fig.9 Diagrama de clases de los bloques </figcaption>
+    </figure>
+
+2. Programar el funcionamiento
+   
+    De acuerdo a la seccion [Arquitectura de los bloques](#arquitectura-de-los-bloques) modifique los ficheros según sus requerimientos.
+
+3. Compilar
+   
+   Elecute la tarea **"Build C++ APP-ReabRob"** presionando las teclas :
+   
+        [CTRL] + [SHIFT] + [B]
+
+    Y espere hasta que el proceso termine.
