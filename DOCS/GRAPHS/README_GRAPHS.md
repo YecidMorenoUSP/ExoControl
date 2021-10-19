@@ -1,3 +1,9 @@
+<style>
+    figure{
+        background-color: white;
+        color: black;
+    };
+</style>
 
 ## Posibles arquitecturas de grafos
 1. Grafo de un bloque <div style="text-align: justify"> 
@@ -35,6 +41,7 @@
    </div>
 
 4. Grafo secuencial de tres bloques <div style="text-align: justify">
+   
     En esta configuracion podemos ver varios ejemplos como los de Fig.2, aquí ya podemos ver una dependencia, donde para ejecutar el bloque *SCOPE* es necesario ejecutar primero el bloque *FUNGEN*, ya se crea una **secuencia**.
 
     <figure align="center">
