@@ -1,3 +1,5 @@
+
+
 <style>
     figure{
         background-color: rgba(255,255,255,.4);
@@ -176,7 +178,7 @@ Cada metodo tiene un proposito general de acuerdo a la siguiente tabla:
                 N_OUT = 0;
 
                 UpdateIO();
-                
+
                 // - - - - - - - - -
                 // Your code her
                 // - - - - - - - - -

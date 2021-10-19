@@ -1,3 +1,7 @@
+[README_GRAPHS](DOCS/GRAPHS/README_GRAPHS.md)
+
+[README_BLOCKS](DOCS/BLOCKS/README_BLOCKS.md)
+
 # ExoControl **v0.3**
 Este respositorio foi feito para o trabalho de mentrado do aluno Yecid Moreno.
 O objetivo principal é criam uma GUI intuitiva que seja programavel usamdo blocos para o controle do exoesquelo de rehabilitação robótica.
