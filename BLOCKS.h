@@ -55,6 +55,7 @@ namespace BLOCKS{
                 float sizeY = 60;
                 int N_IN  = 1;
                 int N_OUT = 1;
+                //bool ACTIVE = true;
             }dataBlock;
 
                 
@@ -67,7 +68,7 @@ namespace BLOCKS{
                 dataBlock.sizeY = sizeBlock.y;
                 dataBlock.N_IN = N_IN;
                 dataBlock.N_OUT = N_OUT;
-
+                //dataBlock.ACTIVE = ACTIVE;
                 fwrite(&dataBlock, sizeof(dataBlock), 1, fptr); 
             };
             void load(FILE *fptr){
@@ -173,6 +174,7 @@ namespace BLOCKS{
    
     void AddBLOCK(TypeBlock_ TypeBlock);
     void DROOPBLOCK(ImGuiID ID);
+    void DROOPBLOCK(BLOCK * blk);
 
     void BLOCK::Draw(){
                 
@@ -260,7 +262,11 @@ namespace BLOCKS{
                 
                 const bool double_clicked = (LOCAL.hovered && g.IO.MouseDoubleClicked[0]);
                 const bool clicked = (LOCAL.hovered && g.IO.MouseClicked[0]);
-                                               
+
+                if(LOCAL.hovered && g.IO.MouseDoubleClicked[1]){
+                    DROOPBLOCK(this);
+                }
+
                 if(clicked && EVENTS::creatingLine == 0){
                     LOCAL.inDrag = true;
                     LOCAL.posBlock_aux = posBlock;

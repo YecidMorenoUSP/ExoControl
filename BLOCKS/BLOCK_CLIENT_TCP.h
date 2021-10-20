@@ -42,6 +42,10 @@ namespace BLOCKS{
                     if(ImGui::InputText("Port",VARS.port,sizeof(VARS.port))){
                         
                     }
+                    if(ImGui::Button("ANKLEBOT")){
+                        sprintf(VARS.address,"192.168.0.66",sizeof("192.168.0.66"));
+                        sprintf(VARS.port,"8000",sizeof("8000"));
+                    }
                     
                     ShowDemoWindowWidgets();
                 ImGui::End();

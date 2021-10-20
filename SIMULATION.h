@@ -185,6 +185,7 @@ namespace SIM{
         // 1. Lo primero que debemos hacer es agregar a la cola los bloques existentes con máxima prioridad 6-10.
         for(int indexPriority = 0 ; indexPriority <= 10 ; indexPriority ++)
         iterateBLOCKS_GUI{
+            if(!(*it)->ACTIVE) continue;
             if((*it)->priority != indexPriority) continue;
             if(getActivesGrafo((*it)->name) == 0){
                 if((*it)->priority == indexPriority){

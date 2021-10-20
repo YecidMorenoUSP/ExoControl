@@ -356,7 +356,7 @@ namespace GUI{
 
         iterateBLOCKS_GUI{
             //cout<<"\n "<<(*(*it)->IN_ARMA[2])<<"  ";
-            (*it)->Draw();
+            if((*it)->ACTIVE) (*it)->Draw();
         }  
         
         if(BLOCKS::EVENTS::creatingLine >= 1){

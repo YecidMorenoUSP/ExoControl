@@ -116,5 +116,28 @@ namespace BLOCKS{
                 
     }
 
+    void DROOPBLOCK(BLOCK * blk){
+            
+            
+        blk->ACTIVE = false;
+        while(true){
+            bool eraseItem = false;
+            iterateLINES_GUI{ 
+                if((*it)->blockIn->ACTIVE == false || (*it)->blockOut->ACTIVE == false ){
+                    (*it)->blockIn->IN_ARMA.clear();
+                    (*it)->blockIn->IN_ARMA.insert((*it)->blockIn->IN_ARMA.begin(),(*it)->blockIn->N_IN+1,new arma::fmat);  
+                    LINES::ALL_LINES_GUI.erase(it);
+                    eraseItem = true;
+                    break;
+                }
+            }
+            if(!eraseItem) break;
+        }
+        
+                
+    }
+
+    
+
     
 }
