@@ -193,6 +193,7 @@ namespace BLOCKS{
                                                     (char*)Properties.protocolStackName.c_str(),
                                                     (char*)Properties.interfaceName.c_str(),
                                                     (char*)Properties.portName.c_str());
+                // CAN1->setNodeId(32);
                 if(!CAN1->connect()) return false;
                 else{                    
                     CAN1->close();
