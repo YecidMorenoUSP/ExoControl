@@ -8,7 +8,7 @@
 #define name_of_init   PPCAT(name_of_class,_INIT)
 #define name_of_path   (std::string(name_of_block) + "/").c_str()
 
-#define DEBUG_CLIENT_TCP
+// #define DEBUG_CLIENT_TCP
 #define DEFAULT_BUFLEN 512
 
 #include <utilsTCP.h>
@@ -56,8 +56,10 @@ namespace BLOCKS{
 
             name_of_class(){
 
-                sprintf(VARS.address,"127.0.0.1",sizeof("127.0.0.1"));
-                sprintf(VARS.port,"27015",sizeof("27015"));
+                // sprintf(VARS.address,"127.0.0.1",sizeof("127.0.0.1"));
+                // sprintf(VARS.port,"27015",sizeof("27015"));
+                sprintf(VARS.address,"192.168.0.66",sizeof("192.168.0.66"));
+                sprintf(VARS.port,"8000",sizeof("8000"));
 
                 name = name_of_block;
                 TYPE = name_of_type;

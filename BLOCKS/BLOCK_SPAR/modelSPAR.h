@@ -956,7 +956,7 @@ field<cube> LPr_campo(4,1);
     prob.save(path+"prob.dat", arma_ascii);
     xest.save(path+"xest.dat", arma_ascii);
     Pk1.save(path+"Pk1.dat", arma_ascii);
-    LPr_campo.save(path+"LPr_campo.dat", arma_ascii);
+    // LPr_campo.save(path+"LPr_campo.dat", arma_ascii);
 
     std::cout<<"Terminado";
 

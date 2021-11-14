@@ -134,7 +134,8 @@ namespace BLOCKS{
 
                 N_IN  = 7;
                 
-                N_OUT = 1;
+                N_OUT = 7;
+        
 
                 sizeBlock = ImVec2(100,200);
                 
@@ -205,7 +206,15 @@ namespace BLOCKS{
                      model.X.zeros(4,1);
                      GUI::LOG_MSG = GUI::LOG_MSG + "\nTodos os .dat foram carregados \n" ;
 
-
+                     ZeroMemory(VARS.dot_force,sizeof(double)*2);
+                     ZeroMemory(VARS.force,sizeof(double)*7);
+                     ZeroMemory(VARS.force_f,sizeof(double)*7);
+                     ZeroMemory(VARS.tension,sizeof(double)*7);
+                     ZeroMemory(VARS.tension_f,sizeof(double)*7);
+                     ZeroMemory(VARS.error_f ,sizeof(double)*7);
+                     ZeroMemory(VARS.error_theta,sizeof(double)*7);
+                     ZeroMemory(VARS.filt_dot_force,sizeof(double)*2);
+                     ZeroMemory(VARS.int_force_error,sizeof(double)*2);
                     //  model.LPr_campo.load(std::string(name_of_path)+"LPr_campo.dat");
                      return;
                 }
@@ -372,9 +381,16 @@ namespace BLOCKS{
 
                 VARS.velocity_d = as_scalar(model.u1);
 
-                OUT_ARMA[1] = VARS.velocity_d;
+                OUT_ARMA[1] = VARS.velocity_d; // U
+                OUT_ARMA[2] = as_scalar(model.xest(0,0));
+                OUT_ARMA[3] = as_scalar(model.xest(1,0));
+                OUT_ARMA[4] = (VARS.dot_force[0]);
+                OUT_ARMA[5] = (VARS.force_f[0]);
+                OUT_ARMA[6] = (VARS.theta_l);
+                OUT_ARMA[7] = (VARS.int_force_error[0]);
+                
 
-                printf("\n %8f %8f %8f %8f %8f",VARS.velocity_d,VARS.theta_l,VARS.theta_m,VARS.tension[0],VARS.y_est_emg1);
+                printf("\n %8f %8f %8f %8f %8f %8f",VARS.velocity_d,VARS.theta_l,VARS.theta_m,VARS.tension[0],VARS.y_est_emg1,VARS.Kv);
 
                 VARS.force[6] = VARS.force[5];
                 VARS.force[5] = VARS.force[4];

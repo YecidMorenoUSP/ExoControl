@@ -35,3 +35,10 @@ Tabien se desarrolló un apartado de Sockets, lo cualermite counicacion tanto co
 
 <!-- ## License -->
 <!-- Released under [MIT](LICENSE) by [@YecidMorenoUSP](https://github.com/YecidMorenoUSP). -->
+
+
+## Limitaciones
+1. Velicidad con USB y EPOS
+
+## BUGS
+1. Cambiar el pwd despues de guardar o leer un archivo

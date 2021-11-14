@@ -19,6 +19,7 @@
                      BlockDECODE_TCP_INIT();      \
                      BlockENCODE_TCP_INIT();      \
                      BlockESP32_INIT();		  \
+					 BlockGIOVANNA_TCC_INIT();		  \
 					 //<ADD_BLOCK_INIT>
 
 
@@ -72,6 +73,9 @@
 
 #define name_of_object ESP32
 #include "BLOCKS/BLOCK_ESP32.h"
+
+#define name_of_object GIOVANNA_TCC
+#include "BLOCKS/BLOCK_GIOVANNA_TCC.h"
 
 //<ADD_BLOCK_DEFINE_NAME_AND_INCLUDE_H>
 
