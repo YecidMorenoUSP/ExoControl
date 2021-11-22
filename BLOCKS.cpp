@@ -20,6 +20,7 @@
                      BlockENCODE_TCP_INIT();      \
                      BlockESP32_INIT();		  \
 					 BlockGIOVANNA_TCC_INIT();		  \
+					 BlockSAVE_INIT();		  \
 					 //<ADD_BLOCK_INIT>
 
 
@@ -76,6 +77,9 @@
 
 #define name_of_object GIOVANNA_TCC
 #include "BLOCKS/BLOCK_GIOVANNA_TCC.h"
+
+#define name_of_object SAVE
+#include "BLOCKS/BLOCK_SAVE.h"
 
 //<ADD_BLOCK_DEFINE_NAME_AND_INCLUDE_H>
 

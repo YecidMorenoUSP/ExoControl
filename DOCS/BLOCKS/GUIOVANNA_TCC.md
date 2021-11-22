@@ -56,6 +56,10 @@ PORT: 8000
    1. Sõ salvar dados
    
    
+22/nov/2021
+   Salvar dados do Anklebot para analizar os tempos depois do flanco de descida. (MatLab)
+   Colocar us 4 botoes para cada etapa do teste
+   
 
 
 

@@ -227,11 +227,11 @@ namespace BLOCKS{
                 //Variables de entrada al bloque
                 double emg_signal1   = as_scalar(arma::abs((*IN_ARMA[1])));
                 double emg_signal2   = as_scalar(arma::abs((*IN_ARMA[2])));
-                double theta_d       = as_scalar(arma::abs((*IN_ARMA[3])));
-                int    encoder_m     = as_scalar(arma::abs((*IN_ARMA[4])));
-                double Analog1       = as_scalar(arma::abs((*IN_ARMA[5])));
-                double Analog2       = as_scalar(arma::abs((*IN_ARMA[6])));
-                int    encoder_l     = as_scalar(arma::abs((*IN_ARMA[7])));
+                double theta_d       = as_scalar(1.0f * ((*IN_ARMA[3])));
+                int    encoder_m     = as_scalar(1.0f * ((*IN_ARMA[4])));
+                double Analog1       = as_scalar(1.0f * ((*IN_ARMA[5])));
+                double Analog2       = as_scalar(1.0f * ((*IN_ARMA[6])));
+                int    encoder_l     = as_scalar(1.0f * ((*IN_ARMA[7])));
 
                 
 
@@ -310,8 +310,10 @@ namespace BLOCKS{
                 model.omega_est2k = model.omega_est2k1;
                 omega_l=omega_l_est;
 
-                VARS.force_d = (VARS.Kv*(theta_d - VARS.theta_l) - VARS.Bv*(omega_l)) ;  
+                // VARS.force_d = (VARS.Kv*(theta_d - VARS.theta_l) - VARS.Bv*(omega_l)) ;
                 // VARS.force_d = 0*100 + VARS.force_d + 0*100*setpoints_force; //100
+                VARS.force_d = theta_d;
+                // VARS.force_d = 33.33333333f * ( (VARS.Kv*(theta_d - VARS.theta_l)  - VARS.Bv*(omega_l) ) ;
 
                 VARS.angulo_l_ant = VARS.theta_l;
                 
@@ -325,11 +327,11 @@ namespace BLOCKS{
                 VARS.filt_dot_force[0] = 0.9048*VARS.filt_dot_force[1] + 0.09516*VARS.dot_force[1];
 
                 if(VARS.y_est_emg1 > VARS.lim_emg_1 || VARS.y_est_emg2 > VARS.lim_emg_2){
+                    VARS.modo = 1;
+                    model.K = model.K1;
+                }else{
                     VARS.modo = 2;
                     model.K = model.K2;
-                }else{
-                    VARS.modo = 3;
-                    model.K = model.K3;
                 }
                 
 
@@ -358,7 +360,7 @@ namespace BLOCKS{
                 
 
                 model.y = VARS.force_f[0];
-                model.u1 = model.K(0,0)*model.xest(0,0) + 
+                model.u1 = model.K(0,0)*model.X(0,0) + 
                            model.K(0,1)*model.xest(1,0) + 
                            model.K(0,2)*model.X(2,0)    + 
                            model.K(0,3)*model.X(3,0);

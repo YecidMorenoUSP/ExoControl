@@ -21,6 +21,7 @@ enum TypeBlock_{
     BLKType_ENCODE_TCP,
     BLKType_ESP32,
 	BLKType_GIOVANNA_TCC,
+	BLKType_SAVE,
 	BLKType_COUNT, //<ADD_BLOCK_ENUM>
 
 };
