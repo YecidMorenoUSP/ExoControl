@@ -75,7 +75,7 @@ namespace BLOCKS{
                      close_port(FES);
                     return;
                  }
-                pulse(FES,Smpt_Channel::Smpt_Channel_Blue,(*IN_ARMA[1])[0],100); 
+                pulse(FES,Smpt_Channel::Smpt_Channel_Blue,(*IN_ARMA[1])[0],30); 
             }
             
             virtual BLOCK * Create(){

@@ -17,6 +17,8 @@ namespace BLOCKS{
             static int count;
     
             struct VARS{
+                 arma::vec  tosave;
+                 int index;
             }VARS;
 
 
@@ -32,6 +34,11 @@ namespace BLOCKS{
 
         public:
     
+            void uvec_push(arma::vec  & v, float value) {
+                arma::vec av(1);
+                av.at(0) = value;
+                v.insert_cols(v.n_cols, av.col(0));
+            }
 
             name_of_class(){
 
@@ -40,7 +47,7 @@ namespace BLOCKS{
 
                 // priority = 7;
 
-                N_IN  = 0;
+                N_IN  = 1;
                 N_OUT = 0;
 
                 sizeBlock = ImVec2(100,50);
@@ -72,12 +79,25 @@ namespace BLOCKS{
 
                 n             -> Numero da entrada ou saida
                 
-                (*IN_ARMA)[n] -> Valor da entrada n
+                (*IN_ARMA)[n] -> Valor da entrada n  (*IN_ARMA[1])
 
                 OUT_ARMA[n]   -> Valor da saida n*/
 
-                if(SIM::EVENTS::time_index == FIRST_LAP)return;
-                if(SIM::EVENTS::time_index == LAST_LAP)return;
+                if(SIM::EVENTS::time_index == FIRST_LAP){
+                    VARS.tosave.clear();
+                    VARS.index = 0;
+                    return;
+                }
+                if(SIM::EVENTS::time_index == LAST_LAP){
+                    VARS.tosave.save("out.dat", raw_ascii);
+                    return;
+                }
+                // VARS.tosave[VARS.index] =  as_scalar(*IN_ARMA[1]);
+                // uvec_push(VARS.tosave,as_scalar(*IN_ARMA[1]));
+                int sz = VARS.tosave.size();
+                VARS.tosave.resize(sz+1);
+                VARS.tosave(sz) = as_scalar(*IN_ARMA[1]);
+                VARS.index ++;
             }
             
             

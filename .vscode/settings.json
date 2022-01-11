@@ -71,7 +71,8 @@
         "xlocbuf": "cpp",
         "xlocmes": "cpp",
         "xlocmon": "cpp",
-        "xloctime": "cpp"
+        "xloctime": "cpp",
+        "rehamovelib.c": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

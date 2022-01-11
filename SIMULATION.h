@@ -10,7 +10,7 @@ namespace SIM{
     void setLOG(std::string txt);
 
     namespace EVENTS{
-        float Ts = 1.0f/200.00f;
+        float Ts = (1.0f/200.00f);
         // float Ts = 1.0f/1000.00f;
 
         

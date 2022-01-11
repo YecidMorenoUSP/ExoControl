@@ -3,6 +3,14 @@
 
 #include <direct.h>
 
+float G_Ef1[4]={0.8f,1.2f,30.0f,0.8f};
+float G_Ef2[4]={0.8f,1.0f,1.0f,1.0f};
+float G_Q=1;
+float G_R=1;
+float G_Qf=1;
+float G_Egf=1;
+float G_Rf=1;
+
 void modelSPAR(std::string path){
     _mkdir(path.c_str());
     std::cout<<"Iniciado";
@@ -117,19 +125,19 @@ void modelSPAR(std::string path){
     mat Ef_1, Ef_2, Ef_3;
     
     Ef_1.zeros(1,4);
-    Ef_1(0,0) = -6.000000e-01;
-    Ef_1(0,1) = -4.960000e+02*0.8f;
-    Ef_1(0,2) = 1.300000e+02;
-    Ef_1(0,3) = 4.805000e+03 * 1.3f;
+    Ef_1(0,0) = -6.000000e-01 * G_Ef1[0];
+    Ef_1(0,1) = -4.960000e+02 * G_Ef1[1];
+    Ef_1(0,2) = 1.300000e+02  * G_Ef1[2];
+    Ef_1(0,3) = 3.0e3         * G_Ef1[3];
     Ef.slice(0) = Ef_1;
 
 
     
     Ef_2.zeros(1,4);
-    Ef_2(0,0) = -5.000000e-01;
-    Ef_2(0,1) = -4.770000e+02;
-    Ef_2(0,2) = 1.820000e+02;
-    Ef_2(0,3) = 4.671100e+03;
+    Ef_2(0,0) = -5.000000e-01       * G_Ef2[0] ;
+    Ef_2(0,1) = -4.770000e+02       * G_Ef2[1] ;
+    Ef_2(0,2) = 1.820000e+02        * G_Ef2[2] ;
+    Ef_2(0,3) = 4.671100e+03        * G_Ef2[3] ;
     Ef.slice(1) = Ef_2;
 
     Ef_3.zeros(1,4);
@@ -144,11 +152,11 @@ void modelSPAR(std::string path){
     mat Eb_1, Eb_2, Eb_3;
     
     Eb_1.zeros(1,1);
-    Eb_1(0,0) = -1.186000000000000e+02;
+    Eb_1(0,0) = -1.186000000000000e+02; // e+02
     Eb.slice(0) = Eb_1;
 
     Eb_2.zeros(1,1);
-    Eb_2(0,0) = -1.424000000000000e+02;
+    Eb_2(0,0) = -1.424000000000000e+02; // e+02
     Eb.slice(1) = Eb_2;
 
     Eb_3.zeros(1,1);
@@ -280,10 +288,10 @@ void modelSPAR(std::string path){
     mat Q_1,Q_2,Q_3;
 
     Q_1.eye(4,4);
-    Q.slice(0) = Q_1 * 1000.0f;
+    Q.slice(0) = Q_1 * 1000.0f * G_Q;
 
     Q_2.eye(4,4);
-    Q.slice(1) = Q_2 * 1000.0f;
+    Q.slice(1) = Q_2 * 1000.0f * G_Q;
     
     Q_3.eye(4,4);
     Q.slice(2) = Q_3 * 1000.0f;
@@ -293,11 +301,11 @@ void modelSPAR(std::string path){
     mat R_1,R_2,R_3;
 
     R_1.zeros(1,1);
-    R_1(0,0) = 1 * 0.01f;
+    R_1(0,0) = 1 * 0.01f *G_R;
     R.slice(0) = R_1;
 
     R_2.zeros(1,1);
-    R_2(0,0) = 1 * 0.01f;
+    R_2(0,0) = 1 * 0.01f * G_R;
     R.slice(1) = R_2;
 
     R_3.zeros(1,1);
@@ -453,10 +461,10 @@ void modelSPAR(std::string path){
 
 
     R_f.eye(1,1);
-    R_f=0.01*R_f;
+    R_f=0.01*R_f * G_Rf;
 
     Q_f.eye(2,2);
-    Q_f = Q_f * 10000000;
+    Q_f = Q_f * 10000000 * G_Qf;
     
 
     cube F_f(2,2,3);
@@ -508,7 +516,7 @@ void modelSPAR(std::string path){
     G_f1(1,0) = 1.232146e+00;
     G_f1(1,1) = 1.634185e+00;
 
-    G_f.slice(0) = G_f1;
+    G_f.slice(0) = G_f1 * G_Egf;
 
     mat G_f2;
     G_f2.zeros(2,2);
@@ -935,7 +943,9 @@ field<cube> LPr_campo(4,1);
     Pk1.save(path+"Pk1.dat", arma_ascii);
     // LPr_campo.save(path+"LPr_campo.dat", arma_ascii);
 
-    std::cout<<"Terminado";
+    std::cout<<"Terminado\n";
+    K1.print("K1 : ");
+    K2.print("K2 : ");
 
 
       

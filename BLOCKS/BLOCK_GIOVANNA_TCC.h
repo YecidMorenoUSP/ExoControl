@@ -21,17 +21,21 @@ namespace BLOCKS{
                 float meadia_n_1;
                 int index;
                 int index_activate;
+                double faixa;
+                double pos_d_1;
             }VARS;
 
 
             struct Properties{     
                 float Amp_FES;
+                int Time_FES;
             }Properties ;
 
             virtual void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);                               
                     // ShowDemoWindowWidgets();
                     ImGui::InputFloat( "Amp_FES", &(Properties.Amp_FES), 0, 100.0f, "%.3f");
+                    ImGui::InputInt( "Time_FES", &(Properties.Time_FES), 1, 10);
                 ImGui::End();
             }
 
@@ -46,7 +50,7 @@ namespace BLOCKS{
                 // priority = 7;
 
                 N_IN  = 4;
-                N_OUT = 2;
+                N_OUT = 1;
 
                 sizeBlock = ImVec2(100,50);
                 
@@ -62,39 +66,28 @@ namespace BLOCKS{
                 OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
                 IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);  
            
+                Properties.Amp_FES = 22.0f;
+                Properties.Time_FES = 100.0f;
                 return;
 
             }
 
             virtual void Exec() override{
-            /*Esta função será executada com cada um das repetições da simulação
-
-                FIRST_LAP     -> Se estabelece a conexão com o hardware 
-                                 e as primeroras configurações se precisa
-
-                LAST_LAP      -> É a ultima volta da simulação, 
-                                 aquí se fecham conexões e salva os dados
-
-                n             -> Numero da entrada ou saida
-                
-                (*IN_ARMA)[n] -> Valor da entrada n
-
-                OUT_ARMA[n]   -> Valor da saida n*/
-
+   
                 if(SIM::EVENTS::time_index == FIRST_LAP){
                     // Inicialiçar os DATA_LOG
                     VARS.index = 0;
                     VARS.index_activate = 0;
                     VARS.meadia_n_1 = 0;
-                    Properties.Amp_FES = 0.0f;
+                    VARS.faixa = 0.15f;
+                    VARS.pos_d_1 = 0;
                     return;   
                 }
                 if(SIM::EVENTS::time_index == LAST_LAP){
-                    // Finaliçar os DATA_LOG
                     return;
                 }
 
-                VARS.pos_v10[VARS.index%10] = arma::as_scalar((*IN_ARMA[1]));
+                /*VARS.pos_v10[VARS.index%10] = arma::as_scalar((*IN_ARMA[1]));
                 
                 if(VARS.index%10 == 9){
                     float media_cur = arma::mean(VARS.pos_v10);
@@ -117,7 +110,31 @@ namespace BLOCKS{
                     printf("\n\n Estimulando");
                 }else{
                     OUT_ARMA[1] = 0.0f;
+                }*/
+                
+                double pos_dp = arma::as_scalar((*IN_ARMA[1]));
+                double pos_d  = arma::as_scalar((*IN_ARMA[2]));
+                double vel_dp = arma::as_scalar((*IN_ARMA[3]));
+
+                double vel_d = pos_d - VARS.pos_d_1; // / Ts
+                
+                
+
+                if(pos_dp > (-VARS.faixa) &&  pos_dp < VARS.faixa ){
+                    if(vel_d > 0.05 && vel_dp > 0.05 ){
+                        VARS.index_activate = Properties.Time_FES;
+                    }
                 }
+
+                if(VARS.index_activate >= 0 ){
+                    OUT_ARMA[1] = Properties.Amp_FES;
+                    VARS.index_activate--;
+                }else{
+                    OUT_ARMA[1] = 0.0f;
+                }
+
+                VARS.pos_d_1 = vel_d;
+
             }
             
             

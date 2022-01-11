@@ -9,7 +9,7 @@
 #define name_of_path   (std::string(name_of_block) + "/").c_str()
 
 #define SERVER_TCP_SEND_FIRST
-#define DEBUG_SERVER_TCP
+//#define DEBUG_SERVER_TCP
 #define DEFAULT_BUFLEN 512
 
 #include <ServerTCP.h>

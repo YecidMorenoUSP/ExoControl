@@ -74,7 +74,7 @@ namespace BLOCKS{
                 double lim_emg_2 = 0.1;
 
 
-                int factor_de_seguridad = 7000; 
+                int factor_de_seguridad = 720; 
                 double modo = 0;
                 
             }VARS;
@@ -86,6 +86,22 @@ namespace BLOCKS{
 
             virtual void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);            
+
+                    ImGui::InputFloat("G_Ef1 X(0)", &G_Ef1[0], 0.01f, 1.0f, "%.3f");
+                    ImGui::InputFloat("G_Ef1 X(1)", &G_Ef1[1], 0.01f, 1.0f, "%.3f");
+                    ImGui::InputFloat("G_Ef1 X(2)", &G_Ef1[2], 0.01f, 1.0f, "%.3f");
+                    ImGui::InputFloat("G_Ef1 X(3)", &G_Ef1[3], 0.01f, 1.0f, "%.3f");
+
+                    ImGui::InputFloat("G_Ef2 X(0)", &G_Ef2[0], 0.01f, 1.0f, "%.3f");
+                    ImGui::InputFloat("G_Ef2 X(1)", &G_Ef2[1], 0.01f, 1.0f, "%.3f");
+                    ImGui::InputFloat("G_Ef2 X(2)", &G_Ef2[2], 0.01f, 1.0f, "%.3f");
+                    ImGui::InputFloat("G_Ef2 X(3)", &G_Ef2[3], 0.01f, 1.0f, "%.3f");
+
+                    ImGui::InputFloat("G_Q"  , &G_Q  , 0.01f, 1.0f, "%.3f");
+                    ImGui::InputFloat("G_R"  , &G_R  , 0.01f, 1.0f, "%.3f");
+                    ImGui::InputFloat("G_Qf" , &G_Qf , 0.01f, 1.0f, "%.3f");
+                    ImGui::InputFloat("G_Egf", &G_Egf, 0.01f, 1.0f, "%.3f");
+                    ImGui::InputFloat("G_Rf" , &G_Rf , 0.01f, 1.0f, "%.3f");
 
                     if(ImGui::Button("Load Model")){
                         modelSPAR(name_of_path);
@@ -227,7 +243,7 @@ namespace BLOCKS{
                 //Variables de entrada al bloque
                 double emg_signal1   = as_scalar(arma::abs((*IN_ARMA[1])));
                 double emg_signal2   = as_scalar(arma::abs((*IN_ARMA[2])));
-                double theta_d       = as_scalar(1.0f * ((*IN_ARMA[3])));
+                double theta_d       = -as_scalar(1.0f * ((*IN_ARMA[3])));
                 int    encoder_m     = as_scalar(1.0f * ((*IN_ARMA[4])));
                 double Analog1       = as_scalar(1.0f * ((*IN_ARMA[5])));
                 double Analog2       = as_scalar(1.0f * ((*IN_ARMA[6])));
@@ -252,7 +268,7 @@ namespace BLOCKS{
                 }
                 
                 VARS.theta_m =  (double(encoder_m - VARS.ZERO_02)/4096)*2*3.1416;
-                VARS.theta_l =  (double(encoder_l - VARS.ZERO_03)/4096)*2*3.1416;
+                VARS.theta_l =  (double(encoder_l - VARS.ZERO_03)/2048)*2*3.1416;
 
                 VARS.tension[0] = (Analog1 + Analog2) * 0.5f;
 
@@ -312,8 +328,8 @@ namespace BLOCKS{
 
                 // VARS.force_d = (VARS.Kv*(theta_d - VARS.theta_l) - VARS.Bv*(omega_l)) ;
                 // VARS.force_d = 0*100 + VARS.force_d + 0*100*setpoints_force; //100
-                VARS.force_d = theta_d;
-                // VARS.force_d = 33.33333333f * ( (VARS.Kv*(theta_d - VARS.theta_l)  - VARS.Bv*(omega_l) ) ;
+                // VARS.force_d = theta_d;
+                VARS.force_d = 33.33333333f * ( VARS.Kv*(theta_d - VARS.theta_l)  - VARS.Bv*(omega_l) ) ;//+ VARS.Kv*theta_d ; //VARS.Kv*theta_d
 
                 VARS.angulo_l_ant = VARS.theta_l;
                 
@@ -360,7 +376,7 @@ namespace BLOCKS{
                 
 
                 model.y = VARS.force_f[0];
-                model.u1 = model.K(0,0)*model.X(0,0) + 
+                model.u1 = model.K(0,0)*model.xest(0,0) + 
                            model.K(0,1)*model.xest(1,0) + 
                            model.K(0,2)*model.X(2,0)    + 
                            model.K(0,3)*model.X(3,0);
