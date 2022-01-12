@@ -17,22 +17,39 @@ namespace BLOCKS{
             static int count;
     
             struct VARS{
-                 arma::vec  tosave;
+                 arma::fmat  tosave;
                  int index;
             }VARS;
 
 
             struct Properties{     
-                
+               char fileName[100];
             }Properties ;
 
             virtual void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);                               
-                    ShowDemoWindowWidgets();
+                    //ShowDemoWindowWidgets();
+                    ImGui::InputText(("FileName"), Properties.fileName, size_t(Properties.fileName));
                 ImGui::End();
             }
 
         public:
+
+            std::string getNameOfFile(){
+
+                time_t rawtime;
+                struct tm * timeinfo;
+                char buffer[200];
+
+                time (&rawtime);
+                timeinfo = localtime(&rawtime);
+
+                strftime(buffer,sizeof(buffer),"_%Y_%m_%d__%H_%M_%S.dat",timeinfo);
+                std::string str(buffer);
+                str = std::string("SAVE/")+std::string(Properties.fileName) + str;
+                std::cout<<Properties.fileName;
+                return str;
+            }   
     
             void uvec_push(arma::vec  & v, float value) {
                 arma::vec av(1);
@@ -63,7 +80,10 @@ namespace BLOCKS{
                 
                 OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
                 IN_ARMA.insert(IN_ARMA.begin(),N_IN+1,new arma::fmat);  
-           
+                
+                sprintf(Properties.fileName,"out",sizeof("out"));
+                 
+
                 return;
 
             }
@@ -85,19 +105,27 @@ namespace BLOCKS{
 
                 if(SIM::EVENTS::time_index == FIRST_LAP){
                     VARS.tosave.clear();
+                    // VARS.tosaveA.resize(7,6);
+                    
                     VARS.index = 0;
                     return;
                 }
                 if(SIM::EVENTS::time_index == LAST_LAP){
-                    VARS.tosave.save("out.dat", raw_ascii);
+                    VARS.tosave.save(getNameOfFile().c_str(), raw_ascii);
                     return;
+                }
+                VARS.index ++;
+                VARS.tosave.resize(VARS.index,(int) (*IN_ARMA[1])[0] + 1);
+                VARS.tosave(VARS.index-1,0) = SIM::GET_NANOS();
+                for(int i = 0 ; i <(int) (*IN_ARMA[1])[0] ; i++ ){
+                    VARS.tosave(VARS.index-1,i+1) = (*IN_ARMA[1])[i+1];
                 }
                 // VARS.tosave[VARS.index] =  as_scalar(*IN_ARMA[1]);
                 // uvec_push(VARS.tosave,as_scalar(*IN_ARMA[1]));
-                int sz = VARS.tosave.size();
-                VARS.tosave.resize(sz+1);
-                VARS.tosave(sz) = as_scalar(*IN_ARMA[1]);
-                VARS.index ++;
+                // int sz = VARS.tosave.size();
+                // VARS.tosave.resize(sz+1);
+                // VARS.tosave(sz) = (*IN_ARMA[1]);
+
             }
             
             

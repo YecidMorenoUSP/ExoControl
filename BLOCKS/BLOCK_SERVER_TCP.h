@@ -94,6 +94,9 @@ namespace BLOCKS{
                 
                 if(SIM::EVENTS::time_index == FIRST_LAP){
                      VARS.app.updateSendBuffer("S: HOLA\n\0",sizeof("S: HOLA\n\0"));
+                    //  VARS.app.updateRecBuffer(0,1);
+                     ZeroMemory(VARS.app.recBuffer,DEFAULT_BUFLEN);
+
                      VARS.server = new ServerTCP((PCSTR)VARS.port,&VARS.app);
                      if(VARS.server->initServer()){
                         LOCAL.double_clicked_count = 50;

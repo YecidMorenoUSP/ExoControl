@@ -109,7 +109,7 @@ namespace BLOCKS{
                         break;
                 }
                 
-                OUT_ARMA[1] =  VARS.wave;
+                OUT_ARMA[1] =  as_scalar(VARS.wave);
 
             }
             

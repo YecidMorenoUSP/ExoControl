@@ -16,27 +16,165 @@ namespace BLOCKS{
         private:
             static int count;
             RehamoveDevice * FES;
+             struct Properties{
+                std::string nameCOM = "COM3";
+            }Properties;
+
+
+            class foo
+            {
+            public:
+               
+                RehamoveDevice * FES;
+                std::atomic<bool>  running_mutex;
+                std::mutex mtx;
+                std::string nameCOM = "COM3";
+                float min = 10;
+                float max = 60;
+                float mA = 0;
+
+                float mA_export = 0;
+
+                void runTest(int x){
+                    FES = open_port(nameCOM.c_str()); 
+                    if(FES == NULL) {
+                        close_port(FES);
+                    }
+                    for( mA = min ; mA < max; mA+=5){                      
+
+                        mtx.lock();
+                            mA_export = mA;
+                        mtx.unlock();
+
+                        
+                        for(int i = 0 ; i < 60; i++){
+                            std::this_thread::yield();
+                            if (running_mutex.load()) break;
+                            pulse(FES,Smpt_Channel::Smpt_Channel_Blue,mA,30); 
+                        }
+
+                        std::this_thread::yield();
+                        if (running_mutex.load()) break;
+                            
+                    }
+                        
+                    close_port(FES);
+                    running_mutex.store(true);
+                }
+                void bar()
+                {
+                   runTest(0);
+                }
+
+                void test_k(){
+                    FES = open_port(nameCOM.c_str()); 
+                    if(FES == NULL) {
+                        close_port(FES);
+                    }
+                  
+                    
+                    for(int i = 0 ; i < 60*4; i++){
+                        std::this_thread::yield();
+                        if (running_mutex.load()) break;
+                        pulse(FES,Smpt_Channel::Smpt_Channel_Blue,mA,30); 
+                    }
+                
+                        
+                    close_port(FES);
+                    running_mutex.store(true);
+                }
+                
+                
+            };
+
             struct VARS{
                 ImVec4 colors[4] = {ImVec4(0.06f, 0.59f, 0.87f, 1.00f),
                                     ImVec4(1.00f, 0.46f, 0.00f, 1.00f),
                                     ImVec4(0.31f, 0.94f, 0.11f, 1.00f),      
                                     ImVec4(0.62f, 0.10f, 1.00f, 1.00f)};
+                std::thread TestThread_;
+                foo f;
             }VARS;
 
-            struct Properties{
-                std::string nameCOM = "COM3";
-            }Properties;
+           
+
+            struct{
+                bool CALIBRATING = false;
+                float min = 10;
+                float max = 60;
+
+                float mA_K = 20;
+                
+            }TEST;
+            std::vector<std::thread> threads;
+            
+
+             
+            
 
             virtual void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0); 
                 ImGui::InputText(("COM Port"), (char*)Properties.nameCOM.c_str() , size_t(Properties.nameCOM.c_str()));
-                    ShowDemoWindowWidgets();
+                if(ImGui::InputFloat( "Min_mA", &(TEST.min), 0.0f, 50.0f, "%.3f")){
+                    if(TEST.min>TEST.max) TEST.min = 0;
+                }
+                if(ImGui::InputFloat( "Max_mA", &(TEST.max), 0.0f, 200.0f, "%.3f")){
+                    if(TEST.max<TEST.min){
+                        TEST.min = 0;
+                        TEST.max = 40;
+                    }
+                }
+                if(ImGui::Button("Calibrate")){
+                    if(VARS.f.running_mutex.load()){
+                        
+                        if(VARS.TestThread_.joinable())VARS.TestThread_.join();
+
+                        VARS.f.running_mutex.store(false);
+                        VARS.f.min = TEST.min;
+                        VARS.f.max = TEST.max;
+                        
+                        
+                        VARS.TestThread_ =  std::thread(&foo::bar, &VARS.f);
+                        // threads.push_back(std::thread(runTest,0));
+                    }else{
+                        
+                        VARS.f.running_mutex.store(true);
+                        if(VARS.TestThread_.joinable())VARS.TestThread_.join();
+                    }                    
+                    
+                }
+                ImGui::SameLine();
+                ImGui::LabelText("#info","mA: %f",VARS.f.mA);
+
+                if(ImGui::InputFloat( "mA_K", &(VARS.f.mA), 0.0f, 200.0f, "%.3f")){}
+
+                if(ImGui::Button("Test_K")){
+                    if(VARS.f.running_mutex.load()){
+                        
+                        if(VARS.TestThread_.joinable())VARS.TestThread_.join();
+
+                        VARS.f.running_mutex.store(false);
+                        // VARS.f.mA = TEST.mA_K;                     
+                        
+                        VARS.TestThread_ =  std::thread(&foo::test_k, &VARS.f);
+
+                    }else{
+                        
+                        VARS.f.running_mutex.store(true);
+                        if(VARS.TestThread_.joinable())VARS.TestThread_.join();
+                    }                    
+                    
+                }
+         
+
+                ShowDemoWindowWidgets();
                 ImGui::End();
             }
 
         public:
         
             name_of_class(){
+                VARS.f.running_mutex.store(true);
                 name = name_of_block;
                 TYPE = name_of_type;
 

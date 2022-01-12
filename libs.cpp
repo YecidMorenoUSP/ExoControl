@@ -31,6 +31,7 @@
 #include <stb_image.h>
 #include <imagenes_varios.cpp>
 #include <iostream>
+#include <ctime>
 #include <thread>
 #include <string>
 #include <atomic>

@@ -114,7 +114,11 @@ namespace BLOCKS{
             virtual void Exec() override{
                 
                 if(SIM::EVENTS::time_index == FIRST_LAP){
-                    
+                    OUT_ARMA[1][0] = N_IN;
+                    for(int i = 1 ; i <= N_IN ; i++){
+                        //(*IN_ARMA[i]).print("IN: ");
+                        OUT_ARMA[1][i] = 0.0f;
+                    }
                      return;
                 }
                 if(SIM::EVENTS::time_index == LAST_LAP){
@@ -123,6 +127,7 @@ namespace BLOCKS{
 
                 OUT_ARMA[1][0] = N_IN;
                 for(int i = 1 ; i <= N_IN ; i++){
+                    //(*IN_ARMA[i]).print("IN: ");
                     OUT_ARMA[1][i] = (*IN_ARMA[i])[0];
                 }
                 
