@@ -99,11 +99,15 @@ namespace BLOCKS{
                 //__TIC__
 
                 // Revisar si existen estradas para evitar el error
+                if(IN_ARMA[1] == IN_ARMA[0]){
+
+                }else
                 if((*IN_ARMA[1]).size()>=1){
                     BlockCAN->VARS.f.mtx.lock();
                     BlockCAN->VARS.f.writeEpos [Properties.nodeId] = (int)(*IN_ARMA[1])[0];
                     BlockCAN->VARS.f.mtx.unlock();
                 }
+
                 if (N_OUT >= 1 && true){
                     BlockCAN->VARS.f.mtx.lock();
                     BlockCAN->VARS.f.readPosition [Properties.nodeId] = (float*)OUT_ARMA[1].memptr();

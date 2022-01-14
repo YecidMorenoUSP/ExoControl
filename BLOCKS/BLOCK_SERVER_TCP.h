@@ -9,7 +9,7 @@
 #define name_of_path   (std::string(name_of_block) + "/").c_str()
 
 #define SERVER_TCP_SEND_FIRST
-//#define DEBUG_SERVER_TCP
+// #define DEBUG_SERVER_TCP
 #define DEFAULT_BUFLEN 512
 
 #include <ServerTCP.h>
@@ -18,7 +18,7 @@
 namespace BLOCKS{
 
  class name_of_class : public BLOCK {
-        private:          
+        public:          
 
             static int count;
     
@@ -49,7 +49,7 @@ namespace BLOCKS{
                 ImGui::End();
             }
 
-        public:
+        // public:
     
 
             name_of_class(){

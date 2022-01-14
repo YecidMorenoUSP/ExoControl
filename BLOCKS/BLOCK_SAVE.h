@@ -12,7 +12,7 @@
 namespace BLOCKS{
 
  class name_of_class : public BLOCK {
-        private:          
+        public:          
 
             static int count;
     
@@ -23,7 +23,7 @@ namespace BLOCKS{
 
 
             struct Properties{     
-               char fileName[100];
+               char fileName[500];
             }Properties ;
 
             virtual void showProperties(){
@@ -33,7 +33,7 @@ namespace BLOCKS{
                 ImGui::End();
             }
 
-        public:
+        // public:
 
             std::string getNameOfFile(){
 

@@ -13,17 +13,18 @@
 namespace BLOCKS{
 
  class name_of_class : public BLOCK {
-        private:
+        public:
             static int count;
             RehamoveDevice * FES;
              struct Properties{
                 std::string nameCOM = "COM3";
+                int Freq = 30; 
             }Properties;
 
 
             class foo
             {
-            public:
+                public:
                
                 RehamoveDevice * FES;
                 std::atomic<bool>  running_mutex;
@@ -32,6 +33,9 @@ namespace BLOCKS{
                 float min = 10;
                 float max = 60;
                 float mA = 0;
+                float onExecmA=0;
+
+                int Freq = 30;
 
                 float mA_export = 0;
 
@@ -39,6 +43,7 @@ namespace BLOCKS{
                     FES = open_port(nameCOM.c_str()); 
                     if(FES == NULL) {
                         close_port(FES);
+                        return;
                     }
                     for( mA = min ; mA < max; mA+=5){                      
 
@@ -50,7 +55,7 @@ namespace BLOCKS{
                         for(int i = 0 ; i < 60; i++){
                             std::this_thread::yield();
                             if (running_mutex.load()) break;
-                            pulse(FES,Smpt_Channel::Smpt_Channel_Blue,mA,30); 
+                            pulse(FES,Smpt_Channel::Smpt_Channel_Blue,mA,Freq); 
                         }
 
                         std::this_thread::yield();
@@ -70,13 +75,30 @@ namespace BLOCKS{
                     FES = open_port(nameCOM.c_str()); 
                     if(FES == NULL) {
                         close_port(FES);
+                        return;
                     }
                   
                     
                     for(int i = 0 ; i < 60*4; i++){
                         std::this_thread::yield();
                         if (running_mutex.load()) break;
-                        pulse(FES,Smpt_Channel::Smpt_Channel_Blue,mA,30); 
+                        pulse(FES,Smpt_Channel::Smpt_Channel_Blue,mA,Freq); 
+                    }
+                
+                        
+                    close_port(FES);
+                    running_mutex.store(true);
+                }
+
+                void onExec(){
+                    FES = open_port(nameCOM.c_str()); 
+                    if(FES == NULL) {
+                        close_port(FES);
+                        return;
+                    }
+                  
+                    while(!running_mutex.load()){
+                        pulse(FES,Smpt_Channel::Smpt_Channel_Blue,onExecmA,Freq); 
                     }
                 
                         
@@ -115,6 +137,9 @@ namespace BLOCKS{
             virtual void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0); 
                 ImGui::InputText(("COM Port"), (char*)Properties.nameCOM.c_str() , size_t(Properties.nameCOM.c_str()));
+                if(ImGui::InputInt( "Freq", &(VARS.f.Freq))){
+                    
+                }
                 if(ImGui::InputFloat( "Min_mA", &(TEST.min), 0.0f, 50.0f, "%.3f")){
                     if(TEST.min>TEST.max) TEST.min = 0;
                 }
@@ -171,7 +196,7 @@ namespace BLOCKS{
                 ImGui::End();
             }
 
-        public:
+        // public:
         
             name_of_class(){
                 VARS.f.running_mutex.store(true);
@@ -198,22 +223,39 @@ namespace BLOCKS{
             }
 
             virtual void Exec() override{
-                if(SIM::EVENTS::time_index == FIRST_LAP){
-                    FES = open_port(Properties.nameCOM.c_str());
-                    if(FES == NULL) {
-                        LOCAL.double_clicked_count = 50;
-                        close_port(FES);
-                        GUI::MODAL_WARNING::setModal("SIMULATION FAILED","RehaMove : "+Properties.nameCOM+" with Error","");
-                        SIM::EVENTS::SimulationTaskMutex_end.store(true); 
+                // if(SIM::EVENTS::time_index == FIRST_LAP){
+                //     FES = open_port(Properties.nameCOM.c_str());
+                //     if(FES == NULL) {
+                //         LOCAL.double_clicked_count = 50;
+                //         close_port(FES);
+                //         GUI::MODAL_WARNING::setModal("SIMULATION FAILED","RehaMove : "+Properties.nameCOM+" with Error","");
+                //         SIM::EVENTS::SimulationTaskMutex_end.store(true); 
                         
-                    }
+                //     }
+                //     return;
+                //  }
+                //  if(SIM::EVENTS::time_index == LAST_LAP){
+                //      close_port(FES);
+                //     return;
+                //  }
+                // pulse(FES,Smpt_Channel::Smpt_Channel_Blue,(*IN_ARMA[1])[0],30); 
+
+                if(SIM::EVENTS::time_index == FIRST_LAP){
+                    if(VARS.TestThread_.joinable())VARS.TestThread_.join();
+                    VARS.f.running_mutex.store(false);    
+                    VARS.f.onExecmA = 0;
+                    VARS.TestThread_ =  std::thread(&foo::onExec, &VARS.f);
                     return;
-                 }
-                 if(SIM::EVENTS::time_index == LAST_LAP){
-                     close_port(FES);
+                }
+
+                if(SIM::EVENTS::time_index == LAST_LAP){
+                    VARS.f.running_mutex.store(true);
+                    if(VARS.TestThread_.joinable())VARS.TestThread_.join();
                     return;
-                 }
-                pulse(FES,Smpt_Channel::Smpt_Channel_Blue,(*IN_ARMA[1])[0],30); 
+                }
+
+                VARS.f.onExecmA = (*IN_ARMA[1])[0];
+
             }
             
             virtual BLOCK * Create(){

@@ -13,7 +13,7 @@
 namespace BLOCKS{
 
  class name_of_class : public BLOCK {
-        private:
+        public:
             static int count;
 
             struct VARS{
@@ -30,7 +30,7 @@ namespace BLOCKS{
                 ImGui::End();
             }
 
-        public:
+        // public:
         
             name_of_class(){
                 name = name_of_block;

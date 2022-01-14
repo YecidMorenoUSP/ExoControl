@@ -18,7 +18,8 @@
 namespace BLOCKS{
 
  class name_of_class : public BLOCK {
-        private:          
+        // private:      
+        public:    
 
             static int count;
     
@@ -51,7 +52,7 @@ namespace BLOCKS{
                 ImGui::End();
             }
 
-        public:
+        // public:
     
 
             name_of_class(){

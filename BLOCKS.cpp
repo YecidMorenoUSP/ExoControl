@@ -21,6 +21,7 @@
                      BlockESP32_INIT();		  \
 					 BlockGIOVANNA_TCC_INIT();		  \
 					 BlockSAVE_INIT();		  \
+					 BlockPULSE_INIT();		  \
 					 //<ADD_BLOCK_INIT>
 
 
@@ -80,6 +81,9 @@
 
 #define name_of_object SAVE
 #include "BLOCKS/BLOCK_SAVE.h"
+
+#define name_of_object PULSE
+#include "BLOCKS/BLOCK_PULSE.h"
 
 //<ADD_BLOCK_DEFINE_NAME_AND_INCLUDE_H>
 

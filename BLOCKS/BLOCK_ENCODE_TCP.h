@@ -64,6 +64,9 @@ namespace BLOCKS{
                 ImGui::End();
             }
 
+        public:
+    
+    
             virtual void UpadateIO(){
 
                 sizeBlock.y = 50.0f + (N_IN)*25;
@@ -77,9 +80,6 @@ namespace BLOCKS{
                 OUT_ARMA[1] = fmat::fixed<1,128>();
     
             };
-
-        public:
-    
 
             name_of_class(){
 
@@ -128,7 +128,12 @@ namespace BLOCKS{
                 OUT_ARMA[1][0] = N_IN;
                 for(int i = 1 ; i <= N_IN ; i++){
                     //(*IN_ARMA[i]).print("IN: ");
-                    OUT_ARMA[1][i] = (*IN_ARMA[i])[0];
+                    if(IN_ARMA[i] == IN_ARMA[0]){
+                        OUT_ARMA[1][i] = 0;
+                    }else{
+                        OUT_ARMA[1][i] = as_scalar((*IN_ARMA[i]));
+                    }
+                    
                 }
                 
             }

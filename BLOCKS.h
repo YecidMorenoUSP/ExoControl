@@ -22,6 +22,7 @@ enum TypeBlock_{
     BLKType_ESP32,
 	BLKType_GIOVANNA_TCC,
 	BLKType_SAVE,
+	BLKType_PULSE,
 	BLKType_COUNT, //<ADD_BLOCK_ENUM>
 
 };

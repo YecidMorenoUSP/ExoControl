@@ -17,7 +17,7 @@
 namespace BLOCKS{
 
  class name_of_class : public BLOCK {
-        private:          
+        public:          
 
             static int count;
     
@@ -117,7 +117,7 @@ namespace BLOCKS{
                 ImGui::End();
             }
 
-        public:
+        // public:
         
             struct{
                double K_1 = 0.0,K_2 = 0.0,K_3 = 0.0, K_4 = 0.0, K_5 = 0.0, KX = 0.0;
@@ -148,9 +148,9 @@ namespace BLOCKS{
                 name = name_of_block;
                 TYPE = name_of_type;
 
-                N_IN  = 7;
+                N_IN  = 9;
                 
-                N_OUT = 7;
+                N_OUT = 8;
         
 
                 sizeBlock = ImVec2(100,200);
@@ -241,14 +241,26 @@ namespace BLOCKS{
              
                 
                 //Variables de entrada al bloque
-                double emg_signal1   = as_scalar(arma::abs((*IN_ARMA[1])));
-                double emg_signal2   = as_scalar(arma::abs((*IN_ARMA[2])));
-                double theta_d       = -as_scalar(1.0f * ((*IN_ARMA[3])));
-                int    encoder_m     = as_scalar(1.0f * ((*IN_ARMA[4])));
-                double Analog1       = as_scalar(1.0f * ((*IN_ARMA[5])));
-                double Analog2       = as_scalar(1.0f * ((*IN_ARMA[6])));
-                int    encoder_l     = as_scalar(1.0f * ((*IN_ARMA[7])));
 
+                double emg_signal1  = 0;
+                double emg_signal2  = 0;
+                double theta_d      = 0;
+                int    encoder_m    = 0;
+                double Analog1      = 0;
+                double Analog2      = 0;
+                int    encoder_l    = 0;
+
+                if(IN_ARMA[1] != IN_ARMA[0])  emg_signal1   = as_scalar(arma::abs((*IN_ARMA[1])));
+                if(IN_ARMA[2] != IN_ARMA[0])  emg_signal2   = as_scalar(arma::abs((*IN_ARMA[2])));
+                if(IN_ARMA[3] != IN_ARMA[0])  theta_d       = -as_scalar(1.0f * ((*IN_ARMA[3])));
+
+                encoder_m     = as_scalar(1.0f * ((*IN_ARMA[4])));
+                Analog1       = as_scalar(1.0f * ((*IN_ARMA[5])));
+                Analog2       = as_scalar(1.0f * ((*IN_ARMA[6])));
+                encoder_l     = as_scalar(1.0f * ((*IN_ARMA[7])));
+
+                if(IN_ARMA[8] != IN_ARMA[0])  VARS.Kv = as_scalar(1.0f * ((*IN_ARMA[8])));
+                if(IN_ARMA[9] != IN_ARMA[0])  VARS.Bv = as_scalar(1.0f * ((*IN_ARMA[9])));
                 
 
                 if(!VARS.set_ref){
@@ -406,9 +418,10 @@ namespace BLOCKS{
                 OUT_ARMA[5] = (VARS.force_f[0]);
                 OUT_ARMA[6] = (VARS.theta_l);
                 OUT_ARMA[7] = (VARS.int_force_error[0]);
+                OUT_ARMA[8] = (VARS.theta_l)*2;
                 
 
-                printf("\n %8f %8f %8f %8f %8f %8f",VARS.velocity_d,VARS.theta_l,VARS.theta_m,VARS.tension[0],VARS.y_est_emg1,VARS.Kv);
+                // printf("\n %8f %8f %8f %8f %8f %8f",VARS.velocity_d,VARS.theta_l,VARS.theta_m,VARS.tension[0],VARS.y_est_emg1,VARS.Kv);
 
                 VARS.force[6] = VARS.force[5];
                 VARS.force[5] = VARS.force[4];

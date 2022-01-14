@@ -12,7 +12,8 @@
 namespace BLOCKS{
 
  class name_of_class : public BLOCK {
-        private:          
+        // private: 
+        public:         
 
             typedef struct{
                 float size = 9.0;
@@ -37,6 +38,21 @@ namespace BLOCKS{
                             .item_current = 1
                           };
 
+            void UpdateOut(){
+                        sizeBlock.y = 50.0f + (N_OUT)*25;
+
+                        N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
+                        N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
+
+                        posOut.clear();
+                        posOut.insert(posOut.begin(),N_OUT+1,ImVec2(0,0)); 
+
+                        arma::fmat auxOut ;
+                        auxOut << 0.0f;
+                        OUT_ARMA.clear();
+                        OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
+            }
+
             virtual void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0);           
                     
@@ -53,26 +69,14 @@ namespace BLOCKS{
                     ImGui::PopButtonRepeat();
                     
                     if(changed){
-       
-                        sizeBlock.y = 50.0f + (N_OUT)*25;
-
-                        N_OUT_size = sizeBlock.y/(float)(N_OUT+1.0f);
-                        N_IN_size  = sizeBlock.y/(float)(N_IN+1.0f);
-
-                        posOut.clear();
-                        posOut.insert(posOut.begin(),N_OUT+1,ImVec2(0,0)); 
-
-                        arma::fmat auxOut ;
-                        auxOut << 0.0f;
-                        OUT_ARMA.clear();
-                        OUT_ARMA.insert(OUT_ARMA.begin(),N_OUT+1,auxOut); 
+                        UpdateOut();
                     }
                     
                     ShowDemoWindowWidgets();
                 ImGui::End();
             }
 
-        public:
+        // public:
     
 
             name_of_class(){

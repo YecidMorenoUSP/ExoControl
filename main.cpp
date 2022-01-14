@@ -46,7 +46,385 @@ std::string openfilename(char *filter = "All Files (*.blkReabRob)\0*.blkReabRob\
 
 #include "libs.cpp"
 
+int __NUM_TEST__ = 0;
+int __TYPE_TEST__ = 0;
+char __NAME__P1__ [40] = "Yecid";
+char __NAME__P2__ [40] = "Mauricio";
+
+int __FREQ_FES__ = 30;
+int __FREQ_FES__2 = 30;
+
+arma::fvec __FES__Values = {1,  30, 50};
+arma::fvec __KV__Values  = {0,  20, 40};
+arma::fvec __BV__Values  = {0,   4,  8};
+
+arma::umat TestGM_Values_ = {{0,0,0},
+                             {0,1,0},
+                             {0,2,0},
+                             {1,2,1},
+                             {1,1,1},
+                             {1,0,1},
+                             {0,0,0},
+                             {0,1,0},
+                             {0,2,0},
+                             {2,2,2},
+                             {2,1,2},
+                             {2,0,2},
+                             {0,0,0}};
+
+
+
+void ADD_LINE_BI_PI_BO_PO( int b0, int p0, int b1, int p1){                   
+    LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
+    LINES::ALL_LINES_GUI.back()->posIn = p1;
+    LINES::ALL_LINES_GUI.back()->posOut = p0;
+    LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + b0];
+    LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + b1];
+    LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
+}
+
+void V_ADD_LINE_BI_PI_BO_PO( int b0, int p0, int b1, int p1){                   
+    LINES::LINE * l =  new LINES::LINE() ;
+
+    l->posIn = p1;
+    l->posOut = p0;
+    l->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + b0];
+    l->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + b1];
+    l->blockIn->IN_ARMA[l->posIn] = &(l->blockOut->OUT_ARMA[l->posOut]);
+}
+
+void ADD_ANKLEBOT(int XX, int YY){
+        
+        int OB = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_ENCODE_TCP);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+0,YY+0);
+        ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->N_IN  = 4;
+        ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->UpadateIO();
+        
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_CLIENT_TCP);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+120,YY+50);
+        sprintf(((BLOCKS::BlockCLIENT_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.address,"192.168.0.66",sizeof("192.168.0.66"));
+   
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_DECODE_TCP);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+240,YY+12);
+        ((BLOCKS::BlockDECODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->N_OUT  = 3;
+        ((BLOCKS::BlockDECODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->UpdateOut();
+
+        ADD_LINE_BI_PI_BO_PO(  OB+1,1,  OB+2,1  );
+        ADD_LINE_BI_PI_BO_PO(  OB+2,1,  OB+3,1  );
+}
+
+void ADD_SPAR(int XX, int YY){
+
+    int OB = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_CAN_CFG);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+163,YY+200);
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_SPAR);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+150,YY+0);
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+0,YY+80);
+    ((BLOCKS::BlockEPOS*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.nodeId=3;
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+0,YY+132);
+    ((BLOCKS::BlockEPOS*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.nodeId=32;
+
+    ADD_LINE_BI_PI_BO_PO(  OB+3,1,  OB+2,4  );
+    ADD_LINE_BI_PI_BO_PO(  OB+3,2,  OB+2,5  );
+    ADD_LINE_BI_PI_BO_PO(  OB+3,3,  OB+2,6  );
+    ADD_LINE_BI_PI_BO_PO(  OB+4,1,  OB+2,7  );
+    ADD_LINE_BI_PI_BO_PO(  OB+2,1,  OB+3,1  );
+    
+    
+}
+
+void ADD_GAME_MARCIAN(int XX, int YY){
+        
+        int OB = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+
+        // BlOCK 1
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_ENCODE_TCP);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+0,YY+0);
+        ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->N_IN  = 2;
+        ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->UpadateIO();
+        
+        // BlOCK 2
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_SERVER_TCP);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+120,YY+25);
+        sprintf(((BLOCKS::BlockSERVER_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.port,"2121",sizeof("2121"));
+        
+        // BlOCK 3
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_DECODE_TCP);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+240,YY+0);
+        ((BLOCKS::BlockDECODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->N_OUT  = 2;
+        ((BLOCKS::BlockDECODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->UpdateOut(); //Ysize = 50.0f + (N_OUT)*25
+
+        ADD_LINE_BI_PI_BO_PO(  OB+1,1,  OB+2,1  );
+        ADD_LINE_BI_PI_BO_PO(  OB+2,1,  OB+3,1  );
+}
+
+void ADD_GAME_AIRHOCHEY(int XX, int YY){
+        
+        int OB = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT;
+
+        // BlOCK 0
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_ENCODE_TCP);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+0,YY+50);
+        ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->N_IN  = 2;
+        ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->UpadateIO();
+        
+        // BlOCK 1
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_SERVER_TCP);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+120,YY+75);
+        sprintf(((BLOCKS::BlockSERVER_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.port,"2121",sizeof("2121"));
+        
+        // BlOCK 2
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_DECODE_TCP);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+240,YY+0);
+        ((BLOCKS::BlockDECODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->N_OUT  = 6;
+        ((BLOCKS::BlockDECODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->UpdateOut(); //Ysize = 50.0f + (N_OUT)*25
+
+        ADD_LINE_BI_PI_BO_PO(  OB+0,1,  OB+1,1  );
+        ADD_LINE_BI_PI_BO_PO(  OB+1,1,  OB+2,1  );
+}
+
+void TestGM_RA_FES_KV_BV(float __FES__ , float __Kv__ , float __Bv__){
+    int OB1 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    ADD_ANKLEBOT(100,100);
+    // 177 224
+    
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_NUMK);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(0,100);
+    ((BLOCKS::BlockNUMK*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.K = __Kv__;
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_NUMK);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(0,146);
+    ((BLOCKS::BlockNUMK*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.K = __Bv__;
+
+
+    int OB2 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    ADD_GAME_MARCIAN(400,245);
+
+    int OB3 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_PULSE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(780,254);
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.item_current  = 2;
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.Amplitude1  = __FES__; //FES[N]
+    
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_REHAMOVE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(920,258);
+    ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.Freq  = __FREQ_FES__;
+
+    ADD_LINE_BI_PI_BO_PO(OB1+4,1,  OB1+1, 1);
+    ADD_LINE_BI_PI_BO_PO(OB1+5,1,  OB1+1, 2);
+
+    ADD_LINE_BI_PI_BO_PO(OB1+3,1,  OB2+1, 1);
+
+    ADD_LINE_BI_PI_BO_PO(OB3+0,1,  OB3+1, 1);
+    ADD_LINE_BI_PI_BO_PO(OB3+1,1,  OB3+2, 1);
+
+    ADD_LINE_BI_PI_BO_PO(OB2+3,1,  OB1+1, 3);
+
+    int OB4 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(336,50);
+    sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
+            "%s_Test_%d_Type_%d_Log_%s",__NAME__P1__,__NUM_TEST__,__TYPE_TEST__,"R");
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_ENCODE_TCP);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(913,329);
+    ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->N_IN  = 3;
+    ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->UpadateIO();
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(1040,367);
+    sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
+            "%s_Test_%d_Type_%d_Log_%s",__NAME__P1__,__NUM_TEST__,__TYPE_TEST__,"L");
+
+    ADD_LINE_BI_PI_BO_PO(OB1+2,1,  OB4+1, 1);
+    
+    ADD_LINE_BI_PI_BO_PO(OB3+1,1,  OB4+2, 1);
+    ADD_LINE_BI_PI_BO_PO(OB3+1,2,  OB4+2, 2);
+    ADD_LINE_BI_PI_BO_PO(OB2+3,1,  OB4+2, 3);
+    ADD_LINE_BI_PI_BO_PO(OB4+2,1,  OB4+3, 1);
+
+}
+
+void TestGM_RS_FES_KV_BV(float __FES__ , float __Kv__ , float __Bv__){
+    int OB1 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    ADD_SPAR(100,100);
+    // 177 224
+    ((BLOCKS::BlockSPAR*) BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + OB1+2])->VARS.Kv  = __Kv__; //Kv[N]
+    ((BLOCKS::BlockSPAR*) BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + OB1+2])->VARS.Bv  = __Bv__;  //Bv[N]
+    
+    int OB2 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    ADD_GAME_MARCIAN(400,245+135);
+
+    int OB3 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_PULSE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(780,254+135);
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.item_current  = 2;
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.Amplitude1  = __FES__; //FES[N]
+    
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_REHAMOVE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(920,258+135);
+    ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.Freq  = __FREQ_FES__;
+
+    ADD_LINE_BI_PI_BO_PO(OB1+2,6,  OB2+1, 1);
+
+    ADD_LINE_BI_PI_BO_PO(OB3+0,1,  OB3+1, 1);
+    ADD_LINE_BI_PI_BO_PO(OB3+1,1,  OB3+2, 1);
+
+    ADD_LINE_BI_PI_BO_PO(OB3+1,1,  OB3+2, 1);
+
+    ADD_LINE_BI_PI_BO_PO(OB2+3,1,  OB1+2, 3);
+
+    int OB4 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_ENCODE_TCP);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(915,40);
+    ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->N_IN  = 10;
+    ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->UpadateIO();
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(1047,160);
+    sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
+            "%s_Test_%d_Type_%d_Log_%s",__NAME__P1__,__NUM_TEST__,__TYPE_TEST__,"L");
+
+    ADD_LINE_BI_PI_BO_PO(OB1+2,1,  OB4+1,  1);
+    ADD_LINE_BI_PI_BO_PO(OB1+2,2,  OB4+1,  2);
+    ADD_LINE_BI_PI_BO_PO(OB1+2,3,  OB4+1,  3);
+    ADD_LINE_BI_PI_BO_PO(OB1+2,4,  OB4+1,  4);
+    ADD_LINE_BI_PI_BO_PO(OB1+2,5,  OB4+1,  5);
+    ADD_LINE_BI_PI_BO_PO(OB1+2,6,  OB4+1,  6);
+    ADD_LINE_BI_PI_BO_PO(OB1+2,7,  OB4+1,  7);
+    ADD_LINE_BI_PI_BO_PO(OB1+2,8,  OB4+1,  8);
+    ADD_LINE_BI_PI_BO_PO(OB2+3,1,  OB4+1,  9);
+    ADD_LINE_BI_PI_BO_PO(OB3+1,1,  OB4+1, 10);
+
+    ADD_LINE_BI_PI_BO_PO(OB4+1,1,  OB4+2, 1);
+
+}
+
+void TestGA_RAS_FES(float __FES__){
+    
+    int OB1 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    ADD_ANKLEBOT(100,100);
+    
+    int OB2 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    ADD_SPAR(100+90,250+18);
+
+    int OB3 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    ADD_GAME_AIRHOCHEY(480,150);
+
+    int OB4 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_PULSE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(500,50);
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.item_current  = 2;
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.Amplitude1  = __FES__; //FES[N]
+    
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_REHAMOVE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(640,50);
+    ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.Freq  = __FREQ_FES__;
+
+    int OB5 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_PULSE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(500,540);
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.item_current  = 2;
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.Amplitude1  = __FES__; //FES[N]
+    
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_REHAMOVE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(640,540);
+    ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.Freq  = __FREQ_FES__2;
+
+
+    ADD_LINE_BI_PI_BO_PO(OB1+3,1,  OB3+1, 1);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,8,  OB3+1, 2);
+
+    // ADD_LINE_BI_PI_BO_PO(OB3+3,1,  OB1+1, 1);
+    // ADD_LINE_BI_PI_BO_PO(OB3+3,2,  OB1+1, 2);
+
+    // ADD_LINE_BI_PI_BO_PO(OB3+3,4,  OB2+2, 8);
+    // ADD_LINE_BI_PI_BO_PO(OB3+3,5,  OB2+2, 9);
+
+    V_ADD_LINE_BI_PI_BO_PO(OB3+3,1,  OB1+1, 1);
+    V_ADD_LINE_BI_PI_BO_PO(OB3+3,2,  OB1+1, 2);
+    V_ADD_LINE_BI_PI_BO_PO(OB3+3,4,  OB2+2, 8);
+    V_ADD_LINE_BI_PI_BO_PO(OB3+3,5,  OB2+2, 9);
+
+    
+
+    ADD_LINE_BI_PI_BO_PO(OB4+1,1,  OB4+2, 1);
+    ADD_LINE_BI_PI_BO_PO(OB1+3,1,  OB4+1, 1);
+    
+    ADD_LINE_BI_PI_BO_PO(OB5+1,1,  OB5+2, 1);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,8,  OB5+1, 1);
+
+
+    int OB6 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_ENCODE_TCP);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(842,36);
+    ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->N_IN  = 4;
+    ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->UpadateIO();
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(993,88);
+    sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
+    "GH_Test_%d_Type_%d_Log_%s",__NUM_TEST__,__TYPE_TEST__,__NAME__P1__);
+
+
+    int OB7 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_ENCODE_TCP);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(852,382);
+    ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->N_IN  = 9;
+    ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->UpadateIO();
+
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(998,494);
+    sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
+    "GH_Test_%d_Type_%d_Log_%s",__NUM_TEST__,__TYPE_TEST__,__NAME__P2__);
+
+    int OB8 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+    BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
+    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(842,225);
+    sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
+    "GH_Test_%d_Type_%d_Log_%s",__NUM_TEST__,__TYPE_TEST__,"KvBv");
+
+
+    ADD_LINE_BI_PI_BO_PO(OB6+1,1,  OB6+2, 1);
+    ADD_LINE_BI_PI_BO_PO(OB1+3,1,  OB6+1, 1);
+    ADD_LINE_BI_PI_BO_PO(OB1+3,2,  OB6+1, 2);
+    ADD_LINE_BI_PI_BO_PO(OB1+3,3,  OB6+1, 3);
+    ADD_LINE_BI_PI_BO_PO(OB4+1,1,  OB6+1, 4);
+
+    ADD_LINE_BI_PI_BO_PO(OB7+1,1,  OB7+2, 1);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,1,  OB7+1, 1);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,2,  OB7+1, 2);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,3,  OB7+1, 3);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,4,  OB7+1, 4);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,5,  OB7+1, 5);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,6,  OB7+1, 6);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,7,  OB7+1, 7);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,8,  OB7+1, 8);
+    ADD_LINE_BI_PI_BO_PO(OB5+1,1,  OB7+1, 9);
+
+    ADD_LINE_BI_PI_BO_PO(OB3+2,1,  OB8+1, 1);
+
+
+}
+
 void ADDMenuBar();
+
+void Menu_GM_RA();
+void Menu_GM_RS();
+void Menu_GA_RAS();
 
 #define IO_BEGIN_FILE "[BEGIN]\0"
 #define IO_BLOCK_FILE "\n[BLOCK]\0"
@@ -191,103 +569,6 @@ void ADDMenuBar(){
         if (ImGui::BeginMenuBar()){
 
             if (ImGui::BeginMenu("Examples")){
-
-                if(ImGui::MenuItem("SPAR"        , NULL, false)){
-                    BLOCKS::AddBLOCK((TypeBlock_)BLKType_CAN_CFG);
-                    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,100);
-                    
-                    BLOCKS::AddBLOCK((TypeBlock_)BLKType_NUMK);
-                    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,200);
-
-                    BLOCKS::AddBLOCK((TypeBlock_)BLKType_FUNGEN);
-                    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,300);
-
-                    BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
-                    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,400);
-                    ((BLOCKS::BlockEPOS*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.nodeId=3;
-
-                    BLOCKS::AddBLOCK((TypeBlock_)BLKType_EPOS);
-                    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(100,500);
-                    ((BLOCKS::BlockEPOS*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.nodeId=2;
-                    
-                    BLOCKS::AddBLOCK((TypeBlock_)BLKType_SPAR);
-                    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(300,200);
-
-                    BLOCKS::AddBLOCK((TypeBlock_)BLKType_NUMK);
-                    BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(50,500);
-
-                    
-                    LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
-                    LINES::ALL_LINES_GUI.back()->posIn = 1;
-                    LINES::ALL_LINES_GUI.back()->posOut = 1;
-                    LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 1];
-                    LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
-                    LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
-
-
-                    LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
-                    LINES::ALL_LINES_GUI.back()->posIn = 2;
-                    LINES::ALL_LINES_GUI.back()->posOut = 1;
-                    LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 1];
-                    LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
-                    LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
-
-
-                    LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
-                    LINES::ALL_LINES_GUI.back()->posIn = 3;
-                    LINES::ALL_LINES_GUI.back()->posOut = 1;
-                    LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 2];
-                    LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
-                    LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
-
-
-                    LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
-                    LINES::ALL_LINES_GUI.back()->posIn = 4;
-                    LINES::ALL_LINES_GUI.back()->posOut = 1;
-                    LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
-                    LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
-                    LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
-
-
-                    LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
-                    LINES::ALL_LINES_GUI.back()->posIn = 5;
-                    LINES::ALL_LINES_GUI.back()->posOut = 2;
-                    LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
-                    LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
-                    LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
-
-
-                    LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
-                    LINES::ALL_LINES_GUI.back()->posIn = 6;
-                    LINES::ALL_LINES_GUI.back()->posOut = 3;
-                    LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
-                    LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
-                    LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
-
-
-                    LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
-                    LINES::ALL_LINES_GUI.back()->posIn = 7;
-                    LINES::ALL_LINES_GUI.back()->posOut = 1;
-                    LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 4];
-                    LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
-                    LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
-
-
-                    LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
-                    LINES::ALL_LINES_GUI.back()->posIn = 1;
-                    LINES::ALL_LINES_GUI.back()->posOut = 1;
-                    LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 5];
-                    LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 3];
-                    LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
-
-
-                    LINES::ALL_LINES_GUI.push_back( new LINES::LINE() );
-                    LINES::ALL_LINES_GUI.back()->posIn = 1;
-                    LINES::ALL_LINES_GUI.back()->posOut = 1;
-                    LINES::ALL_LINES_GUI.back()->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 6];
-                    LINES::ALL_LINES_GUI.back()->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + 4];
-                    LINES::ALL_LINES_GUI.back()->blockIn->IN_ARMA[LINES::ALL_LINES_GUI.back()->posIn] = &(LINES::ALL_LINES_GUI.back()->blockOut->OUT_ARMA[LINES::ALL_LINES_GUI.back()->posOut]);
-                }
                 
                 if(ImGui::MenuItem("LOAD"        , NULL, false)){
                     
@@ -403,8 +684,75 @@ void ADDMenuBar(){
 
                 ImGui::EndMenu();
             }
-       
+
+            if (ImGui::BeginMenu("Assets")){
+                if(ImGui::MenuItem("SPAR"        , NULL, false))    ADD_SPAR(100,100);
+                if(ImGui::MenuItem("ANKLEBOT"        , NULL, false))    ADD_ANKLEBOT(100,100);
+                if(ImGui::MenuItem("GAME_MARCIAN"        , NULL, false))    ADD_GAME_MARCIAN(400,100);
+                if(ImGui::MenuItem("GAME_AIRHOCKEY"        , NULL, false))    ADD_GAME_AIRHOCHEY(400,100);
+                ImGui::EndMenu();
+            }
+
+            Menu_GM_RA();
+            Menu_GM_RS();
+
+            Menu_GA_RAS();
+
             ImGui::EndMenuBar();
         }
         ImGui::End();
+}
+
+void Menu_GM_RA(){
+    
+            if (ImGui::BeginMenu("Test GM & RA")){
+                char nameOfMenu[50] = "Test";
+                for(int nTest = 0 ; nTest < TestGM_Values_.n_rows ; nTest ++ ){
+                    sprintf(nameOfMenu,"T%d",nTest+1);
+                    if(ImGui::MenuItem(nameOfMenu        , NULL, false)){
+                        __NUM_TEST__ = nTest+1;
+                        __TYPE_TEST__ = 1;
+                        TestGM_RA_FES_KV_BV(__FES__Values((int)TestGM_Values_(nTest,0)),
+                                            __KV__Values((int)TestGM_Values_(nTest,1)),
+                                            __BV__Values((int)TestGM_Values_(nTest,2)));
+                    }
+                }
+                ImGui::EndMenu();
+            }
+}
+
+void Menu_GM_RS(){
+    
+            if (ImGui::BeginMenu("Test GM & RS")){
+                char nameOfMenu[50] = "Test";
+                for(int nTest = 0 ; nTest < TestGM_Values_.n_rows ; nTest ++ ){
+                    sprintf(nameOfMenu,"T%d",nTest+1);
+                    if(ImGui::MenuItem(nameOfMenu        , NULL, false)){
+                        __NUM_TEST__ = nTest+1;
+                        __TYPE_TEST__ = 2;
+                        TestGM_RS_FES_KV_BV(__FES__Values((int)TestGM_Values_(nTest,0)),
+                                            __KV__Values((int)TestGM_Values_(nTest,1)),
+                                            __BV__Values((int)TestGM_Values_(nTest,2)));
+                    }
+                }
+                
+                ImGui::EndMenu();
+            }
+
+}
+
+void Menu_GA_RAS(){
+    if (ImGui::BeginMenu("Test GA & RA & RS")){
+                char nameOfMenu[50] = "Test";
+                for(int nTest = 0 ; nTest < __FES__Values.n_rows ; nTest ++ ){
+                    sprintf(nameOfMenu,"T%d",nTest+1);
+                    if(ImGui::MenuItem(nameOfMenu        , NULL, false)){
+                        __NUM_TEST__ = nTest+1;
+                        __TYPE_TEST__ = 3;
+                        TestGA_RAS_FES(__FES__Values((int)TestGM_Values_(nTest,0)));
+                    }
+                }
+                
+                ImGui::EndMenu();
+    }
 }
