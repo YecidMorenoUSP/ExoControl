@@ -136,14 +136,14 @@ namespace BLOCKS{
 
             virtual void showProperties(){
                 ImGui::Begin("Properties",&GUI::EVENTS::showProperties,0); 
-                ImGui::InputText(("COM Port"), (char*)Properties.nameCOM.c_str() , size_t(Properties.nameCOM.c_str()));
-                if(ImGui::InputInt( "Freq", &(VARS.f.Freq))){
+                ImGui::InputText(("COM Port"), (char*)VARS.f.nameCOM.c_str() , size_t(VARS.f.nameCOM.c_str()));
+                if(ImGui::InputInt( "F [ Hz ]", &(VARS.f.Freq))){
                     
                 }
-                if(ImGui::InputFloat( "Min_mA", &(TEST.min), 0.0f, 50.0f, "%.3f")){
+                if(ImGui::InputFloat( "A. min [ mA ]", &(TEST.min), 0.0f, 50.0f, "%.3f")){
                     if(TEST.min>TEST.max) TEST.min = 0;
                 }
-                if(ImGui::InputFloat( "Max_mA", &(TEST.max), 0.0f, 200.0f, "%.3f")){
+                if(ImGui::InputFloat( "A. max [ mA ]", &(TEST.max), 0.0f, 200.0f, "%.3f")){
                     if(TEST.max<TEST.min){
                         TEST.min = 0;
                         TEST.max = 40;
@@ -171,9 +171,9 @@ namespace BLOCKS{
                 ImGui::SameLine();
                 ImGui::LabelText("#info","mA: %f",VARS.f.mA);
 
-                if(ImGui::InputFloat( "mA_K", &(VARS.f.mA), 0.0f, 200.0f, "%.3f")){}
+                if(ImGui::InputFloat( "A. [ mA ]", &(VARS.f.mA), 0.0f, 200.0f, "%.3f")){}
 
-                if(ImGui::Button("Test_K")){
+                if(ImGui::Button("Test 4s")){
                     if(VARS.f.running_mutex.load()){
                         
                         if(VARS.TestThread_.joinable())VARS.TestThread_.join();
@@ -192,7 +192,7 @@ namespace BLOCKS{
                 }
          
 
-                ShowDemoWindowWidgets();
+                // ShowDemoWindowWidgets();
                 ImGui::End();
             }
 

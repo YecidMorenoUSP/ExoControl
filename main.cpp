@@ -46,17 +46,31 @@ std::string openfilename(char *filter = "All Files (*.blkReabRob)\0*.blkReabRob\
 
 #include "libs.cpp"
 
+
+
 int __NUM_TEST__ = 0;
 int __TYPE_TEST__ = 0;
-char __NAME__P1__ [40] = "Yecid";
-char __NAME__P2__ [40] = "Mauricio";
+char __NAME__P1__ [40] = "Mauricio";
+char __NAME__P2__ [40] = "Yecid";
 
 int __FREQ_FES__ = 30;
 int __FREQ_FES__2 = 30;
 
-arma::fvec __FES__Values = {1,  30, 50};
-arma::fvec __KV__Values  = {0,  20, 40};
-arma::fvec __BV__Values  = {0,   4,  8};
+int __AMP_FES__ = 110;
+int __AMP_FES__2 = 120;
+
+#define COM_CUR "COM4"
+
+#define COM_MAURICIO "COM4"
+#define COM_Yecid "COM3"
+
+arma::fvec __FES__Values = {1,  80, 110};
+
+arma::fvec __KV__Values_RA  = {0,    20,  40};
+arma::fvec __BV__Values_RA  = {0,   0.5f,  1.5f};
+
+arma::fvec __KV__Values_RS  = {0,  20, 40};
+arma::fvec __BV__Values_RS  = {0,   2,  4};
 
 arma::umat TestGM_Values_ = {{0,0,0},
                              {0,1,0},
@@ -91,6 +105,32 @@ void V_ADD_LINE_BI_PI_BO_PO( int b0, int p0, int b1, int p1){
     l->blockOut = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + b0];
     l->blockIn = BLOCKS::ALL_BLOCKS_GUI[BLKType_COUNT + b1];
     l->blockIn->IN_ARMA[l->posIn] = &(l->blockOut->OUT_ARMA[l->posOut]);
+}
+
+void ADD_DELSYS_LOG(int XX, int YY){
+        
+        int OB = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
+
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_DELSYS);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+0,YY+0);
+
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_ENCODE_TCP);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+120,YY+0);
+        ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->N_IN  = 4;
+        ((BLOCKS::BlockENCODE_TCP*) BLOCKS::ALL_BLOCKS_GUI.back())->UpadateIO();
+        
+        BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
+        BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(XX+240,YY+0);
+        sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
+            "EMG_Log_%s_","E");
+
+        ADD_LINE_BI_PI_BO_PO(  OB+1,2,  OB+2,1  );
+        ADD_LINE_BI_PI_BO_PO(  OB+1,3,  OB+2,2  );
+        ADD_LINE_BI_PI_BO_PO(  OB+1,10,  OB+2,3  );
+        ADD_LINE_BI_PI_BO_PO(  OB+1,11,  OB+2,4  );
+
+        ADD_LINE_BI_PI_BO_PO(  OB+2,1,  OB+3,1  );
+        
 }
 
 void ADD_ANKLEBOT(int XX, int YY){
@@ -212,11 +252,13 @@ void TestGM_RA_FES_KV_BV(float __FES__ , float __Kv__ , float __Bv__){
     int OB3 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_PULSE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(780,254);
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.th  = 0.01;
     ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.item_current  = 2;
     ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.Amplitude1  = __FES__; //FES[N]
     
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_REHAMOVE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(920,258);
+    ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.nameCOM  = COM_CUR;
     ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.Freq  = __FREQ_FES__;
 
     ADD_LINE_BI_PI_BO_PO(OB1+4,1,  OB1+1, 1);
@@ -234,7 +276,7 @@ void TestGM_RA_FES_KV_BV(float __FES__ , float __Kv__ , float __Bv__){
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(336,50);
     sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
-            "%s_Test_%d_Type_%d_Log_%s",__NAME__P1__,__NUM_TEST__,__TYPE_TEST__,"R");
+            "GM_RA_%s_Test_%d_Type_%d_Log_%s_",__NAME__P1__,__NUM_TEST__,__TYPE_TEST__,"R");
 
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_ENCODE_TCP);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(913,329);
@@ -244,7 +286,7 @@ void TestGM_RA_FES_KV_BV(float __FES__ , float __Kv__ , float __Bv__){
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(1040,367);
     sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
-            "%s_Test_%d_Type_%d_Log_%s",__NAME__P1__,__NUM_TEST__,__TYPE_TEST__,"L");
+            "GM_RA_%s_Test_%d_Type_%d_Log_%s_",__NAME__P1__,__NUM_TEST__,__TYPE_TEST__,"L");
 
     ADD_LINE_BI_PI_BO_PO(OB1+2,1,  OB4+1, 1);
     
@@ -268,12 +310,15 @@ void TestGM_RS_FES_KV_BV(float __FES__ , float __Kv__ , float __Bv__){
     int OB3 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_PULSE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(780,254+135);
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.th  = 0.01;
     ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.item_current  = 2;
     ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.Amplitude1  = __FES__; //FES[N]
     
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_REHAMOVE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(920,258+135);
+    ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.nameCOM  = COM_CUR;
     ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.Freq  = __FREQ_FES__;
+    
 
     ADD_LINE_BI_PI_BO_PO(OB1+2,6,  OB2+1, 1);
 
@@ -294,7 +339,7 @@ void TestGM_RS_FES_KV_BV(float __FES__ , float __Kv__ , float __Bv__){
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(1047,160);
     sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
-            "%s_Test_%d_Type_%d_Log_%s",__NAME__P1__,__NUM_TEST__,__TYPE_TEST__,"L");
+            "GM_RS_%s_Test_%d_Type_%d_Log_%s_",__NAME__P1__,__NUM_TEST__,__TYPE_TEST__,"L");
 
     ADD_LINE_BI_PI_BO_PO(OB1+2,1,  OB4+1,  1);
     ADD_LINE_BI_PI_BO_PO(OB1+2,2,  OB4+1,  2);
@@ -326,25 +371,27 @@ void TestGA_RAS_FES(float __FES__){
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_PULSE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(500,50);
     ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.item_current  = 2;
-    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.Amplitude1  = __FES__; //FES[N]
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.Amplitude1  = __AMP_FES__; //FES[N]
     
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_REHAMOVE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(640,50);
+    ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.nameCOM  = COM_MAURICIO;
     ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.Freq  = __FREQ_FES__;
 
     int OB5 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_PULSE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(500,540);
     ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.item_current  = 2;
-    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.Amplitude1  = __FES__; //FES[N]
+    ((BLOCKS::BlockPULSE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.Amplitude1  = __AMP_FES__2; //FES[N]
     
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_REHAMOVE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(640,540);
+    ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.nameCOM  = COM_Yecid;
     ((BLOCKS::BlockREHAMOVE*) BLOCKS::ALL_BLOCKS_GUI.back())->VARS.f.Freq  = __FREQ_FES__2;
 
 
     ADD_LINE_BI_PI_BO_PO(OB1+3,1,  OB3+1, 1);
-    ADD_LINE_BI_PI_BO_PO(OB2+2,8,  OB3+1, 2);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,6,  OB3+1, 2);
 
     // ADD_LINE_BI_PI_BO_PO(OB3+3,1,  OB1+1, 1);
     // ADD_LINE_BI_PI_BO_PO(OB3+3,2,  OB1+1, 2);
@@ -363,7 +410,7 @@ void TestGA_RAS_FES(float __FES__){
     ADD_LINE_BI_PI_BO_PO(OB1+3,1,  OB4+1, 1);
     
     ADD_LINE_BI_PI_BO_PO(OB5+1,1,  OB5+2, 1);
-    ADD_LINE_BI_PI_BO_PO(OB2+2,8,  OB5+1, 1);
+    ADD_LINE_BI_PI_BO_PO(OB2+2,6,  OB5+1, 1);
 
 
     int OB6 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
@@ -376,7 +423,7 @@ void TestGA_RAS_FES(float __FES__){
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(993,88);
     sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
-    "GH_Test_%d_Type_%d_Log_%s",__NUM_TEST__,__TYPE_TEST__,__NAME__P1__);
+    "GA_RAS_Test_%d_Type_%d_Log_%s",__NUM_TEST__,__TYPE_TEST__,__NAME__P1__);
 
 
     int OB7 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
@@ -389,13 +436,13 @@ void TestGA_RAS_FES(float __FES__){
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(998,494);
     sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
-    "GH_Test_%d_Type_%d_Log_%s",__NUM_TEST__,__TYPE_TEST__,__NAME__P2__);
+    "GA_RAS_Test_%d_Type_%d_Log_%s",__NUM_TEST__,__TYPE_TEST__,__NAME__P2__);
 
     int OB8 = BLOCKS::ALL_BLOCKS_GUI.size()-BLKType_COUNT-1;
     BLOCKS::AddBLOCK((TypeBlock_)BLKType_SAVE);
     BLOCKS::ALL_BLOCKS_GUI.back()->posBlock = ImVec2(842,225);
     sprintf(((BLOCKS::BlockSAVE*) BLOCKS::ALL_BLOCKS_GUI.back())->Properties.fileName,
-    "GH_Test_%d_Type_%d_Log_%s",__NUM_TEST__,__TYPE_TEST__,"KvBv");
+    "GA_RAS_Test_%d_Type_%d_Log_%s",__NUM_TEST__,__TYPE_TEST__,"KvBv");
 
 
     ADD_LINE_BI_PI_BO_PO(OB6+1,1,  OB6+2, 1);
@@ -690,6 +737,7 @@ void ADDMenuBar(){
                 if(ImGui::MenuItem("ANKLEBOT"        , NULL, false))    ADD_ANKLEBOT(100,100);
                 if(ImGui::MenuItem("GAME_MARCIAN"        , NULL, false))    ADD_GAME_MARCIAN(400,100);
                 if(ImGui::MenuItem("GAME_AIRHOCKEY"        , NULL, false))    ADD_GAME_AIRHOCHEY(400,100);
+                if(ImGui::MenuItem("DELSYS"        , NULL, false))    ADD_DELSYS_LOG(100,800);
                 ImGui::EndMenu();
             }
 
@@ -713,8 +761,8 @@ void Menu_GM_RA(){
                         __NUM_TEST__ = nTest+1;
                         __TYPE_TEST__ = 1;
                         TestGM_RA_FES_KV_BV(__FES__Values((int)TestGM_Values_(nTest,0)),
-                                            __KV__Values((int)TestGM_Values_(nTest,1)),
-                                            __BV__Values((int)TestGM_Values_(nTest,2)));
+                                            __KV__Values_RA((int)TestGM_Values_(nTest,1)),
+                                            __BV__Values_RA((int)TestGM_Values_(nTest,2)));
                     }
                 }
                 ImGui::EndMenu();
@@ -731,8 +779,8 @@ void Menu_GM_RS(){
                         __NUM_TEST__ = nTest+1;
                         __TYPE_TEST__ = 2;
                         TestGM_RS_FES_KV_BV(__FES__Values((int)TestGM_Values_(nTest,0)),
-                                            __KV__Values((int)TestGM_Values_(nTest,1)),
-                                            __BV__Values((int)TestGM_Values_(nTest,2)));
+                                            __KV__Values_RS((int)TestGM_Values_(nTest,1)),
+                                            __BV__Values_RS((int)TestGM_Values_(nTest,2)));
                     }
                 }
                 
