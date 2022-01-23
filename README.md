@@ -1,48 +1,11 @@
-[README_GRAPHS](DOCS/GRAPHS/README_GRAPHS.md)
-
-[README_BLOCKS](DOCS/BLOCKS/README_BLOCKS.md)
-
-# ExoControl **v0.3**
-Este respositorio foi feito para o trabalho de mentrado do aluno Yecid Moreno.
-O objetivo principal é criam uma GUI intuitiva que seja programavel usamdo blocos para o controle do exoesquelo de rehabilitação robótica.
-
-## Mudançãs de versão 
-
-- ### Versão v0.1 (GUI)
-    1. Se apresenta um rascunho da GUI    
-    2. Concerto de alguns erros 
-    3. Implementação de subprocesos nos blocos
-
-- ### Versão v0.2 
-    1. Bloco SPAR, plataforma robotica de tornozelo
-    2. ExoRobot atualizado
-    3. Leitura de EPOS en RT, analogicas e digitais
-    4. Protocolo CAN-Open e USB
-
-- ### Versão v0.3
-    1. Arduino Protocol
-    2. ESP-32 
-    3. Realidade Virtual, HTC VIVE
-    4. Server, para DB e opçoes remotas
 
 
+## Caros revisores, estou a actualizar a documentação, para o momento em que a possam visualizar:
+1. [README_APP](DOCS/APP/README_APP.md)
 
-# ExoControl
+2. [README_GRAPHS](DOCS/GRAPHS/README_GRAPHS.md)
 
-Si desea adicionar un bloque necesita modificar : 
-1. Clonar el archivo BLOCKS/BLOCK_**DEFAULT**.h
-
-2. Ir al archivo BLOCKS.cpp y adicionar
-    - #define DefineBLOCKS Block**DEFAULT**_INIT(); \
-    - #define name_of_object **DEFAULT**
-    - #include "BLOCKS/BLOCK_**DEFAULT**.h"
-
-3. Ir al archivo BLOCKS.h y adicionar
-    -  BLKType_**DEFAULT**,  NOTA : debe ser antes del *BLKType_COUNT*
-
-## LINES
-Si desea ver la salida de un bloque sólo necesita ubicar el mouse y presionar control
-
+3. [README_BLOCKS](DOCS/BLOCKS/README_BLOCKS.md)
 
 ## GIF
 
@@ -54,7 +17,3 @@ Si desea ver la salida de un bloque sólo necesita ubicar el mouse y presionar c
 
 ### Test con Rehamove3, FES en el brazo
 ![Alt Text](https://github.com/YecidMorenoUSP/PublicFiles/blob/master/ExoControl/GIF/FES1.gif?raw=true)
-
-
-# Dicas para o futuro
-1. Usar punteros vacios en lugar de variables punteros arma para enlazar los bloques.
