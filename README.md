@@ -1,6 +1,6 @@
 
 
-## Caros revisores, estou a actualizar a documentação, para o momento em que a possam visualizar:
+## Caros revisores, estou a actualizar a documentação, por enquanto podem ver:
 1. [README_APP](DOCS/APP/README_APP.md)
 
 2. [README_GRAPHS](DOCS/GRAPHS/README_GRAPHS.md)
